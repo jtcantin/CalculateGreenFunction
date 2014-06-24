@@ -1,0 +1,28 @@
+MKLROOT = /global/software/intel/composerxe-2011.0.084/mkl
+
+CC = icc 
+
+#use openmp, supress the warning d279, use c++11 standard
+CFLAGS = -O3 -openmp -wd279 -Wall 
+
+#include eigen, gsl, mkl and boost
+CINCLUDE = -I/home/pxiang/eigen -I/home/pxiang/gtest-1.7.0/include  -I$(MKLROOT)/include -I/home/pxiang/gsl_icc/include
+
+#path for the libraries
+CLIB = -L$(MKLROOT)/lib/intel64  -Wl,-rpath,/home/pxiang/gsl_icc/lib
+
+#linking options
+FLAGSLIB = -L$(MKLROOT)/lib/intel64 /home/pxiang/gtest-1.7.0/libgtest.a -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lpthread -limf
+
+
+
+SOURCES = *.cpp 
+#complex_matrix.cpp  complex_matrix_test.cpp  generate_alpha_beta.cpp  generate_alpha_beta_test.cpp  integer_matrix.cpp  main.cpp  matrix.cpp  matrix_test.cpp  mics.cpp 
+
+test2: $(SOURCES) iccMake
+	$(CC) $(CFLAGS) $(CINCLUDE)   $(SOURCES)  $(CLIB) $(FLAGSLIB) -o $@
+# Tab before $(F90)$
+
+clean:
+	rm -f test2
+# Tab before "rm"

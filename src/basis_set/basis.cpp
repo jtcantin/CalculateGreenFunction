@@ -51,7 +51,7 @@ double distance(Basis& b1, Basis& b2) {
 	switch (b1.getDim()) {
 	case 1: // 1D case
 		if (b1[0]==b2[0]) {
-			result = std::fabs(b1[1]-b2[2]);
+			result = std::fabs(b1[1]-b2[1]);
 		} else if (b1[1]==b2[1]) {
 			result = std::fabs(b1[0]-b2[0]);
 		} else {

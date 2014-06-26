@@ -23,7 +23,7 @@
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
 								</outputEntries>
 							</builder>
-							<tool command="icpc  -O3 -openmp -mkl=parallel " id="intel.cpp.compilestep.linux.x86_64.exe.rel.1139847134_14.0.0" name="Intel Intel(R) 64 C++ Compiler " superClass="intel.cpp.compilestep.linux.x86_64.exe.rel_14.0.0">
+							<tool command="icpc  -O3 -openmp " id="intel.cpp.compilestep.linux.x86_64.exe.rel.1139847134_14.0.0" name="Intel Intel(R) 64 C++ Compiler " superClass="intel.cpp.compilestep.linux.x86_64.exe.rel_14.0.0">
 								<option id="intel.compilestep.preprocessor.includedirectories.1316810273" name="Additional Include Directories (-I)" superClass="intel.compilestep.preprocessor.includedirectories" valueType="includePath">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0/include"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/eigen"/>
@@ -41,12 +41,17 @@
 							</tool>
 							<tool id="intel.c.linkstep.linux.x86_64.exe.rel.1269677876_14.0.0" name="Intel Intel(R) 64 C Linker" superClass="intel.c.linkstep.linux.x86_64.exe.rel_14.0.0"/>
 							<tool id="intel.cpp.linkstep.linux.x86_64.exe.rel.1954020933_14.0.0" name="Intel Intel(R) 64 C++ Linker" superClass="intel.cpp.linkstep.linux.x86_64.exe.rel_14.0.0">
-								<option id="intel.linkstep.libname.1278475954" name="Additional Libraries (-l)" superClass="intel.linkstep.libname"/>
+								<option id="intel.linkstep.libname.1278475954" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs">
+									<listOptionValue builtIn="false" value="mkl_intel_lp64"/>
+									<listOptionValue builtIn="false" value="mkl_core"/>
+									<listOptionValue builtIn="false" value="mkl_intel_thread"/>
+									<listOptionValue builtIn="false" value="m"/>
+								</option>
 								<option id="intel.linkstep.userobjs.1464092977" name="Other objects" superClass="intel.linkstep.userobjs" valueType="userObjs">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0/libgtest.a"/>
 								</option>
 								<option id="intel.linkstep.libpath.86859469" name="Search Directory for Libraries (-L)" superClass="intel.linkstep.libpath" valueType="stringList">
-									<listOptionValue builtIn="false" value="/home/pxiang/intel/composer_xe_2013_sp1/mkl/include"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/intel/composer_xe_2013_sp1.3.174/mkl/lib/intel64"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/intel/composer_xe_2013_sp1.3.174/compiler/lib"/>
 								</option>
 								<option id="intel.linkstep.loptions.266727058" name="Additional Options" superClass="intel.linkstep.loptions" value="-parallel" valueType="string"/>
@@ -58,7 +63,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src|basis_set|formMatrix" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="basis_set|formMatrix|recursiveCalculation|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
@@ -99,10 +104,11 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="formMatrix|basis_set|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="formMatrix|basis_set" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="recursiveCalculation|formMatrix|basis_set|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="recursiveCalculation|formMatrix|basis_set" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/basis_set"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/formMatrix"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/recursiveCalculation"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

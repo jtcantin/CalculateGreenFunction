@@ -5,23 +5,21 @@ CC = icc
 #use openmp, supress the warning d279, use c++11 standard
 CFLAGS = -O3 -openmp -wd279 -Wall 
 
-#include eigen, gsl, mkl and boost
-CINCLUDE = -I/home/pxiang/eigen -I/home/pxiang/gtest-1.7.0/include  -I$(MKLROOT)/include -I/home/pxiang/gsl_icc/include
+#include eigen, mkl
+CINCLUDE = -I/home/pxiang/eigen -I/home/pxiang/gtest-1.7.0/include  -I$(MKLROOT)/include
 
-#path for the libraries
-CLIB = -L$(MKLROOT)/lib/intel64  -Wl,-rpath,/home/pxiang/gsl_icc/lib
 
 #linking options
-FLAGSLIB = -L$(MKLROOT)/lib/intel64 /home/pxiang/gtest-1.7.0/libgtest.a -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lpthread -limf
+FLAGSLIB = -L$(MKLROOT)/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm
+#-L$(MKLROOT)/lib/intel64 /home/pxiang/gtest-1.7.0/libgtest.a -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lpthread -limf
 
 
-
-SOURCES = *.cpp 
+SOURCES = $(wildcard *.cpp) $(wildcard */*.cpp) 
 #complex_matrix.cpp  complex_matrix_test.cpp  generate_alpha_beta.cpp  generate_alpha_beta_test.cpp  integer_matrix.cpp  main.cpp  matrix.cpp  matrix_test.cpp  mics.cpp 
 
-test2: $(SOURCES) iccMake
-	$(CC) $(CFLAGS) $(CINCLUDE)   $(SOURCES)  $(CLIB) $(FLAGSLIB) -o $@
-# Tab before $(F90)$
+green: $(SOURCES) iccMake
+	$(CC) $(CFLAGS) $(CINCLUDE)   $(SOURCES)  $(FLAGSLIB) -o $@
+# Tab before $(CC)
 
 clean:
 	rm -f test2

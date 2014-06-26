@@ -113,12 +113,12 @@ void formMatrixM(int K, int Kp, CDMatrix& MKKp) {
 /**
  * form the WK matrix
  */
-void formMatrixW(int K, int numNeighbor, dcomplex energy, CDMatrix& WK) {
+void formMatrixW(int K, int maxDistance, dcomplex energy, CDMatrix& WK) {
 	// find out the size of WK matrix
 	int total_rows=0;
 	int total_cols=0;
 	// go through the blocks that on the diagonal
-	for (int i=0; i<numNeighbor; ++i) {
+	for (int i=0; i<maxDistance; ++i) {
 		int rows, cols;
 		getZSize(K+i, rows, cols);
 		total_rows += rows;
@@ -132,9 +132,9 @@ void formMatrixW(int K, int numNeighbor, dcomplex energy, CDMatrix& WK) {
 	int col_start = 0;
 	int row_size;
 	int col_size;
-	for (int block_row=0; block_row<numNeighbor; ++block_row) {
+	for (int block_row=0; block_row<maxDistance; ++block_row) {
 		col_start = 0; // rewind block col count
-		for (int block_col=0; block_col<numNeighbor; ++block_col) {
+		for (int block_col=0; block_col<maxDistance; ++block_col) {
 			if (block_row == block_col) { // diagonal blocks
 				CDMatrix Z;
 				formMatrixZ(K+block_row, energy, Z);
@@ -160,14 +160,14 @@ void formMatrixW(int K, int numNeighbor, dcomplex energy, CDMatrix& WK) {
 /**
  * form the Alpha matrix
  */
-void formMatrixAlpha(int K, int numNeighbor, CDMatrix& AlphaK) {
+void formMatrixAlpha(int K, int maxDistance, CDMatrix& AlphaK) {
 	// find out the size of alpha matrix
 	int total_rows=0;
 	int total_cols=0;
 	// go through the blocks that on the diagonal
-	for (int i=0; i<numNeighbor; ++i) {
+	for (int i=0; i<maxDistance; ++i) {
 		int rows, cols;
-		getMSize(K+i, K+i-numNeighbor, rows, cols);
+		getMSize(K+i, K+i-maxDistance, rows, cols);
 		total_rows += rows;
 		total_cols += cols;
 	}
@@ -183,23 +183,23 @@ void formMatrixAlpha(int K, int numNeighbor, CDMatrix& AlphaK) {
 	int row_size;
 	int col_size;
 
-	for (int block_row=0; block_row<numNeighbor; ++block_row) {
+	for (int block_row=0; block_row<maxDistance; ++block_row) {
 		// rewind block col count
 		col_start = 0;
 		// find out the starting column index
 		for (int i=0; i<block_row; ++i) {
 			int rows, cols;
-			getMSize(K+i, K+i-numNeighbor, rows, cols);
+			getMSize(K+i, K+i-maxDistance, rows, cols);
 			col_start += cols;
 		}
 
-		for (int block_col=block_row; block_col<numNeighbor; ++block_col) {
+		for (int block_col=block_row; block_col<maxDistance; ++block_col) {
 			// calculate only the upper triangle part is nonzero
 //			std::cout << "block row: " << block_row << " block col: "
 //					<< block_col << std::endl;
 			CDMatrix M;
 //			std::cout << "before calling formMatrixM" << std::endl;
-			formMatrixM(K+block_row, K+block_col-numNeighbor, M);
+			formMatrixM(K+block_row, K+block_col-maxDistance, M);
 //			std::cout << "after calling formMatrixM" << std::endl;
 			row_size = M.rows();
 			col_size = M.cols();
@@ -216,14 +216,14 @@ void formMatrixAlpha(int K, int numNeighbor, CDMatrix& AlphaK) {
 /**
  * form the Beta matrix
  */
-void formMatrixBeta(int K, int numNeighbor, CDMatrix& BetaK) {
+void formMatrixBeta(int K, int maxDistance, CDMatrix& BetaK) {
 	// find out the size of beta matrix
 	int total_rows=0;
 	int total_cols=0;
 	// go through the blocks that on the diagonal
-	for (int i=0; i<numNeighbor; ++i) {
+	for (int i=0; i<maxDistance; ++i) {
 		int rows, cols;
-		getMSize(K+i, K+i+numNeighbor, rows, cols);
+		getMSize(K+i, K+i+maxDistance, rows, cols);
 		total_rows += rows;
 		total_cols += cols;
 	}
@@ -236,7 +236,7 @@ void formMatrixBeta(int K, int numNeighbor, CDMatrix& BetaK) {
 	int row_size;
 	int col_size;
 
-	for (int block_row=0; block_row<numNeighbor; ++block_row) {
+	for (int block_row=0; block_row<maxDistance; ++block_row) {
 		// rewind block col count
 		col_start = 0;
 
@@ -246,7 +246,7 @@ void formMatrixBeta(int K, int numNeighbor, CDMatrix& BetaK) {
 //					<< block_col << std::endl;
 			CDMatrix M;
 //			std::cout << "before calling formMatrixM" << std::endl;
-			formMatrixM(K+block_row, K+block_col+numNeighbor, M);
+			formMatrixM(K+block_row, K+block_col+maxDistance, M);
 //			std::cout << "after calling formMatrixM" << std::endl;
 			row_size = M.rows();
 			col_size = M.cols();

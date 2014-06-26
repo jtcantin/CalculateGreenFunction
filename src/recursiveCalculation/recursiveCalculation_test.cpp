@@ -11,12 +11,12 @@ TEST(SetUpRecursion, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
-	int maxDistance = 2;
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
+	int maxDistance = interactionData.maxDistance;
 	Basis initialSites(60,61);
 	RecursionData rd;
 
-	setUpRecursion(lattice1D,  parameters, initialSites, maxDistance,rd);
+	setUpRecursion(lattice1D,  interactionData, initialSites, rd);
 
 	std::cout<<"xmax = " << xmax << std::endl;
 	std::cout<<"x1 = " << initialSites[0]
@@ -34,20 +34,19 @@ TEST(FromRightToCenter, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
-	int maxDistance = 2;
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,2,230};
+	int maxDistance = interactionData.maxDistance;
 	Basis initialSites(60,61);
-	RecursionData rd;
+	RecursionData recursionData;
 
 
-	setUpRecursion(lattice1D,  parameters, initialSites, maxDistance,rd);
+	setUpRecursion(lattice1D,  interactionData, initialSites,recursionData);
 
 	dcomplex z = dcomplex(10, 0.01);
 	CDMatrix AKRightStop;
 
 	deleteMatrixFiles("A[0-9]*.bin");
-	fromRightToCenter(rd.KRightStart, rd.KRightStop, maxDistance,
-			z, AKRightStop, true);
+	fromRightToCenter(recursionData, z, AKRightStop, true);
 
 	EXPECT_TRUE(true);
 }
@@ -57,20 +56,19 @@ TEST(FromLeftToCenter, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
-	int maxDistance = 2;
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,2,230};
+	int maxDistance = interactionData.maxDistance;
 	Basis initialSites(60,61);
-	RecursionData rd;
+	RecursionData recursionData;
 
-	setUpRecursion(lattice1D,  parameters, initialSites, maxDistance,rd);
+	setUpRecursion(lattice1D,  interactionData, initialSites, recursionData);
 
 
 	dcomplex z = dcomplex(10, 0.01);
 	CDMatrix ATildeKLeftStop;
 
 	deleteMatrixFiles("ATilde[0-9]*.bin");
-	fromLeftToCenter(rd.KLeftStart, rd.KLeftStop, maxDistance,
-			z, ATildeKLeftStop, true);
+	fromLeftToCenter(recursionData, z, ATildeKLeftStop, true);
 
 	EXPECT_TRUE(true);
 }
@@ -80,31 +78,27 @@ TEST(SolveVKCenter, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
-	int maxDistance = 5;
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
+	int maxDistance = interactionData.maxDistance;
 	Basis initialSites(60,61);
-	RecursionData rd;
+	RecursionData recursionData;
 
-	setUpRecursion(lattice1D,  parameters, initialSites, maxDistance,rd);
+	setUpRecursion(lattice1D,  interactionData, initialSites,recursionData);
 
 
 	dcomplex z = dcomplex(10, 0.01);
 	CDMatrix ATildeKLeftStop;
 
 	deleteMatrixFiles("ATilde[0-9]*.bin");
-	fromLeftToCenter(rd.KLeftStart, rd.KLeftStop, maxDistance,
-			z, ATildeKLeftStop, true);
+	fromLeftToCenter(recursionData, z, ATildeKLeftStop, true);
 
 	CDMatrix AKRightStop;
 
 	deleteMatrixFiles("A[0-9]*.bin");
-	fromRightToCenter(rd.KRightStart, rd.KRightStop, maxDistance,
-			z, AKRightStop, true);
+	fromRightToCenter(recursionData, z, AKRightStop, true);
 
 	CDMatrix VKCenter;
-	solveVKCenter(VKCenter, ATildeKLeftStop, AKRightStop,
-			       rd.KCenter, lattice1D, initialSites,
-			       maxDistance, z);
+	solveVKCenter(recursionData, z, ATildeKLeftStop, AKRightStop, VKCenter);
 
 	EXPECT_TRUE(true);
 }

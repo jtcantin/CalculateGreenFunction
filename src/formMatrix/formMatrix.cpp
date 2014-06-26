@@ -18,9 +18,13 @@ LatticeShape *pLattice;
 
 
 // call this before forming the matrices
-void setInteractions(LatticeShape& lattice, Parameters& parameters) {
+void setInteractions(LatticeShape& lattice, InteractionData& interactionData) {
 	pLattice = &lattice;
-	pInteraction = new Interaction(lattice, parameters);
+	// destroy the Interaction object pointed by pInteraction
+	if (pInteraction!=NULL) {
+		pInteraction->~Interaction();
+	}
+	pInteraction = new Interaction(lattice, interactionData);
 }
 
 
@@ -113,7 +117,9 @@ void formMatrixM(int K, int Kp, CDMatrix& MKKp) {
 /**
  * form the WK matrix
  */
-void formMatrixW(int K, int maxDistance, dcomplex energy, CDMatrix& WK) {
+void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
+	extern Interaction *pInteraction;
+	int maxDistance = pInteraction->getMaxDistance();
 	// find out the size of WK matrix
 	int total_rows=0;
 	int total_cols=0;
@@ -160,7 +166,9 @@ void formMatrixW(int K, int maxDistance, dcomplex energy, CDMatrix& WK) {
 /**
  * form the Alpha matrix
  */
-void formMatrixAlpha(int K, int maxDistance, CDMatrix& AlphaK) {
+void formMatrixAlpha(int K, CDMatrix& AlphaK) {
+	extern Interaction *pInteraction;
+	int maxDistance = pInteraction->getMaxDistance();
 	// find out the size of alpha matrix
 	int total_rows=0;
 	int total_cols=0;
@@ -216,7 +224,9 @@ void formMatrixAlpha(int K, int maxDistance, CDMatrix& AlphaK) {
 /**
  * form the Beta matrix
  */
-void formMatrixBeta(int K, int maxDistance, CDMatrix& BetaK) {
+void formMatrixBeta(int K, CDMatrix& BetaK) {
+	extern Interaction *pInteraction;
+	int maxDistance = pInteraction->getMaxDistance();
 	// find out the size of beta matrix
 	int total_rows=0;
 	int total_cols=0;

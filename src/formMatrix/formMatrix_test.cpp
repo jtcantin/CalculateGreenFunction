@@ -12,9 +12,9 @@ TEST(FormMatrixZ, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
 	generateIndexMatrix(lattice1D);
-	setInteractions(lattice1D, parameters);
+	setInteractions(lattice1D, interactionData);
 	int K = 24;
 	dcomplex energy = dcomplex(10.0, 0.001);
 	CDMatrix ZK;
@@ -27,9 +27,9 @@ TEST(FormMatrixM, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
 	generateIndexMatrix(lattice1D);
-	setInteractions(lattice1D, parameters);
+	setInteractions(lattice1D, interactionData);
 	CDMatrix MKKp;
 	for (int K=1; K<=xmax+xmax-1; ++K) {
 		for (int Kp=1; Kp<=xmax+xmax-1; ++Kp) {
@@ -46,34 +46,20 @@ TEST(FormMatrixW, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
 	generateIndexMatrix(lattice1D);
-	setInteractions(lattice1D, parameters);
-	CDMatrix WK;
+
+
 	dcomplex energy = dcomplex(10.0, 0.001);
 
 	for (int K=1; K<=xmax+xmax-1; ++K) {
-		for (int numNeighbor=1; numNeighbor<=5 && K+numNeighbor<=xmax+xmax-1; ++numNeighbor) {
-			formMatrixW(K, numNeighbor, energy, WK);
+		for (int maxDistance=1; maxDistance<=5 && K+maxDistance<=xmax+xmax-1; ++maxDistance) {
+			InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
+			setInteractions(lattice1D, interactionData);
+			CDMatrix WK;
+			formMatrixW(K, energy, WK);
 		}
 	}
 
-
-	int K = 1;
-	int numNeighbor = 2;
-	formMatrixW(K, numNeighbor, energy, WK);
-
-	numNeighbor = 3;
-	formMatrixW(K, numNeighbor, energy, WK);
-
-	numNeighbor = 4;
-	formMatrixW(K, numNeighbor, energy, WK);
-
-	numNeighbor = 5;
-	formMatrixW(K, numNeighbor, energy, WK);
-
-	numNeighbor = 6;
-	formMatrixW(K, numNeighbor, energy, WK);
 
 	EXPECT_TRUE(true);
 }
@@ -83,17 +69,19 @@ TEST(FormMatrixAlpha, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
 	generateIndexMatrix(lattice1D);
-	setInteractions(lattice1D, parameters);
-	CDMatrix Alpha;
 
-	for (int numNeighbor=1; numNeighbor<=5; ++numNeighbor) {
+
+
+	for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
 		//std::cout <<"numNeighbor = " << numNeighbor << std::endl;
+		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
+		setInteractions(lattice1D, interactionData);
+		CDMatrix Alpha;
 		for (int K=1; K<=xmax+xmax-1; ++K) {
-			if (K + numNeighbor-1<=xmax+xmax-1 && K-numNeighbor>=1) {
+			if (K + maxDistance-1<=xmax+xmax-1 && K-maxDistance>=1) {
 				//std::cout << "K="<< K << " Kp=" << K-numNeighbor << std::endl;
-				formMatrixAlpha(K, numNeighbor, Alpha);
+				formMatrixAlpha(K, Alpha);
 			}
 		}
 	}
@@ -107,26 +95,30 @@ TEST(FormMatrixBeta, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Parameters parameters = {1.0,1.0,1.0,true,false,true,5,230};
 	generateIndexMatrix(lattice1D);
-	setInteractions(lattice1D, parameters);
-	CDMatrix Beta;
 
-	for (int numNeighbor=1; numNeighbor<=5; ++numNeighbor) {
+
+	for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
+		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
+		setInteractions(lattice1D, interactionData);
+		CDMatrix Beta;
 		for (int K=1; K<=xmax+xmax-1; ++K) {
-			if (K + 2*numNeighbor-1<=xmax+xmax-1) {
+			if (K + 2*maxDistance-1<=xmax+xmax-1) {
 				//std::cout << "K="<<K<< " Kp=" << K+numNeighbor << std::endl;
-				formMatrixBeta(K, numNeighbor, Beta);
+				formMatrixBeta(K, Beta);
 			}
 		}
 	}
 
 //	std::cout << "\n\n" << std::endl;
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,1,230};
 	int rows, cols;
 	int rows_expected, cols_expected;
 	int K = 1;
-	int numNeighbor = 1;
-	formMatrixBeta(K, numNeighbor, Beta);
+	CDMatrix Beta;
+	interactionData.maxDistance = 1;
+	setInteractions(lattice1D, interactionData);
+	formMatrixBeta(K, Beta);
 	rows = Beta.rows();
 	cols = Beta.cols();
 	rows_expected = DimsOfV[K];
@@ -135,8 +127,9 @@ TEST(FormMatrixBeta, RunningOK) {
 	EXPECT_EQ(cols, cols_expected);
 
 	K = 1;
-	numNeighbor = 2;
-	formMatrixBeta(K, numNeighbor, Beta);
+	interactionData.maxDistance = 2;
+	setInteractions(lattice1D, interactionData);
+	formMatrixBeta(K, Beta);
 	rows = Beta.rows();
 	cols = Beta.cols();
 	rows_expected = DimsOfV[K] + DimsOfV[K+1];
@@ -144,8 +137,9 @@ TEST(FormMatrixBeta, RunningOK) {
 	EXPECT_EQ(rows, rows_expected);
 	EXPECT_EQ(cols, cols_expected);
 
-	numNeighbor = 3;
-	formMatrixBeta(K, numNeighbor, Beta);
+	interactionData.maxDistance = 3;
+	setInteractions(lattice1D, interactionData);
+	formMatrixBeta(K, Beta);
 	rows = Beta.rows();
 	cols = Beta.cols();
 	rows_expected = DimsOfV[K] + DimsOfV[K+1] + DimsOfV[K+2];
@@ -153,8 +147,9 @@ TEST(FormMatrixBeta, RunningOK) {
 	EXPECT_EQ(rows, rows_expected);
 	EXPECT_EQ(cols, cols_expected);
 
-	numNeighbor = 4;
-	formMatrixBeta(K, numNeighbor, Beta);
+	interactionData.maxDistance = 4;
+	setInteractions(lattice1D, interactionData);
+	formMatrixBeta(K, Beta);
 	rows = Beta.rows();
 	cols = Beta.cols();
 	rows_expected = DimsOfV[K] + DimsOfV[K+1] + DimsOfV[K+2] + DimsOfV[K+3];
@@ -162,8 +157,9 @@ TEST(FormMatrixBeta, RunningOK) {
 	EXPECT_EQ(rows, rows_expected);
 	EXPECT_EQ(cols, cols_expected);
 
-	numNeighbor = 5;
-	formMatrixBeta(K, numNeighbor, Beta);
+	interactionData.maxDistance = 5;
+	setInteractions(lattice1D, interactionData);
+	formMatrixBeta(K,  Beta);
 	rows = Beta.rows();
 	cols = Beta.cols();
 	rows_expected = DimsOfV[K] + DimsOfV[K+1] + DimsOfV[K+2] + DimsOfV[K+3]
@@ -173,8 +169,9 @@ TEST(FormMatrixBeta, RunningOK) {
 	EXPECT_EQ(rows, rows_expected);
 	EXPECT_EQ(cols, cols_expected);
 
-	numNeighbor = 6;
-	formMatrixBeta(K, numNeighbor, Beta);
+	interactionData.maxDistance = 6;
+	setInteractions(lattice1D, interactionData);
+	formMatrixBeta(K,  Beta);
 	rows = Beta.rows();
 	cols = Beta.cols();
 	rows_expected = DimsOfV[K] + DimsOfV[K+1] + DimsOfV[K+2] + DimsOfV[K+3]

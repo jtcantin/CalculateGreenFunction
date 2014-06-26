@@ -13,10 +13,10 @@
 #include "../Utility/random_generator.h"
 #include "../IO/binaryIO.h"
 
-/* this parameters struct contains no information about the size of the lattice*/
+/* this InteractionData struct contains no information about the size of the lattice*/
 // the lattice geometry information is stored in class LatticeShape
 /**
- * Parameters stores the onsite energy, the strengths of hopping
+ * InteractionData stores the onsite energy, the strengths of hopping
  * and dynamic interactions. It also specifies whether the interactions
  * are random or not, and contains the seed for generating the random
  * interactions and the effective range of hopping and dynamic interactions
@@ -26,7 +26,7 @@ typedef struct {
 	bool randomHop, randomDyn, randomOnSite;
 	int maxDistance; // beyond which the interaction is set to zero
 	unsigned seed;
-} Parameters;
+} InteractionData;
 
 
 
@@ -41,38 +41,38 @@ typedef struct {
 
 class Interaction {
 public:
-	Interaction(LatticeShape& lattice, Parameters& parameters) {
+	Interaction(LatticeShape& lattice, InteractionData& interactionData) {
 		dim = lattice.getDim();
-		seed = parameters.seed;
+		seed = interactionData.seed;
 		rng.SetSeed(seed);
 		if (dim==1) {
 			int xsite = lattice.getXmax() + 1;
-			int neighborNum = parameters.maxDistance;
+			maxDistance = interactionData.maxDistance;
 			// initialize the hopping matrix
 			t = DMatrix::Zero(xsite,xsite);
-			if (parameters.randomHop) {
-				setRandomMatrix(t, parameters.hop, neighborNum);
+			if (interactionData.randomHop) {
+				setRandomMatrix(t, interactionData.hop, maxDistance);
 			} else {
 				// set all element to constant
-				setConstantMatrix(t, parameters.hop, neighborNum);
+				setConstantMatrix(t, interactionData.hop, maxDistance);
 			}
 
 			// initialize the dynamic matrix
 			d = DMatrix::Zero(xsite,xsite);
-			if (parameters.randomDyn) {
-				setRandomMatrix(d, parameters.dyn, neighborNum);
+			if (interactionData.randomDyn) {
+				setRandomMatrix(d, interactionData.dyn, maxDistance);
 			} else {
 				// set all element to constant
-				setConstantMatrix(d, parameters.dyn, neighborNum);
+				setConstantMatrix(d, interactionData.dyn, maxDistance);
 			}
 
 			// initialize the dynamic matrix
 			e = DVector::Zero(xsite);
-			if (parameters.randomOnSite) {
-				setRandomVector(e, parameters.onsiteE);
+			if (interactionData.randomOnSite) {
+				setRandomVector(e, interactionData.onsiteE);
 			} else {
 				// set all element to constant
-				setConstantVector(e, parameters.onsiteE);
+				setConstantVector(e, interactionData.onsiteE);
 			}
 		} //end of if for dim=1
 
@@ -134,28 +134,42 @@ public:
 		rng.SetSeed(seed);
 	}
 
+	// obtain the range of interactions
+	int getMaxDistance() {
+		return maxDistance;
+	}
+
+	// destructor
+	~Interaction() {
+		// release the memory of the matrices
+		t.resize(0,0);
+		d.resize(0,0);
+		e.resize(0);
+	}
+
 private:
 	DMatrix t;
 	DMatrix d;
 	DVector e;
+	int maxDistance;
 	int dim;
 	unsigned seed;
 	RandomNumberGenerator rng;
 
-	void setRandomMatrix(DMatrix& m, double maxVal, int neighborNum) {
+	void setRandomMatrix(DMatrix& m, double maxVal, int maxDistance) {
 		int xsite = m.rows();
 		for (int i=0; i<xsite-1; ++i) {
-			for (int incr=1; incr<=neighborNum && i+incr<xsite; ++incr) {
+			for (int incr=1; incr<=maxDistance && i+incr<xsite; ++incr) {
 				m(i,i+incr) = maxVal*rng.randomReal()/std::pow(incr,3.0); // range [0, hop)
 				m(i+incr,i) = t(i,i+incr);
 			}
 		}
 	}
 
-	void setConstantMatrix(DMatrix& m, double maxVal, int neighborNum) {
+	void setConstantMatrix(DMatrix& m, double maxVal, int maxDistance) {
 		int xsite = m.rows();
 		for (int i=0; i<xsite-1; ++i) {
-			for (int incr=1; incr<=neighborNum && i+incr<xsite; ++incr) {
+			for (int incr=1; incr<=maxDistance && i+incr<xsite; ++incr) {
 				m(i,i+incr) = maxVal/std::pow(incr,3.0); // range [0, hop)
 				m(i+incr,i) = t(i,i+incr);
 			}
@@ -184,16 +198,16 @@ void getMSize(int K, int Kp, int& rows, int& cols);
 
 void getZSize(int K, int& rows, int& cols);
 
-void setInteractions(LatticeShape& lattice, Parameters& parameters);
+void setInteractions(LatticeShape& lattice, InteractionData& interactionData);
 
 void formMatrixZ(int K, dcomplex Energy, CDMatrix& ZK);
 
 void formMatrixM(int K, int Kp, CDMatrix& MKKp);
 
-void formMatrixW(int K, int numNeighbor, dcomplex energy, CDMatrix& WK);
+void formMatrixW(int K, dcomplex energy, CDMatrix& WK);
 
-void formMatrixAlpha(int K, int numNeighbor, CDMatrix& AlphaK);
+void formMatrixAlpha(int K, CDMatrix& AlphaK);
 
-void formMatrixBeta(int K, int numNeighbor, CDMatrix& BetaK);
+void formMatrixBeta(int K, CDMatrix& BetaK);
 
 #endif /* FORMMATRIX_H_ */

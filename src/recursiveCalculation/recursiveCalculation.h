@@ -19,6 +19,9 @@ typedef struct {
 	int KCenter;
 	int KRightStop;
 	int KRightStart;
+	int maxDistance; //step size of the Recursion
+	int Csize; // the size of the constant vector C in the quation for V_{KCenter}
+	int indexForNonzero; // the index for the only nonzero element in vector C
 } RecursionData;
 
 
@@ -26,18 +29,18 @@ void deleteMatrixFiles(std::string files);
 
 void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X);
 
-void setUpRecursion(LatticeShape& lattice, Parameters& parameters,
-		            Basis& initialSites, int maxDistance,RecursionData& rd);
+void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
+		            Basis& initialSites, RecursionData& rd);
 
 
-void fromRightToCenter(int KRightStart, int KRightStop, int maxDistance,
+void fromRightToCenter(RecursionData& recursionData,
 		dcomplex z, CDMatrix& AKRightStop, bool saveAMatrices=true);
 
-void fromLeftToCenter(int KLeftStart, int KLeftStop, int maxDistance,
+void fromLeftToCenter(RecursionData& recursionData,
 		dcomplex z, CDMatrix& ATildeKLeftStop, bool saveAMatrices=true);
 
-void solveVKCenter(CDMatrix& VKCenter, CDMatrix& ATildeKLeftStop, CDMatrix& AKRightStop,
-		           int KCenter, LatticeShape& lattice, Basis& initialSites,
-		           int maxDistance, dcomplex z);
+void solveVKCenter(RecursionData& recursionData, dcomplex z,
+		           CDMatrix& ATildeKLeftStop, CDMatrix& AKRightStop,
+		           CDMatrix& VKCenter);
 
 #endif /* RECURSIVECALCULATION_HPP_ */

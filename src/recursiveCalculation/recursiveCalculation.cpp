@@ -22,27 +22,26 @@ void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X) {
 	X = A.colPivHouseholderQr().solve(B);
 }
 
+
 /**
  * set up the precondition for the recursive calculations: fromRightToCenter
  * and fromLeftToCenter
  */
 void setUpRecursion(LatticeShape& lattice, Parameters& parameters,
-		            Basis& initialSites, int maxDistance,
-		            int& KLeftStart, int& KLeftStop, int& KCritial,
-		            int& KRightStop, int& KRightStart) {
+		            Basis& initialSites, int maxDistance,RecursionData& rd) {
 	switch (lattice.getDim()) {
 	case 1:
 		int Kmin = 1;
 		int Kmax = 2*lattice.getXmax() - 1;
-		int Kc = initialSites[0] + initialSites[1];
+		int Kc = initialSites.getSum(); //initialSites[0] + initialSites[1];
 
-		KLeftStart = 1; // always start from V_1 from the left
+		rd.KLeftStart = 1; // always start from V_1 from the left
 		// find out the position where the left and right recursions must stop
 		for (int K=1; K<=Kmax; K+=maxDistance) {
 			if (Kc>=K && Kc<=K+maxDistance-1) {
-				KCritial = K;
-				KLeftStop = KCritial-maxDistance;
-				KRightStop = KCritial+maxDistance;
+				rd.KCenter = K;
+				rd.KLeftStop = rd.KCenter-maxDistance;
+				rd.KRightStop = rd.KCenter+maxDistance;
 			}
 		}
 
@@ -55,11 +54,11 @@ void setUpRecursion(LatticeShape& lattice, Parameters& parameters,
 		 * current_value_of_K - maxDistance - (maxDistance-1)
 		 *
 		 */
-		int K= KRightStop + maxDistance -1;
+		int K= rd.KRightStop + maxDistance -1;
 		while (K <= Kmax) {
 			K += maxDistance;
 		}
-		KRightStart = K - maxDistance - (maxDistance-1);
+		rd.KRightStart = K - maxDistance - (maxDistance-1);
 
 		// calculate the indexMatrix and set up the interaction matrix
 		generateIndexMatrix(lattice);
@@ -169,7 +168,12 @@ void fromRightToCenter(int KRightStart, int KRightStop, int maxDistance,
 		formMatrixBeta(K, maxDistance, BetaK);
 		CDMatrix WK;
 		formMatrixW(K, maxDistance,z, WK);
-		CDMatrix LeftSide = WK - BetaK*AKPlus;
+		//CDMatrix LeftSide = WK - BetaK*AKPlus;
+		/*
+		 * an optimized way to obtain LeftSide without evaluating temporary matrices
+		 */
+		CDMatrix LeftSide = WK;
+		LeftSide.noalias() -= BetaK*AKPlus;
 
 		//release the memory of WK and Beta
 		BetaK.resize(0,0);
@@ -286,7 +290,12 @@ void fromLeftToCenter(int KLeftStart, int KLeftStop, int maxDistance,
 		formMatrixAlpha(K, maxDistance, AlphaK);
 		CDMatrix WK;
 		formMatrixW(K, maxDistance,z, WK);
-		CDMatrix LeftSide = WK - AlphaK*ATildeKMinus;
+		//CDMatrix LeftSide = WK - AlphaK*ATildeKMinus;
+		/*
+		 * an optimized way to obtain LeftSide without evaluating temporary matrices
+		 */
+		CDMatrix LeftSide = WK;
+		LeftSide.noalias() -= AlphaK*ATildeKMinus;
 
 		//release the memory of WK and AlphaK
 		AlphaK.resize(0,0);
@@ -313,6 +322,70 @@ void fromLeftToCenter(int KLeftStart, int KLeftStop, int maxDistance,
 	ATildeKMinus.resize(0,0);
 }
 
+
+
+/**
+ * solve for the Vector VKCenter given AKRightStop and ATildeKLeftStop
+ *
+ * W_{KCenter}*V_{KCenter} = alpha_{KCenter}*V_{KCenter-maxDistance}
+ *                           + beta_{KCenter}*V_{KCenter+maxDistance} + C
+ * Knowing A_{KRightStop} = A_{KCenter+maxDistance}, we can obtain V_{KCenter+maxDistance} by
+ * V_{KCenter+maxDistance} =  A_{KRightStop}*V_{KCenter}
+ *
+ * Knowing ATilde_{KLeftStop} = ATilde_{KCenter-maxDistance}, we have
+ * V_{KCenter-maxDistance} =  ATilde_{KLeftStop}*V_{KCenter}
+ *
+ * Substituting the above two equations into the first equation, we obtain
+ * [ W_{KCenter} - alpha_{KCenter}*ATilde_{KLeftStop} - beta_{KCenter}*A_{KRightStop}]*V_{KCenter}
+ * = C
+ *
+ * Then V_{KCenter} can be obtained by solving the above linear equation
+ */
+void solveVKCenter(CDMatrix& VKCenter, CDMatrix& ATildeKLeftStop, CDMatrix& AKRightStop,
+		           int KCenter, LatticeShape& lattice, Basis& initialSites,
+		           int maxDistance, dcomplex z) {
+	// obtain the lefthand side of the linear equation
+	CDMatrix WKCenter;
+	formMatrixW(KCenter, maxDistance,z,WKCenter);
+	CDMatrix LeftSide = WKCenter;
+	WKCenter.resize(0,0);
+
+	CDMatrix AlphaKCenter;
+	formMatrixAlpha(KCenter, maxDistance, AlphaKCenter);
+	LeftSide -= AlphaKCenter*ATildeKLeftStop;
+	AlphaKCenter.resize(0,0);
+
+	CDMatrix BetaKCenter;
+	formMatrixBeta(KCenter, maxDistance, BetaKCenter);
+	LeftSide -= BetaKCenter*AKRightStop;
+	BetaKCenter.resize(0,0);
+
+
+	//obtain the constant vector C on the righthand side of the linear equation
+	extern std::vector<int> DimsOfV;
+	int totalRows = 0;
+	for(int i=0; i<maxDistance; ++i) {
+		totalRows += DimsOfV[KCenter+i];
+	}
+	CDMatrix RightSide = CDMatrix::Zero(totalRows, 1);
+	int rowIndex = 0;
+	int Kc = initialSites.getSum();
+	for(int K=KCenter; K!=Kc; ++K) {
+		rowIndex += DimsOfV[K];
+	}
+	// when K = Kc, the above loop is over
+	int index1, index2;
+	getLatticeIndex(lattice, initialSites, index1, index2);
+	extern IMatrix IndexMatrix;
+	// find out G(index1, index2) is the nth elements of v_{Kc} (nth starts from 0)
+	int nth = IndexMatrix(index1, index2);
+	rowIndex += nth;
+	RightSide(rowIndex, 0)=dcomplex(1.0, 0.0);
+
+	//solve the linear equation
+	solveDenseLinearEqs(LeftSide,RightSide,VKCenter);
+
+}
 
 //
 //

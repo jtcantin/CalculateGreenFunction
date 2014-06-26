@@ -87,6 +87,42 @@ public:
 		return dim;
 	}
 
+	// obtain the sum of all coordinates
+	int getSum() {
+		int result = 0;
+		switch (dim) {
+		case 1:
+			result = coordinates[0] + coordinates[1];
+			break;
+		case 2:
+			result = coordinates[0] + coordinates[1]
+			         + coordinates[2] + coordinates[3];
+			break;
+		case 3:
+			break;
+		}
+		return result;
+	}
+
+	bool operator==(Basis& other) {
+		bool result=false;
+		switch (dim) {
+		case 1:
+			result = (coordinates[0]== other.coordinates[0])
+			         &&(coordinates[1]== other.coordinates[1]);
+			break;
+		case 2:
+			result = (coordinates[0]== other.coordinates[0])
+	                 &&(coordinates[1]== other.coordinates[1])
+	                 &&(coordinates[2]== other.coordinates[2])
+	                 &&(coordinates[3]== other.coordinates[3]);
+			break;
+		case 3:
+			break;
+		}
+		return result;
+	}
+
 private:
 	int *coordinates;
 	int dim;

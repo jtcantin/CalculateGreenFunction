@@ -43,4 +43,9 @@ void solveVKCenter(RecursionData& recursionData, dcomplex z,
 		           CDMatrix& ATildeKLeftStop, CDMatrix& AKRightStop,
 		           CDMatrix& VKCenter);
 
+void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
+		                      InteractionData& interactionData,
+		                      const std::vector<dcomplex>& zList,
+		                      std::vector<double>& rhoList);
+
 #endif /* RECURSIVECALCULATION_HPP_ */

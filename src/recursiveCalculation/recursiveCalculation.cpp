@@ -410,18 +410,34 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		                      InteractionData& interactionData,
 		                      const std::vector<dcomplex>& zList,
 		                      std::vector<double>& rhoList) {
-	dcomplex z;
-//	CDMatrix Vnc;
-//	AlphaBeta ab(pars);
-//
-//	int nth;
-//	rhoList.clear();
-//	for (int i=0; i<zList.size(); ++i) {
-//		z = zList[i];
-//		Vnc = solveVnc(ni1,ni2,z,ab);
-//		nth = getIndex(pars.nmax, ni1+ni2, ni1, ni2);
-//		rhoList.push_back(-Vnc(nth,0).imag/M_PI);
-//	}
+
+	RecursionData recursionData;
+	setUpRecursion(lattice,  interactionData, initialSites, recursionData);
+
+	rhoList.clear();
+	for (int i=0; i<zList.size(); ++i) {
+		dcomplex z = zList[i];
+
+		CDMatrix ATildeKLeftStop;
+		fromLeftToCenter(recursionData, z, ATildeKLeftStop, false);
+//		std::cout<< "ATildeKLeftStop OK" << std::endl;
+
+		CDMatrix AKRightStop;
+		fromRightToCenter(recursionData, z, AKRightStop, false);
+//		std::cout<< "AKRightStop OK" << std::endl;
+
+		CDMatrix VKCenter;
+		solveVKCenter(recursionData, z, ATildeKLeftStop, AKRightStop, VKCenter);
+//		std::cout<< "VKCenter OK" << std::endl;
+
+		dcomplex gf = VKCenter(recursionData.indexForNonzero,0);
+//		std::cout<< "gf OK" << std::endl;
+
+		double rho = -gf.imag()/M_PI;
+		rhoList.push_back(rho);
+	}
+
+
 }
 
 

@@ -100,3 +100,25 @@ TEST(SolveVKCenter, RunningOK) {
 	EXPECT_TRUE(true);
 }
 
+
+TEST(GeneratingDensityOfStates, RunningOK) {
+	LatticeShape lattice1D(1);
+	int xmax = 120;
+	lattice1D.setXmax(xmax); //xsite = xmax + 1
+	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,1,230};
+	Basis initialSites(xmax/2, xmax/2 + 1);
+	std::vector<dcomplex> zList(101);
+	std::vector<double> zRealList = linspace(-50,50,101);
+	for (int i=0; i<zList.size(); ++i) {
+		//zRealList[i]=-50 + i;
+		zList[i].real() = zRealList[i];
+		zList[i].imag() = 0.1;
+	}
+	std::vector<double> rhoList;
+
+	calculateDensityOfState(lattice1D, initialSites,
+			                 interactionData,
+			                 zList, rhoList);
+	save_two_arrays("rho_vs_energy.txt", zRealList, rhoList);
+	EXPECT_TRUE(true);
+}

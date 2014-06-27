@@ -35,7 +35,6 @@ TEST(FromRightToCenter, RunningOK) {
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,2,230};
-	int maxDistance = interactionData.maxDistance;
 	Basis initialSites(60,61);
 	RecursionData recursionData;
 
@@ -57,7 +56,6 @@ TEST(FromLeftToCenter, RunningOK) {
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,2,230};
-	int maxDistance = interactionData.maxDistance;
 	Basis initialSites(60,61);
 	RecursionData recursionData;
 
@@ -79,7 +77,6 @@ TEST(SolveVKCenter, RunningOK) {
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
-	int maxDistance = interactionData.maxDistance;
 	Basis initialSites(60,61);
 	RecursionData recursionData;
 

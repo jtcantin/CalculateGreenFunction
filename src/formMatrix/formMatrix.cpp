@@ -19,9 +19,16 @@ LatticeShape *pLattice;
 
 // call this before forming the matrices
 void setInteractions(LatticeShape& lattice, InteractionData& interactionData) {
+	// destroy the Interaction object pointed by pInteraction
+//	if (pLattice!=NULL) {
+//		std::cout<<"Deallocate previously created LatticeShape objects"<<std::endl;
+//		pLattice->~LatticeShape();
+//	}
 	pLattice = &lattice;
+
 	// destroy the Interaction object pointed by pInteraction
 	if (pInteraction!=NULL) {
+		//std::cout<<"Deallocate previously created Interaction objects"<<std::endl;
 		pInteraction->~Interaction();
 	}
 	pInteraction = new Interaction(lattice, interactionData);

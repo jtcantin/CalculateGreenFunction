@@ -235,6 +235,10 @@ public:
 		array.resize(dimension);
 	}
 
+	~LatticeShape() {
+		array.clear();
+	}
+
 private:
 	int dimension;
 	std::vector<int> array; // to store [ xmax,  [ymax,  [zmax] ]]

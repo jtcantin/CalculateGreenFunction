@@ -401,72 +401,30 @@ void solveVKCenter(RecursionData& recursionData, dcomplex z,
 	solveDenseLinearEqs(LeftSide,RightSide,VKCenter);
 }
 
-//
-//
-//
-////CDMatrix solveVnc(int ni1, int ni2, complex_double z, Parameters& pars) {
-////	AlphaBeta ab(pars);
-//CDMatrix solveVnc(int ni1, int ni2, complex_mkl z, AlphaBeta& ab, bool saved) {
-//	//	AlphaBeta ab(pars);
-//	// to speed up, we can make ab static --- but it doesn't work
-//	//static AlphaBeta ab(pars);
-//	int Kc = ni1 + ni2;
-//	CDMatrix alphanc;
-//	CDMatrix betanc;
-//	ab.FillAlphaBetaMatrix(Kc,z,alphanc, betanc);
-//	CDMatrix AncPlusOne = fromRightToCenter(Kc,z,ab, saved);
-//	CDMatrix AncMinusOneTilde = fromLeftToCenter(Kc,z,ab, saved);
-//	CDMatrix mat1 = alphanc*AncMinusOneTilde;
-//	mat1.AddInPlace(betanc*AncPlusOne);
-//	changeElements(mat1);
-//
-//	// calculate the dimension of the const vector C
-//	int nsum = Kc;
-//	int nth = 0;
-//	int m;
-//	for (int i=0; i<= nsum/2; ++i) {
-//		int j = nsum - i; // i+j = nsum
-//		if (j>i && j<=ab.GetNmax()) {
-//			if (i==ni1 && j==ni2) {
-//				m = nth;
-//			}
-//			nth++;
-//		}
-//	}
-//
-//
-//	CDMatrix constVector(nth, 1, true);
-//	complex_mkl denominator =  ab.GetFactor(ni1, ni2, z);
-//	//constVector(m,0) = complex_double(1.0, 0.0)/denominator;
-//	double square = denominator.real*denominator.real + denominator.imag*denominator.imag;
-//	constVector(m,0).real = denominator.real/square;
-//	constVector(m,0).imag = -denominator.imag/square;
-//
-//	solveLinearEqs(mat1, constVector); // now constVector contains the solution
-//	return constVector;
-//}
-//
-//
 
-//
-//
-//
-//void generateDensityOfState(int ni1, int ni2, Parameters& pars, const std::vector<complex_mkl>& zList, std::vector<double>& rhoList) {
-//	complex_mkl z;
+
+/**
+ * calculate density of state at the initial sites
+ */
+void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
+		                      InteractionData& interactionData,
+		                      const std::vector<dcomplex>& zList,
+		                      std::vector<double>& rhoList) {
+	dcomplex z;
 //	CDMatrix Vnc;
 //	AlphaBeta ab(pars);
 //
 //	int nth;
-//	rhoList.empty();
+//	rhoList.clear();
 //	for (int i=0; i<zList.size(); ++i) {
 //		z = zList[i];
 //		Vnc = solveVnc(ni1,ni2,z,ab);
 //		nth = getIndex(pars.nmax, ni1+ni2, ni1, ni2);
 //		rhoList.push_back(-Vnc(nth,0).imag/M_PI);
 //	}
-//}
-//
-//
+}
+
+
 
 //
 //// calculate all the matrix elements of the Green function < i, j | G | m, n> where m and n are fixed

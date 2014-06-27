@@ -36,6 +36,7 @@
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0/include"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/eigen"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/intel/composer_xe_2013_sp1/mkl/include"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/boost_1_55_0"/>
 								</option>
 								<inputType id="intel.c.compilestep.input.168086142" superClass="intel.c.compilestep.input"/>
 							</tool>

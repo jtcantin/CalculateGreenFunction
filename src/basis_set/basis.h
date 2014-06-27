@@ -16,6 +16,8 @@
 #include "../Utility/types.h"
 #include "../Utility/misc.h"
 
+#include <boost/shared_ptr.hpp> //include boost library
+
 
 class Basis {
 public:
@@ -70,6 +72,7 @@ public:
 	~Basis() {
 		if (coordinates!=NULL) {
 			delete [] coordinates;
+			//std::cout << "Deallocate the memory of the basis" << std::endl;
 		}
 	}
 
@@ -128,13 +131,17 @@ private:
 	int dim;
 };
 
+typedef boost::shared_ptr<Basis> BasisPointer;
+
 typedef std::vector< Basis > Neighbors;
 
 /*************************** global variables ***********************/
 //for 1D case: VtoG[K, nth] = G(x1,x2) or basis(x1,x2)
 //for 2D case: VtoG[K, nth] = G(x1, y1, x2, y2) or basis(x1,y1,x2,y2)
 // each element of VtoG is a basis type (an array of size 2 or 4)
-extern Basis **VtoG;
+//extern Basis **VtoG;
+
+extern std::vector< std::vector<BasisPointer> > VtoG;
 
 // to store the dimension of V = ( .., G(i-1,j+1), G(i,j), ...)
 extern std::vector<int> DimsOfV;

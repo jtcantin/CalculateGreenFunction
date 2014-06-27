@@ -150,7 +150,7 @@ TEST(GenerateIndexMatrixTest, FourSites) {
 	int xmax = 3;
 	LatticeShape lattice1D(1);
 	lattice1D.setXmax(xmax);
-	extern Basis **VtoG;
+	extern std::vector< std::vector<BasisPointer> > VtoG;
 	extern std::vector<int> DimsOfV;
 	extern IMatrix IndexMatrix;
 
@@ -176,23 +176,34 @@ TEST(GenerateIndexMatrixTest, FourSites) {
 	EXPECT_EQ(DimsOfV[4],1);
 	EXPECT_EQ(DimsOfV[5],1);
 
+	BasisPointer p = VtoG[1][0];
+	Basis basis = *p;
+	EXPECT_EQ(basis[0],0); // K = 1
+	EXPECT_EQ(basis[1],1);
 
-	EXPECT_EQ(VtoG[1][0][0],0); // K = 1
-	EXPECT_EQ(VtoG[1][0][1],1);
+	p = VtoG[2][0];
+	basis = *p;
+	EXPECT_EQ(basis[0],0); // K = 2
+	EXPECT_EQ(basis[1],2);
 
-	EXPECT_EQ(VtoG[2][0][0],0); // K = 2
-	EXPECT_EQ(VtoG[2][0][1],2);
+	p = VtoG[3][0];
+	basis = *p;
+	EXPECT_EQ(basis[0],0); // K = 3
+	EXPECT_EQ(basis[1],3);
+	p = VtoG[3][1];
+	basis = *p;
+	EXPECT_EQ(basis[0],1);
+	EXPECT_EQ(basis[1],2);
 
-	EXPECT_EQ(VtoG[3][0][0],0); // K = 3
-	EXPECT_EQ(VtoG[3][0][1],3);
-	EXPECT_EQ(VtoG[3][1][0],1);
-	EXPECT_EQ(VtoG[3][1][1],2);
+	p = VtoG[4][0];
+	basis = *p;
+	EXPECT_EQ(basis[0],1); // K = 4
+	EXPECT_EQ(basis[1],3);
 
-	EXPECT_EQ(VtoG[4][0][0],1); // K = 4
-	EXPECT_EQ(VtoG[4][0][1],3);
-
-	EXPECT_EQ(VtoG[5][0][0],2); // K = 5
-	EXPECT_EQ(VtoG[5][0][1],3);
+	p = VtoG[5][0];
+	basis = *p;
+	EXPECT_EQ(basis[0],2); // K = 5
+	EXPECT_EQ(basis[1],3);
 }
 
 

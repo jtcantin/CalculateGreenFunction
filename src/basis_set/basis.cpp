@@ -72,7 +72,8 @@ double distance(Basis& b1, Basis& b2) {
 //for 1D case: VtoG[K, nth] = G(x1,x2) or basis(x1,x2)
 //for 2D case: VtoG[K, nth] = G(x1, y1, x2, y2) or basis(x1,y1,x2,y2)
 // each element of VtoG is a basis type (an array of size 2 or 4)
-Basis **VtoG;
+//Basis **VtoG;
+std::vector< std::vector<BasisPointer> > VtoG;
 
 // to store the dimension of V = ( .., G(i-1,j+1), G(i,j), ...)
 std::vector<int> DimsOfV;
@@ -170,6 +171,8 @@ void generateNeighbors(Basis basis, int distance, LatticeShape& lattice,
 
 // see the above documentation for VtoG, DimsOfV, and Index
 void generateIndexMatrix(LatticeShape& lattice) {
+	VtoG.clear();
+	DimsOfV.clear();
 	int dim = lattice.getDim();
 	switch (dim) {
 		// for the 1D case
@@ -180,7 +183,8 @@ void generateIndexMatrix(LatticeShape& lattice) {
 			IndexMatrix = IMatrix(nsite, nsite);
 			// allocate space for VtoG
 			//VtoG = PairMatrix(xmax+xmax, xmax+1);
-			VtoG = new Basis*[xmax+xmax];
+			//VtoG = new Basis*[xmax+xmax];
+			VtoG.resize(xmax+xmax);
 			DimsOfV.resize(xmax+xmax); //K=xsum is from 1 to xmax+xmax-1
 			// set all dimension to be zero initially
 			for (int i=0; i<DimsOfV.size(); ++i) {
@@ -198,7 +202,8 @@ void generateIndexMatrix(LatticeShape& lattice) {
 					}
 				}
 				DimsOfV[xsum] = nth;
-				VtoG[xsum] = new Basis[nth+1]; //index from 0 to nth
+				//VtoG[xsum] = new Basis[nth+1]; //index from 0 to nth
+				VtoG[xsum].resize(nth+1);
 			}
 
 			// store each V as a row in VtoG
@@ -207,8 +212,9 @@ void generateIndexMatrix(LatticeShape& lattice) {
 				for (int i=0; i<= xsum/2; ++i) {
 					int j = xsum - i; // i+j = xsum
 					if (j>i && j<=xmax) {
-						Basis basis(i,j);
-						VtoG[xsum][nth] = basis; //createBasis(i,j); // mapping from (K, nth) to (i,j)
+						//Basis basis(i,j);
+						//VtoG[xsum][nth] = basis; //createBasis(i,j); // mapping from (K, nth) to (i,j)
+						VtoG[xsum][nth].reset(new Basis(i,j));
 						nth++;
 					}
 				}

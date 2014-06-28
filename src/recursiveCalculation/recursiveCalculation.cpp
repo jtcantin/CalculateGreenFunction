@@ -20,6 +20,8 @@ void deleteMatrixFiles(std::string files) {
  */
 void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X) {
 	X = A.colPivHouseholderQr().solve(B);
+	// try the following slower but more accurate solver
+	//X = A.fullPivHouseholderQr().solve(B);
 }
 
 
@@ -33,6 +35,10 @@ void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 	recursionData.maxDistance = maxDistance;
 	switch (lattice.getDim()) {
 	case 1:
+		// calculate the indexMatrix and set up the interaction matrix
+		generateIndexMatrix(lattice);
+		setInteractions(lattice, interactionData);
+
 		int Kmin = 1;
 		int Kmax = 2*lattice.getXmax() - 1;
 		int Kc = initialSites.getSum(); //initialSites[0] + initialSites[1];
@@ -84,10 +90,6 @@ void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		rowIndex += nth;
 		recursionData.indexForNonzero = rowIndex;
 
-
-		// calculate the indexMatrix and set up the interaction matrix
-		generateIndexMatrix(lattice);
-		setInteractions(lattice, interactionData);
 		break;
 	case 2:
 		break;
@@ -397,6 +399,12 @@ void solveVKCenter(RecursionData& recursionData, dcomplex z,
 	CDMatrix RightSide = CDMatrix::Zero(recursionData.Csize, 1);
 	RightSide(recursionData.indexForNonzero, 0)=dcomplex(1.0, 0.0);
 
+//	std::cout << "OK before solving the linear equation" << std::endl;
+//	std::cout << "LeftSide: " << LeftSide.rows() <<"X" << LeftSide.cols() << std::endl;
+//	std::cout << "RightSide: " << RightSide.rows() <<"X" << RightSide.cols() << std::endl;
+//	std::cout << "KCenter: " << recursionData.KCenter << std::endl;
+//	std::cout << "DimsOfV[KCenter]: " << DimsOfV[recursionData.KCenter]<< std::endl;
+//	std::cout << "CSize: " << recursionData.Csize << std::endl;
 	//solve the linear equation
 	solveDenseLinearEqs(LeftSide,RightSide,VKCenter);
 }

@@ -74,9 +74,9 @@ TEST(FromLeftToCenter, RunningOK) {
 
 TEST(SolveVKCenter, RunningOK) {
 	LatticeShape lattice1D(1);
-	int xmax = 120;
+	int xmax = 121;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,1,230};
 	Basis initialSites(60,61);
 	RecursionData recursionData;
 
@@ -103,14 +103,14 @@ TEST(SolveVKCenter, RunningOK) {
 
 TEST(GeneratingDensityOfStates, RunningOK) {
 	LatticeShape lattice1D(1);
-	int xmax = 120;
+	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,1,230};
+	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,4,230};
 	Basis initialSites(xmax/2, xmax/2 + 1);
-	std::vector<dcomplex> zList(101);
-	std::vector<double> zRealList = linspace(-50,50,101);
+	int zsize = 201;
+	std::vector<dcomplex> zList(zsize);
+	std::vector<double> zRealList = linspace(-50,50,zsize);
 	for (int i=0; i<zList.size(); ++i) {
-		//zRealList[i]=-50 + i;
 		zList[i].real() = zRealList[i];
 		zList[i].imag() = 0.1;
 	}

@@ -206,6 +206,18 @@ TEST(GenerateIndexMatrixTest, FourSites) {
 	EXPECT_EQ(basis[1],3);
 }
 
+TEST(GenerateIndexMatrixTest, Sites121) {
+	int xmax = 121;
+	LatticeShape lattice1D(1);
+	lattice1D.setXmax(xmax);
+	extern std::vector< std::vector<BasisPointer> > VtoG;
+	extern std::vector<int> DimsOfV;
+	extern IMatrix IndexMatrix;
+
+	generateIndexMatrix(lattice1D);
+	int i = DimsOfV[121];
+	EXPECT_EQ(i,61);
+}
 
 TEST(GetLatticeIndex, TestPointerArgument) {
 	int xmax = 99;

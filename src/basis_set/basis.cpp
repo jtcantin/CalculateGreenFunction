@@ -182,8 +182,6 @@ void generateIndexMatrix(LatticeShape& lattice) {
 			int nsite = xmax + 1; //total number of sites
 			IndexMatrix = IMatrix(nsite, nsite);
 			// allocate space for VtoG
-			//VtoG = PairMatrix(xmax+xmax, xmax+1);
-			//VtoG = new Basis*[xmax+xmax];
 			VtoG.resize(xmax+xmax);
 			DimsOfV.resize(xmax+xmax); //K=xsum is from 1 to xmax+xmax-1
 			// set all dimension to be zero initially
@@ -202,8 +200,7 @@ void generateIndexMatrix(LatticeShape& lattice) {
 					}
 				}
 				DimsOfV[xsum] = nth;
-				//VtoG[xsum] = new Basis[nth+1]; //index from 0 to nth
-				VtoG[xsum].resize(nth+1);
+				VtoG[xsum].resize(nth+1);  //index from 0 to nth
 			}
 
 			// store each V as a row in VtoG
@@ -212,9 +209,7 @@ void generateIndexMatrix(LatticeShape& lattice) {
 				for (int i=0; i<= xsum/2; ++i) {
 					int j = xsum - i; // i+j = xsum
 					if (j>i && j<=xmax) {
-						//Basis basis(i,j);
-						//VtoG[xsum][nth] = basis; //createBasis(i,j); // mapping from (K, nth) to (i,j)
-						VtoG[xsum][nth].reset(new Basis(i,j));
+						VtoG[xsum][nth].reset(new Basis(i,j)); // mapping from (K, nth) to (i,j)
 						nth++;
 					}
 				}

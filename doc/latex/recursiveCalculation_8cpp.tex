@@ -1,0 +1,121 @@
+\section{src/recursive\-Calculation/recursive\-Calculation.cpp File Reference}
+\label{recursiveCalculation_8cpp}\index{src/recursiveCalculation/recursiveCalculation.cpp@{src/recursiveCalculation/recursiveCalculation.cpp}}
+{\tt \#include \char`\"{}recursive\-Calculation.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+void \bf{delete\-Matrix\-Files} (std::string files)
+\item 
+void \bf{solve\-Dense\-Linear\-Eqs} (\bf{CDMatrix} \&A, \bf{CDMatrix} \&B, \bf{CDMatrix} \&X)
+\item 
+void \bf{set\-Up\-Recursion} (\bf{Lattice\-Shape} \&lattice, \bf{Interaction\-Data} \&interaction\-Data, \bf{Basis} \&initial\-Sites, \bf{Recursion\-Data} \&recursion\-Data)
+\item 
+void \bf{from\-Right\-To\-Center} (\bf{Recursion\-Data} \&recursion\-Data, \bf{dcomplex} z, \bf{CDMatrix} \&AKRight\-Stop, bool save\-AMatrices)
+\item 
+void \bf{from\-Left\-To\-Center} (\bf{Recursion\-Data} \&recursion\-Data, \bf{dcomplex} z, \bf{CDMatrix} \&ATilde\-KLeft\-Stop, bool save\-AMatrices)
+\item 
+void \bf{solve\-VKCenter} (\bf{Recursion\-Data} \&recursion\-Data, \bf{dcomplex} z, \bf{CDMatrix} \&ATilde\-KLeft\-Stop, \bf{CDMatrix} \&AKRight\-Stop, \bf{CDMatrix} \&VKCenter)
+\item 
+void \bf{calculate\-Density\-Of\-State} (\bf{Lattice\-Shape} \&lattice, \bf{Basis} \&initial\-Sites, \bf{Interaction\-Data} \&interaction\-Data, const std::vector$<$ \bf{dcomplex} $>$ \&z\-List, std::vector$<$ double $>$ \&rho\-List)
+\end{CompactItemize}
+
+
+\subsection{Function Documentation}
+\index{recursiveCalculation.cpp@{recursive\-Calculation.cpp}!calculateDensityOfState@{calculateDensityOfState}}
+\index{calculateDensityOfState@{calculateDensityOfState}!recursiveCalculation.cpp@{recursive\-Calculation.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void calculate\-Density\-Of\-State (\bf{Lattice\-Shape} \& {\em lattice}, \bf{Basis} \& {\em initial\-Sites}, \bf{Interaction\-Data} \& {\em interaction\-Data}, const std::vector$<$ \bf{dcomplex} $>$ \& {\em z\-List}, std::vector$<$ double $>$ \& {\em rho\-List})}\label{recursiveCalculation_8cpp_606df39775b7266829a71b5550656fb1}
+
+
+calculate density of state at the initial sites \index{recursiveCalculation.cpp@{recursive\-Calculation.cpp}!deleteMatrixFiles@{deleteMatrixFiles}}
+\index{deleteMatrixFiles@{deleteMatrixFiles}!recursiveCalculation.cpp@{recursive\-Calculation.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void delete\-Matrix\-Files (std::string {\em files})}\label{recursiveCalculation_8cpp_09bb0743532eb10149446411001b1a13}
+
+
+clean up binary files that are used to save the matrices \index{recursiveCalculation.cpp@{recursive\-Calculation.cpp}!fromLeftToCenter@{fromLeftToCenter}}
+\index{fromLeftToCenter@{fromLeftToCenter}!recursiveCalculation.cpp@{recursive\-Calculation.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void from\-Left\-To\-Center (\bf{Recursion\-Data} \& {\em recursion\-Data}, \bf{dcomplex} {\em z}, \bf{CDMatrix} \& {\em ATilde\-KLeft\-Stop}, bool {\em save\-AMatrices})}\label{recursiveCalculation_8cpp_688998cb6b3bb9cb3a37353ee115f303}
+
+
+recursive calculation from the left boundary to the center
+
+must call set\-Up\-Recursion before calling this function 
+
+The recursive relation is given by: W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-max\-Distance\} + beta\_\-\{K\}$\ast$V\_\-\{K+max\-Distance\} where V\_\-\{K\} = [v\_\-\{K\}, v\_\-\{K+1\}, ..., v\_\-\{K+max\-Distance-1\}] and v\_\-\{K\} is composed of the Green's functions whose parameters adds up to K (for example in 1D, v\_\-\{5\} is [G(0,5), G(1,4), G(2, 3)] )
+
+At the left-most end, the index K = KLeft\-Start = Kmin = 1;
+
+V\_\-\{1\} = [v\_\-1, v\_\-2, ..., v\_\-\{max\-Distance\}], V\_\-\{max\-Distance+1\} = [v\_\-\{max\-Distance+1\}, v\_\-\{max\-Distance+2\}, ..., v\_\-\{2$\ast$max\-Distance\}], V\_\-\{2$\ast$max\-Distance+1\} = [..., V\_\-\{3$\ast$max\-Distance\}] V\_\-\{(N-1)$\ast$max\-Distance+1\} = [..., V\_\-\{N$\ast$max\-Distance\}]
+
+Assuming V\_\-\{K-max\-Distance\} = 0 in the recursive relation for K=KLeft\-Start, we obtain: W\_\-\{KLeft\-Start\}$\ast$V\_\-\{KLeft\-Start\} = beta\_\-\{KLeft\-Start\}$\ast$V\_\-\{KLeft\-Start+max\-Distance\} Based on the definition: V\_\-\{K\} = ATilde\_\-\{K\} $\ast$ V\_\-\{K+max\-Distance\}, we obtain: W\_\-\{KLeft\-Start\} $\ast$ ATilde\_\-\{KLeft\-Start\} = beta\_\-\{KLeft\-Start\}
+
+This equation can be solved to give ATilde\_\-\{KLeft\-Start\}
+
+W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-max\-Distance\} + beta\_\-\{K\}$\ast$V\_\-\{K+max\-Distance\} let's simplify the notation: W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-\} + beta\_\-\{K\}$\ast$V\_\-\{K+\}
+
+Now knowing the A\_\-\{KLeft\-Start\} or ATilde\-KMinus, we can recursively calculate ATilde, ... until ATilde\-KLeft\-Stop
+
+Start with the recursion relation W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-\} + beta\_\-\{K\}$\ast$V\_\-\{K+\}
+
+Once we know ATilde\_\-\{K-\}, we can express V\_\-\{K-\} in terms of V\_\-\{K\}, that is, V\_\-\{K-\} = ATilde\_\-\{K-\}$\ast$V\_\-\{K\}. Substituting this into the above recursion relation, we obtain: W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$ATilde\_\-\{K-\}$\ast$V\_\-\{K\} + beta\_\-\{K\}$\ast$V\_\-\{K+\}.
+
+Because of V\_\-\{K\} = ATilde\_\-\{K\} V\_\-\{K+\}, the above equation can be rewritten as W\_\-\{K\}$\ast$ATilde\_\-\{K\} V\_\-\{K+\} = alpha\_\-\{K\}$\ast$ATilde\_\-\{K-\}$\ast$ATilde\_\-\{K\} V\_\-\{K+\} + beta\_\-\{K\}$\ast$A\_\-\{K+\} . Therefore, W\_\-\{K\}$\ast$ATilde\_\-\{K\} = alpha\_\-\{K\}$\ast$ATilde\_\-\{K-\}$\ast$ATilde\_\-\{K\} + beta\_\-\{K\}
+
+==$>$ ( W\_\-\{K\} - alpha\_\-\{K\}$\ast$ATilde\_\-\{K-\} ) $\ast$ ATilde\_\-\{K\} = beta\_\-\{K\}
+
+Then ATilde\_\-\{K\} can be obtained by solving the above linear equations \index{recursiveCalculation.cpp@{recursive\-Calculation.cpp}!fromRightToCenter@{fromRightToCenter}}
+\index{fromRightToCenter@{fromRightToCenter}!recursiveCalculation.cpp@{recursive\-Calculation.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void from\-Right\-To\-Center (\bf{Recursion\-Data} \& {\em recursion\-Data}, \bf{dcomplex} {\em z}, \bf{CDMatrix} \& {\em AKRight\-Stop}, bool {\em save\-AMatrices})}\label{recursiveCalculation_8cpp_1a03ed5a49ba999850f231f2f81b32a5}
+
+
+recursive calculation from right boundary to the center
+
+must call set\-Up\-Recursion before calling this function 
+
+The recursive relation is given by: W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-max\-Distance\} + beta\_\-\{K\}$\ast$V\_\-\{K+max\-Distance\} where V\_\-\{K\} = [v\_\-\{K\}, v\_\-\{K+1\}, ..., v\_\-\{K+max\-Distance-1\}] and v\_\-\{K\} is composed of the Green's functions whose parameters adds up to K (for example in 1D, v\_\-\{5\} is [G(0,5), G(1,4), G(2, 3)] )
+
+At the right-most end, the index K = KRight\-Start. But KRight\-Start is not necessarily equal to Kmax (the largest value that K can take). What we can say is that Kmax is one of \{KRight\-Stop, KRight\-Stop+1, ..., KRight\-Stop+max\-Distance-1\}. Similarly, KRight\-Stop-1 is not necessarily equal to the summation of initial indexes. For example, in 1D, we want to calculate G(n, m, n', m'), Kc = n' + m', but KRight\-Stop may be != Kc + 1. We can only say that V\_\-\{KRight\-Stop-1\} contains v\_\-\{Kc\} (that is why the recursive calculation from right must stop at KRight\-Stop)
+
+For the convenience of calculation, we may let the Kmax to be (N$\ast$max\-Distance) so that all v\_\-\{K\} from v\_\-1 to v\_\-Kmax can be divided into V\_\-\{1\} = [v\_\-1, v\_\-2, ..., v\_\-\{max\-Distance\}], V\_\-\{max\-Distance+1\} = [v\_\-\{max\-Distance+1\}, v\_\-\{max\-Distance+2\}, ..., v\_\-\{2$\ast$max\-Distance\}], V\_\-\{2$\ast$max\-Distance+1\} = [..., V\_\-\{3$\ast$max\-Distance\}] V\_\-\{(N-1)$\ast$max\-Distance+1\} = [..., V\_\-\{N$\ast$max\-Distance\}]
+
+Assuming V\_\-\{K+max\-Distance\} = 0 in the recursive relation for K=KRight\-Start, we obtain: W\_\-\{KRight\-Start\}$\ast$V\_\-\{KRight\-Start\} = alpha\_\-\{KRight\-Start\}$\ast$V\_\-\{KRight\-Start-max\-Distance\} Based on the definition: V\_\-\{K\} = A\_\-\{K\} $\ast$ V\_\-\{K-max\-Distance\}, we obtain: W\_\-\{KRight\-Start\} $\ast$ A\_\-\{KRight\-Start\} = alpha\_\-\{KRight\-Start\}
+
+This equation can be solved to give A\_\-\{KRight\-Start\}
+
+W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-max\-Distance\} + beta\_\-\{K\}$\ast$V\_\-\{K+max\-Distance\} let's simplify the notation: W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-\} + beta\_\-\{K\}$\ast$V\_\-\{K+\}
+
+Now knowing the A\_\-\{KRight\-Start\} or AKPlus, we can recursively calculate AK, AKMinus, ... until AKRight\-Stop
+
+Start with the recursion relation W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-\} + beta\_\-\{K\}$\ast$V\_\-\{K+\}
+
+Once we know A\_\-\{K+\}, we can express V\_\-\{K+\} in terms of V\_\-\{K\}, that is, V\_\-\{K+\} = A\_\-\{K+\}$\ast$V\_\-\{K\}. Substituting this into the above recursion relation, we obtain: W\_\-\{K\}$\ast$V\_\-\{K\} = alpha\_\-\{K\}$\ast$V\_\-\{K-\} + beta\_\-\{K\}$\ast$A\_\-\{K+\}$\ast$V\_\-\{K\}.
+
+Because of V\_\-\{K\} = A\_\-\{K\} V\_\-\{K-\}, the above equation can be rewritten as W\_\-\{K\}$\ast$A\_\-\{K\}$\ast$V\_\-\{K-\} = alpha\_\-\{K\}$\ast$V\_\-\{K-\} + beta\_\-\{K\}$\ast$A\_\-\{K+\}$\ast$A\_\-\{K\}$\ast$V\_\-\{K\} . Therefore, W\_\-\{K\}$\ast$A\_\-\{K\} = alpha\_\-\{K\} + beta\_\-\{K\}$\ast$A\_\-\{K+\}$\ast$A\_\-\{K\}
+
+==$>$ ( W\_\-\{K\} - beta\_\-\{K\}$\ast$A\_\-\{K+\} ) $\ast$ A\_\-\{K\} = alpha\_\-\{K\}
+
+Then A\_\-\{K\} can be obtained by solving the above linear equations \index{recursiveCalculation.cpp@{recursive\-Calculation.cpp}!setUpRecursion@{setUpRecursion}}
+\index{setUpRecursion@{setUpRecursion}!recursiveCalculation.cpp@{recursive\-Calculation.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void set\-Up\-Recursion (\bf{Lattice\-Shape} \& {\em lattice}, \bf{Interaction\-Data} \& {\em interaction\-Data}, \bf{Basis} \& {\em initial\-Sites}, \bf{Recursion\-Data} \& {\em recursion\-Data})}\label{recursiveCalculation_8cpp_d26ca3ee87a9f745d2593ca8e8f089d0}
+
+
+set up the precondition for the recursive calculations: from\-Right\-To\-Center and from\-Left\-To\-Center 
+
+To find out KRight\-Start, we start from V\_\-\{KRight\-Stop\}=[ v\_\-\{KRight\-Stop\}, v\_\-\{KRight\-Stop+1\}, ..., v\_\-\{KRight\-Stop+max\-Distance-1\} ]. We can let K = KRight\-Stop+max\-Distance-1 and increase K by max\-Distance each time until K $>$ Kmax, then the value of KRight\-Start is given by current\_\-value\_\-of\_\-K - max\-Distance - (max\-Distance-1) \index{recursiveCalculation.cpp@{recursive\-Calculation.cpp}!solveDenseLinearEqs@{solveDenseLinearEqs}}
+\index{solveDenseLinearEqs@{solveDenseLinearEqs}!recursiveCalculation.cpp@{recursive\-Calculation.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void solve\-Dense\-Linear\-Eqs (\bf{CDMatrix} \& {\em A}, \bf{CDMatrix} \& {\em B}, \bf{CDMatrix} \& {\em X})}\label{recursiveCalculation_8cpp_f519514f8f6d6155af66d593f73e4e1d}
+
+
+solve the linear equation A$\ast$X = B \index{recursiveCalculation.cpp@{recursive\-Calculation.cpp}!solveVKCenter@{solveVKCenter}}
+\index{solveVKCenter@{solveVKCenter}!recursiveCalculation.cpp@{recursive\-Calculation.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void solve\-VKCenter (\bf{Recursion\-Data} \& {\em recursion\-Data}, \bf{dcomplex} {\em z}, \bf{CDMatrix} \& {\em ATilde\-KLeft\-Stop}, \bf{CDMatrix} \& {\em AKRight\-Stop}, \bf{CDMatrix} \& {\em VKCenter})}\label{recursiveCalculation_8cpp_e097b7a86f8594f1b00c6f8c99c17a08}
+
+
+solve for the Vector VKCenter given AKRight\-Stop and ATilde\-KLeft\-Stop
+
+W\_\-\{KCenter\}$\ast$V\_\-\{KCenter\} = alpha\_\-\{KCenter\}$\ast$V\_\-\{KCenter-max\-Distance\} + beta\_\-\{KCenter\}$\ast$V\_\-\{KCenter+max\-Distance\} + C Knowing A\_\-\{KRight\-Stop\} = A\_\-\{KCenter+max\-Distance\}, we can obtain V\_\-\{KCenter+max\-Distance\} by V\_\-\{KCenter+max\-Distance\} = A\_\-\{KRight\-Stop\}$\ast$V\_\-\{KCenter\}
+
+Knowing ATilde\_\-\{KLeft\-Stop\} = ATilde\_\-\{KCenter-max\-Distance\}, we have V\_\-\{KCenter-max\-Distance\} = ATilde\_\-\{KLeft\-Stop\}$\ast$V\_\-\{KCenter\}
+
+Substituting the above two equations into the first equation, we obtain [ W\_\-\{KCenter\} - alpha\_\-\{KCenter\}$\ast$ATilde\_\-\{KLeft\-Stop\} - beta\_\-\{KCenter\}$\ast$A\_\-\{KRight\-Stop\}]$\ast$V\_\-\{KCenter\} = C
+
+Then V\_\-\{KCenter\} can be obtained by solving the above linear equation 

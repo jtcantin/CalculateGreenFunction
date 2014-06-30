@@ -1,0 +1,73 @@
+\section{src/direct\-Calculation/direct\_\-calculation.h File Reference}
+\label{direct__calculation_8h}\index{src/directCalculation/direct_calculation.h@{src/directCalculation/direct\_\-calculation.h}}
+{\tt \#include \char`\"{}../Utility/types.h\char`\"{}}\par
+{\tt \#include \char`\"{}../basis\_\-set/basis.h\char`\"{}}\par
+{\tt \#include \char`\"{}../form\-Matrix/form\-Matrix.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+void \bf{form\-All\-Basis\-Sets} (\bf{Lattice\-Shape} \&lattice, \bf{IMatrix} \&basis\-Index, std::vector$<$ \bf{Basis} $>$ \&basis\-Sets)
+\item 
+void \bf{form\-Hamiltonian\-Matrix} (\bf{Lattice\-Shape} \&lattice, \bf{DMatrix} \&hamiltonian, \bf{IMatrix} \&basis\-Index, std::vector$<$ \bf{Basis} $>$ \&basis\-Sets)
+\item 
+void \bf{obtain\-Eigen\-Vectors} (\bf{DMatrix} \&hamiltonian, \bf{DVector} \&eigen\-Values, \bf{DMatrix} \&eigen\-Vectors)
+\item 
+void \bf{numerator\-Helper} (\bf{Lattice\-Shape} \&lattice, \bf{Basis} \&bra, \bf{Basis} \&ket, \bf{IMatrix} \&basis\-Index, \bf{DMatrix} \&eigen\-Vectors, \bf{CDArray} \&numerator)
+\item 
+void \bf{denominator\-Helper} (\bf{dcomplex} z, \bf{DVector} \&eigen\-Values, \bf{CDArray} \&one\-Over\-Denominator)
+\item 
+\bf{dcomplex} \bf{green\-Func\-Helper} (\bf{CDArray} \&numerator, \bf{CDArray} \&one\-Over\-Denominator)
+\item 
+void \bf{green\-Func\_\-direct} (\bf{Lattice\-Shape} \&lattice, \bf{Basis} \&bra, \bf{Basis} \&ket, std::vector$<$ \bf{dcomplex} $>$ \&z\-List, std::vector$<$ \bf{dcomplex} $>$ \&gf\-List)
+\item 
+void \bf{density\-Of\-State\_\-direct} (\bf{Lattice\-Shape} \&lattice, \bf{Basis} \&basis, std::vector$<$ \bf{dcomplex} $>$ \&z\-List, std::vector$<$ double $>$ \&dos\-List)
+\end{CompactItemize}
+
+
+\subsection{Function Documentation}
+\index{direct_calculation.h@{direct\_\-calculation.h}!denominatorHelper@{denominatorHelper}}
+\index{denominatorHelper@{denominatorHelper}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void denominator\-Helper (\bf{dcomplex} {\em z}, \bf{DVector} \& {\em eigen\-Values}, \bf{CDArray} \& {\em one\-Over\-Denominator})}\label{direct__calculation_8h_32da09796146c558ea3066caac0864a7}
+
+
+\index{direct_calculation.h@{direct\_\-calculation.h}!densityOfState_direct@{densityOfState\_\-direct}}
+\index{densityOfState_direct@{densityOfState\_\-direct}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void density\-Of\-State\_\-direct (\bf{Lattice\-Shape} \& {\em lattice}, \bf{Basis} \& {\em basis}, std::vector$<$ \bf{dcomplex} $>$ \& {\em z\-List}, std::vector$<$ double $>$ \& {\em dos\-List})}\label{direct__calculation_8h_6ded389bdf2a7892de3692b6bbaafcd2}
+
+
+calculate the density of state at (site1, site2) density\_\-of\_\-state = -Im($<$basis $|$ G(z) $|$ basis$>$)/Pi \index{direct_calculation.h@{direct\_\-calculation.h}!formAllBasisSets@{formAllBasisSets}}
+\index{formAllBasisSets@{formAllBasisSets}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void form\-All\-Basis\-Sets (\bf{Lattice\-Shape} \& {\em lattice}, \bf{IMatrix} \& {\em basis\-Index}, std::vector$<$ \bf{Basis} $>$ \& {\em basis\-Sets})}\label{direct__calculation_8h_87734694a477ec9ea1257f5112de110a}
+
+
+forming all the basis sets
+
+A two-particle basis can be generally written as basis( index\_\-for\_\-site1, index\_\-for\_\-site2 ) = basis( i, j ) In 1D, a site can be labeled by the corresponding lattice coordinate x. In 2D, a site is specified by the lattice coordinate (x,y), and it can be labeled by index = x + y$\ast$(xmax + 1). We have a function: void \doxyref{get\-Lattice\-Index(Lattice\-Shape\& lattice, Basis\& basis, int \&site1, int \&site2)}{p.}{basis_8h_c79dd08aec760821bccb305800cd4887} which can be used to calculate the index for site1 and site2 given a basis set
+
+basis\-Index(site1, site2) = nth means that the basis set with (site1, site2) is the nth basis set. \index{direct_calculation.h@{direct\_\-calculation.h}!formHamiltonianMatrix@{formHamiltonianMatrix}}
+\index{formHamiltonianMatrix@{formHamiltonianMatrix}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void form\-Hamiltonian\-Matrix (\bf{Lattice\-Shape} \& {\em lattice}, \bf{DMatrix} \& {\em hamiltonian}, \bf{IMatrix} \& {\em basis\-Index}, std::vector$<$ \bf{Basis} $>$ \& {\em basis\-Sets})}\label{direct__calculation_8h_1ce8461a389691c969adda2662ffa10e}
+
+
+\index{direct_calculation.h@{direct\_\-calculation.h}!greenFunc_direct@{greenFunc\_\-direct}}
+\index{greenFunc_direct@{greenFunc\_\-direct}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void green\-Func\_\-direct (\bf{Lattice\-Shape} \& {\em lattice}, \bf{Basis} \& {\em bra}, \bf{Basis} \& {\em ket}, std::vector$<$ \bf{dcomplex} $>$ \& {\em z\-List}, std::vector$<$ \bf{dcomplex} $>$ \& {\em gf\-List})}\label{direct__calculation_8h_34bec35a69b8b60587d5e0cfd6a25cd6}
+
+
+calculating the green function $<$bra $|$ G(z) $|$ ket$>$ \index{direct_calculation.h@{direct\_\-calculation.h}!greenFuncHelper@{greenFuncHelper}}
+\index{greenFuncHelper@{greenFuncHelper}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}\bf{dcomplex} green\-Func\-Helper (\bf{CDArray} \& {\em numerator}, \bf{CDArray} \& {\em one\-Over\-Denominator})}\label{direct__calculation_8h_8032f606b52ff11887658b30de0e0bea}
+
+
+\index{direct_calculation.h@{direct\_\-calculation.h}!numeratorHelper@{numeratorHelper}}
+\index{numeratorHelper@{numeratorHelper}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void numerator\-Helper (\bf{Lattice\-Shape} \& {\em lattice}, \bf{Basis} \& {\em bra}, \bf{Basis} \& {\em ket}, \bf{IMatrix} \& {\em basis\-Index}, \bf{DMatrix} \& {\em eigen\-Vectors}, \bf{CDArray} \& {\em numerator})}\label{direct__calculation_8h_3350271fcd1658ef080419be1938c321}
+
+
+helper functions for calculating the green function $<$bra $|$ G(z) $|$ ket$>$
+
+for 1D: $<$bra$|$ = basis(n1f, n2f) $|$ket$>$ = basis(n1i, n1i) \index{direct_calculation.h@{direct\_\-calculation.h}!obtainEigenVectors@{obtainEigenVectors}}
+\index{obtainEigenVectors@{obtainEigenVectors}!direct_calculation.h@{direct\_\-calculation.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void obtain\-Eigen\-Vectors (\bf{DMatrix} \& {\em hamiltonian}, \bf{DVector} \& {\em eigen\-Values}, \bf{DMatrix} \& {\em eigen\-Vectors})}\label{direct__calculation_8h_69c1ee48107fe681c43c3c36d22b358f}
+
+

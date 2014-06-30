@@ -42,6 +42,10 @@ typedef Eigen::VectorXcd CDVector;
 
 typedef Eigen::VectorXd DVector;
 
+typedef Eigen::ArrayXd DArray;
+
+typedef Eigen::ArrayXcd CDArray;
+
 
 
 #include <list>

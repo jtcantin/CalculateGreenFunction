@@ -103,9 +103,9 @@ TEST(SolveVKCenter, RunningOK) {
 
 TEST(GeneratingDensityOfStates, RunningOK) {
 	LatticeShape lattice1D(1);
-	int xmax = 200;
+	int xmax = 100;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,4,230};
+	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,1,230};
 	Basis initialSites(xmax/2, xmax/2 + 1);
 	int zsize = 201;
 	std::vector<dcomplex> zList(zsize);

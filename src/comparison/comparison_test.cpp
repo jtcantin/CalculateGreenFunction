@@ -5,7 +5,6 @@
  *      Author: pxiang
  */
 #include "../directCalculation/direct_calculation.h"
-#include "formMatrix.h"
 #include "../recursiveCalculation/recursiveCalculation.h"
 #include "gtest/gtest.h"
 #include "../Utility/misc.h"

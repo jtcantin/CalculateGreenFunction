@@ -52,7 +52,7 @@ TEST(FormMatrixW, RunningOK) {
 	dcomplex energy = dcomplex(10.0, 0.001);
 
 	for (int K=1; K<=xmax+xmax-1; ++K) {
-		for (int maxDistance=1; maxDistance<=5 && K+maxDistance<=xmax+xmax-1; ++maxDistance) {
+		for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
 			InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
 			setInteractions(lattice1D, interactionData);
 			CDMatrix WK;
@@ -78,8 +78,9 @@ TEST(FormMatrixAlpha, RunningOK) {
 		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
 		setInteractions(lattice1D, interactionData);
 		CDMatrix Alpha;
-		for (int K=1; K<=xmax+xmax-1; ++K) {
-			if (K + maxDistance-1<=xmax+xmax-1 && K-maxDistance>=1) {
+		// alpha_K: K starts from 2, K=1 is meaningless because V_0 doesn't exist
+		for (int K=2; K<=xmax+xmax-1; ++K) {
+			if (K-maxDistance>=1) {
 				//std::cout << "K="<< K << " Kp=" << K-numNeighbor << std::endl;
 				formMatrixAlpha(K, Alpha);
 			}
@@ -96,14 +97,15 @@ TEST(FormMatrixBeta, RunningOK) {
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	generateIndexMatrix(lattice1D);
-
+	int Kmax = xmax+xmax-1;
 
 	for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
 		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
 		setInteractions(lattice1D, interactionData);
 		CDMatrix Beta;
-		for (int K=1; K<=xmax+xmax-1; ++K) {
-			if (K + 2*maxDistance-1<=xmax+xmax-1) {
+		// Beta_K: K is in range [1, Kmax-1] Beta_{Kmax} is meaningless
+		for (int K=1; K<=Kmax-1; ++K) {
+			if (K+maxDistance<=Kmax) {
 				//std::cout << "K="<<K<< " Kp=" << K+numNeighbor << std::endl;
 				formMatrixBeta(K, Beta);
 			}

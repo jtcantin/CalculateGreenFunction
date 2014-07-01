@@ -109,7 +109,7 @@ void generateNeighbors(Basis basis, int distance, LatticeShape& lattice,
         Neighbors& neighbors) {
 
 	int dim = lattice.getDim();
-	//neighbors.clear();
+	neighbors.clear();
 
 	switch (dim) {
 		case 1:

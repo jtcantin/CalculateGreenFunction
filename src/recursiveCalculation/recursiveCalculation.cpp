@@ -62,11 +62,26 @@ void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		 * current_value_of_K - maxDistance - (maxDistance-1)
 		 *
 		 */
+//		int K= recursionData.KRightStop + maxDistance -1;
+//		while (K <= Kmax) {
+//			K += maxDistance;
+//		}
+//		recursionData.KRightStart = K - maxDistance - (maxDistance-1);
+
 		int K= recursionData.KRightStop + maxDistance -1;
-		while (K <= Kmax) {
-			K += maxDistance;
-		}
-		recursionData.KRightStart = K - maxDistance - (maxDistance-1);
+//		for (int i=K; i>0; i+=maxDistance) {
+//			if (K >= Kmax)
+//				break;
+//		}
+		do {
+			K+=maxDistance;
+		} while (K<Kmax);
+		recursionData.KRightStart = K - (maxDistance-1);
+
+//		while (K <= Kmax) {
+//			K += maxDistance;
+//		}
+//		recursionData.KRightStart = K - (maxDistance-1);
 
 		// find out the size of the constant C
 		extern std::vector<int> DimsOfV;
@@ -196,13 +211,16 @@ void fromRightToCenter( RecursionData& recursionData,
 	for (int K=KRightStart-maxDistance; K>=KRightStop; K-=maxDistance) {
 		CDMatrix BetaK;
 		formMatrixBeta(K,  BetaK);
+//		std::cout<< "K=" << K <<"\tBetaK: " << BetaK.rows() << " " << BetaK.cols()<<std::endl;
 		CDMatrix WK;
 		formMatrixW(K, z, WK);
+//		std::cout<< "K=" << K <<"\tWK: " << WK.rows() << " " << WK.cols()<<std::endl;
 		//CDMatrix LeftSide = WK - BetaK*AKPlus;
 		/*
 		 * an optimized way to obtain LeftSide without evaluating temporary matrices
 		 */
 		CDMatrix LeftSide = WK;
+//		std::cout<< "K=" << K <<"\tAKPlus: " << AKPlus.rows() << " " << AKPlus.cols()<<std::endl;
 		LeftSide.noalias() -= BetaK*AKPlus;
 
 		//release the memory of WK and Beta

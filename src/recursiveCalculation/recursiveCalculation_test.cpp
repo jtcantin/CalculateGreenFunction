@@ -24,7 +24,7 @@ TEST(SetUpRecursion, RunningOK) {
 	std::cout<<"maxDistance = " << maxDistance << std::endl;
 	std::cout<<"KLeftStart = " << rd.KLeftStart << std::endl;
 	std::cout<<"KLeftStop = " << rd.KLeftStop << std::endl;
-	std::cout<<"KCritial = " << rd.KCenter << std::endl;
+	std::cout<<"KCenter = " << rd.KCenter << std::endl;
 	std::cout<<"KRightStop = " << rd.KRightStop << std::endl;
 	std::cout<<"KRightStart = " << rd.KRightStart << std::endl;
 }
@@ -81,7 +81,11 @@ TEST(SolveVKCenter, RunningOK) {
 	RecursionData recursionData;
 
 	setUpRecursion(lattice1D,  interactionData, initialSites,recursionData);
-
+	std::cout<<"KLeftStart = " << recursionData.KLeftStart << std::endl;
+	std::cout<<"KLeftStop = " << recursionData.KLeftStop << std::endl;
+	std::cout<<"KCenter = " << recursionData.KCenter << std::endl;
+	std::cout<<"KRightStop = " << recursionData.KRightStop << std::endl;
+	std::cout<<"KRightStart = " << recursionData.KRightStart << std::endl;
 
 	dcomplex z = dcomplex(10, 0.01);
 	CDMatrix ATildeKLeftStop;
@@ -105,7 +109,7 @@ TEST(GeneratingDensityOfStates, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 100;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,1,230};
+	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,2,230};
 	Basis initialSites(xmax/2, xmax/2 + 1);
 	int zsize = 201;
 	std::vector<dcomplex> zList(zsize);

@@ -133,7 +133,11 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
 	int total_rows=0;
 	int total_cols=0;
 	// go through the blocks that on the diagonal
-	for (int i=0; i<maxDistance; ++i) {
+	// it may happen that the number of blocks is < maxDistance
+	extern std::vector<int> DimsOfV;
+	int Kmax = DimsOfV.size()-1;
+	int numBlock = min(Kmax-K+1, maxDistance); //the number of blocks
+	for (int i=0; i<numBlock; ++i) {
 		int rows, cols;
 		getZSize(K+i, rows, cols);
 		total_rows += rows;
@@ -147,9 +151,9 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
 	int col_start = 0;
 	int row_size;
 	int col_size;
-	for (int block_row=0; block_row<maxDistance; ++block_row) {
+	for (int block_row=0; block_row<numBlock; ++block_row) {
 		col_start = 0; // rewind block col count
-		for (int block_col=0; block_col<maxDistance; ++block_col) {
+		for (int block_col=0; block_col<numBlock; ++block_col) {
 			if (block_row == block_col) { // diagonal blocks
 				CDMatrix Z;
 				formMatrixZ(K+block_row, energy, Z);
@@ -182,10 +186,27 @@ void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 	int total_rows=0;
 	int total_cols=0;
 	// go through the blocks that on the diagonal
-	for (int i=0; i<maxDistance; ++i) {
+//	for (int i=0; i<maxDistance; ++i) {
+	// it may happen that the number of blocks is < maxDistance
+	extern std::vector<int> DimsOfV;
+	int Kmax = DimsOfV.size()-1;
+//	std::cout<<"Insider formMatrixAlpha, Kmax = " << Kmax << " K=" <<K << std::endl;
+	int numBlockRow = min(Kmax-K+1, maxDistance);
+	int numBlockCol = maxDistance;
+
+	// go through the last column block by block
+	for (int i=0; i<numBlockRow; ++i) {
 		int rows, cols;
-		getMSize(K+i, K+i-maxDistance, rows, cols);
+//		std::cout << "Insider formMatrixAlpha" << std::endl;
+		getMSize(K+i, K-1, rows, cols);
 		total_rows += rows;
+	}
+
+	// go through the first row block by block
+	for (int i=0; i<numBlockCol; ++i) {
+		int rows, cols;
+//		std::cout << "Insider formMatrixAlpha" << std::endl;
+		getMSize(K, K-maxDistance+i, rows, cols);
 		total_cols += cols;
 	}
 //	std::cout<<"Size of AlphaK: " << total_rows << "  " << total_cols << std::endl;
@@ -200,7 +221,7 @@ void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 	int row_size;
 	int col_size;
 
-	for (int block_row=0; block_row<maxDistance; ++block_row) {
+	for (int block_row=0; block_row<numBlockRow; ++block_row) {
 		// rewind block col count
 		col_start = 0;
 		// find out the starting column index
@@ -210,7 +231,7 @@ void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 			col_start += cols;
 		}
 
-		for (int block_col=block_row; block_col<maxDistance; ++block_col) {
+		for (int block_col=block_row; block_col<numBlockCol; ++block_col) {
 			// calculate only the upper triangle part is nonzero
 //			std::cout << "block row: " << block_row << " block col: "
 //					<< block_col << std::endl;
@@ -239,13 +260,39 @@ void formMatrixBeta(int K, CDMatrix& BetaK) {
 	// find out the size of beta matrix
 	int total_rows=0;
 	int total_cols=0;
+
 	// go through the blocks that on the diagonal
-	for (int i=0; i<maxDistance; ++i) {
+	// it may happen that the number of blocks is < maxDistance
+	extern std::vector<int> DimsOfV;
+	int Kmax = DimsOfV.size()-1;
+//	std::cout << "Kmax = " << Kmax << std::endl;
+	int numBlockRow = min(Kmax-K+1, maxDistance);
+//	std::cout << "numBlockRow = " << numBlockRow << std::endl;
+	int numBlockCol = min(Kmax-(K+maxDistance)+1, maxDistance); //the number of blocks
+
+//	for (int i=0; i<maxDistance; ++i) {
+//		int rows, cols;
+//		getMSize(K+i, min(K+i+maxDistance,Kmax), rows, cols);
+//		total_rows += rows;
+//		total_cols += cols;
+//	}
+
+	// go through the first column of blocks row by row
+	for (int i=0; i<numBlockRow; ++i) {
 		int rows, cols;
-		getMSize(K+i, K+i+maxDistance, rows, cols);
+//		std::cout << "Insider formMatrixBeta" << std::endl;
+		getMSize(K+i, K+maxDistance, rows, cols);
 		total_rows += rows;
+	}
+
+	// go through the column of blocks
+	for (int i=0; i<numBlockCol; ++i) {
+		int rows, cols;
+//		std::cout << "Insider formMatrixBeta" << std::endl;
+		getMSize(K+maxDistance-1, K+maxDistance+i, rows, cols);
 		total_cols += cols;
 	}
+
 
 	//assign memory for BetaK
 	BetaK = CDMatrix::Zero(total_rows, total_cols);
@@ -255,11 +302,11 @@ void formMatrixBeta(int K, CDMatrix& BetaK) {
 	int row_size;
 	int col_size;
 
-	for (int block_row=0; block_row<maxDistance; ++block_row) {
+	for (int block_row=0; block_row<numBlockRow; ++block_row) {
 		// rewind block col count
 		col_start = 0;
 
-		for (int block_col=0; block_col<=block_row; ++block_col) {
+		for (int block_col=0; block_col<=min(block_row,numBlockCol-1); ++block_col) {
 			// calculate only the upper triangle part is nonzero
 //			std::cout << "block row: " << block_row << " block col: "
 //					<< block_col << std::endl;

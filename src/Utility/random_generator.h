@@ -85,36 +85,6 @@ private:
 	RandomNumberGenerator rng;
 };
 
-class OnsiteDisorder {
-public:
-	OnsiteDisorder(int xmax, int ymax, unsigned seed) {
-		rows = xmax;
-		cols = ymax;
-		p = new double[rows*cols];
-		rng.SetSeed(seed);
-		for (int i=0; i<rows*cols; i++) {
-			p[i] = rng.randomReal();
-		}
-	}
-
-	double operator()(const int nx, const int ny) const {
-		return p[nx*cols + ny];
-	}
-
-	~OnsiteDisorder() {
-		delete [] p;
-		p = NULL;
-		rows = 0;
-		cols = 0;
-	}
-
-private:
-	int rows;
-	int cols;
-	double *p;
-	RandomNumberGenerator rng;
-};
-
 
 
 #endif

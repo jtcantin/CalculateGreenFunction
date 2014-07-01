@@ -86,15 +86,29 @@ void formHamiltonianMatrix(LatticeShape& lattice, DMatrix& hamiltonian, IMatrix&
 		int bra_site2;
 		int row;
 		// find out which basis set will produce non-interacting matrix with ket
-		Neighbors ns;
-		generateNeighbors(ket, pInteraction->getMaxDistance(), lattice, ns);
 
-		for (int i=0; i<ns.size(); ++i) {
-			Basis bra = ns[i];
-			getLatticeIndex(lattice, bra, bra_site1, bra_site2);
-			row = basisIndex(bra_site1, bra_site2);
-			hamiltonian(row, col) = pInteraction->hop(bra, ket);
+		for (int distance=1; distance<=pInteraction->getMaxDistance(); ++distance) {
+			Neighbors neighborsAtSomeDistance;
+			// positive distance
+			generateNeighbors(ket,distance, lattice, neighborsAtSomeDistance);
+			for (int i=0; i<neighborsAtSomeDistance.size(); ++i) {
+				Basis bra = neighborsAtSomeDistance[i];
+				getLatticeIndex(lattice, bra, bra_site1, bra_site2);
+				row = basisIndex(bra_site1, bra_site2);
+				hamiltonian(row, col) = pInteraction->hop(bra, ket);
+			}
+
+			// negative distance
+			generateNeighbors(ket, -distance, lattice, neighborsAtSomeDistance);
+			for (int i=0; i<neighborsAtSomeDistance.size(); ++i) {
+				Basis bra = neighborsAtSomeDistance[i];
+				getLatticeIndex(lattice, bra, bra_site1, bra_site2);
+				row = basisIndex(bra_site1, bra_site2);
+				hamiltonian(row, col) = pInteraction->hop(bra, ket);
+			}
+
 		}
+
 
 	}
 

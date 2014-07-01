@@ -13,7 +13,7 @@ TEST(DirectCalculationTest, CheckDOS) {
 	LatticeShape lattice1D(1);
 	int xmax = 100;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,1,230};
+	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,2,230};
 	// calculate the indexMatrix and set up the interaction matrix
 	generateIndexMatrix(lattice1D);
 	setInteractions(lattice1D, interactionData);

@@ -24,6 +24,10 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#f519514f8f6d6155af66d593f73e4e1d">solveDenseLinearEqs</a> (<a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;A, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;B, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;X)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#3e2393074b4d4555969137b2abaae8dd">findCorrespondingVK</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, int maxDistance, <a class="el" href="classBasis.html">Basis</a> &amp;basis)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#6ae3e59ab41f6710e7d84c7ff3e98eef">getBasisIndexInVK</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, int K, <a class="el" href="classBasis.html">Basis</a> &amp;basis)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#d26ca3ee87a9f745d2593ca8e8f089d0">setUpRecursion</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structRecursionData.html">RecursionData</a> &amp;recursionData)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#1a03ed5a49ba999850f231f2f81b32a5">fromRightToCenter</a> (<a class="el" href="structRecursionData.html">RecursionData</a> &amp;recursionData, <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;AKRightStop, bool saveAMatrices)</td></tr>
@@ -33,6 +37,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#e097b7a86f8594f1b00c6f8c99c17a08">solveVKCenter</a> (<a class="el" href="structRecursionData.html">RecursionData</a> &amp;recursionData, <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;ATildeKLeftStop, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;AKRightStop, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;VKCenter)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#606df39775b7266829a71b5550656fb1">calculateDensityOfState</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; double &gt; &amp;rhoList)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#785526870b794d5138028250473ddeaa">calculateGreenFunc</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;finalSites, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;gfList)</td></tr>
 
 </table>
 <hr><h2>Function Documentation</h2>
@@ -83,6 +89,59 @@
 calculate density of state at the initial sites 
 </div>
 </div><p>
+<a class="anchor" name="785526870b794d5138028250473ddeaa"></a><!-- doxytag: member="recursiveCalculation.cpp::calculateGreenFunc" ref="785526870b794d5138028250473ddeaa" args="(LatticeShape &amp;lattice, Basis &amp;finalSites, Basis &amp;initialSites, InteractionData &amp;interactionData, const std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; dcomplex &gt; &amp;gfList)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void calculateGreenFunc           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classBasis.html">Basis</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>finalSites</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classBasis.html">Basis</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>initialSites</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structInteractionData.html">InteractionData</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>interactionData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>zList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>gfList</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+calculate all the matrix elements of the Green function &lt;final_sites| G(z) |initial_sites&gt; for a list of z values 
+</div>
+</div><p>
 <a class="anchor" name="09bb0743532eb10149446411001b1a13"></a><!-- doxytag: member="recursiveCalculation.cpp::deleteMatrixFiles" ref="09bb0743532eb10149446411001b1a13" args="(std::string files)" -->
 <div class="memitem">
 <div class="memproto">
@@ -101,6 +160,41 @@ calculate density of state at the initial sites
 
 <p>
 clean up binary files that are used to save the matrices 
+</div>
+</div><p>
+<a class="anchor" name="3e2393074b4d4555969137b2abaae8dd"></a><!-- doxytag: member="recursiveCalculation.cpp::findCorrespondingVK" ref="3e2393074b4d4555969137b2abaae8dd" args="(LatticeShape &amp;lattice, int maxDistance, Basis &amp;basis)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int findCorrespondingVK           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>maxDistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classBasis.html">Basis</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>basis</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+find out which V_{K} the basis belongs to 
 </div>
 </div><p>
 <a class="anchor" name="688998cb6b3bb9cb3a37353ee115f303"></a><!-- doxytag: member="recursiveCalculation.cpp::fromLeftToCenter" ref="688998cb6b3bb9cb3a37353ee115f303" args="(RecursionData &amp;recursionData, dcomplex z, CDMatrix &amp;ATildeKLeftStop, bool saveAMatrices)" -->
@@ -211,6 +305,41 @@ Once we know A_{K+}, we can express V_{K+} in terms of V_{K}, that is, V_{K+} = 
 Because of V_{K} = A_{K} V_{K-}, the above equation can be rewritten as W_{K}*A_{K}*V_{K-} = alpha_{K}*V_{K-} + beta_{K}*A_{K+}*A_{K}*V_{K} . Therefore, W_{K}*A_{K} = alpha_{K} + beta_{K}*A_{K+}*A_{K}<p>
 ==&gt; ( W_{K} - beta_{K}*A_{K+} ) * A_{K} = alpha_{K}<p>
 Then A_{K} can be obtained by solving the above linear equations 
+</div>
+</div><p>
+<a class="anchor" name="6ae3e59ab41f6710e7d84c7ff3e98eef"></a><!-- doxytag: member="recursiveCalculation.cpp::getBasisIndexInVK" ref="6ae3e59ab41f6710e7d84c7ff3e98eef" args="(LatticeShape &amp;lattice, int K, Basis &amp;basis)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getBasisIndexInVK           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>K</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classBasis.html">Basis</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>basis</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+find out the index for a basis in V_{K} 
 </div>
 </div><p>
 <a class="anchor" name="d26ca3ee87a9f745d2593ca8e8f089d0"></a><!-- doxytag: member="recursiveCalculation.cpp::setUpRecursion" ref="d26ca3ee87a9f745d2593ca8e8f089d0" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData, Basis &amp;initialSites, RecursionData &amp;recursionData)" -->
@@ -342,7 +471,7 @@ Substituting the above two equations into the first equation, we obtain [ W_{KCe
 Then V_{KCenter} can be obtained by solving the above linear equation 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Jun 30 17:14:15 2014 for CalculateGreenFunction by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Jun 30 23:52:13 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

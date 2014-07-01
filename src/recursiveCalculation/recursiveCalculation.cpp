@@ -26,6 +26,42 @@ void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X) {
 
 
 /**
+ * find out which V_{K} the basis belongs to
+ */
+int findCorrespondingVK(LatticeShape& lattice, int maxDistance, Basis& basis) {
+	int result;
+	int Kc=basis.getSum();
+	int Kmax = DimsOfV.size()-1;
+	for (int K=1; K<=Kmax; K+=maxDistance) {
+		if (Kc>=K && Kc<=K+maxDistance-1) {
+			result = K;
+		}
+	}
+	return result;
+}
+
+/**
+ * find out the index for a basis in V_{K}
+ */
+int getBasisIndexInVK(LatticeShape& lattice, int K, Basis& basis) {
+	// find out which V_{K} the basis belongs to
+	int kbasis = basis.getSum(); //the basis set belong to the small v_{k}, which is a block of V_{K}
+
+	int rowIndex = 0;
+	for(int i=K; i!=kbasis; ++i) {
+		rowIndex += DimsOfV[i];
+	}
+	// when i = kbasis, the above loop is over
+	int index1, index2;
+	getLatticeIndex(lattice, basis, index1, index2);
+	extern IMatrix IndexMatrix;
+	// find out G(index1, index2) is the nth elements of v_{Kc} (nth starts from 0)
+	int nth = IndexMatrix(index1, index2);
+	rowIndex += nth;
+	return rowIndex;
+}
+
+/**
  * set up the precondition for the recursive calculations: fromRightToCenter
  * and fromLeftToCenter
  */
@@ -456,6 +492,9 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		solveVKCenter(recursionData, z, ATildeKLeftStop, AKRightStop, VKCenter);
 //		std::cout<< "VKCenter OK" << std::endl;
 
+		ATildeKLeftStop.resize(0,0);
+		AKRightStop.resize(0,0);
+
 		dcomplex gf = VKCenter(recursionData.indexForNonzero,0);
 //		std::cout<< "gf OK" << std::endl;
 
@@ -468,39 +507,91 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 
 
 
-//
-//// calculate all the matrix elements of the Green function < i, j | G | m, n> where m and n are fixed
-//void calculateAllGF(int ni1, int ni2, complex_mkl z, AlphaBeta& ab) {
-//	int nc = ni1 + ni2;
-//	std::string fileReadFrom, fileWriteTo;
-//	CDMatrix V_K = solveVnc(ni1, ni2, z, ab, true);
-//	fileWriteTo="V_"+ itos(nc) + ".bin";
-//	CDMatrixToBytes(V_K,fileWriteTo);
-//	CDMatrix A;
-//	CDMatrix ATilde;
-//	CDMatrix V_nc_save = V_K;
-//
-//	// calculate all V_K and save them into binary files
-//	int nmax = ab.GetNmax();
-//	// calculate V_K where nc+1 < K <= nmax+nmax-1;
-//	for (int K=nc+1; K<=nmax+nmax-1; ++K) {
-//		fileReadFrom="A"+ itos(K) + ".bin";
-//		bytesToCDMatrix(A,fileReadFrom);
-//		V_K = A*V_K;
-//		fileWriteTo="V_"+ itos(K) + ".bin";
-//		CDMatrixToBytes(V_K,fileWriteTo);
-//	}
-//
-//	// calculate V_K where 1 <= K <= nc-1;
-//	V_K = V_nc_save; //restore the value of V_nc
-//	for (int K=nc-1; K>=1; --K) {
-//		fileReadFrom="ATilde"+ itos(K) + ".bin";
-//		bytesToCDMatrix(ATilde,fileReadFrom);
-//		V_K = ATilde*V_K;
-//		fileWriteTo="V_"+ itos(K) + ".bin";
-//		CDMatrixToBytes(V_K,fileWriteTo);
-//	}
-//}
+
+/**
+ * calculate all the matrix elements of the Green function
+ * <final_sites| G(z) |initial_sites> for a list of z values
+ */
+void calculateGreenFunc(LatticeShape& lattice, Basis& finalSites, Basis& initialSites,
+		                InteractionData& interactionData,
+                        const std::vector<dcomplex>& zList,
+                        std::vector<dcomplex>& gfList) {
+	RecursionData recursionData;
+	setUpRecursion(lattice,  interactionData, initialSites, recursionData);
+
+	int maxDistance = interactionData.maxDistance;
+	int Kinitial = recursionData.KCenter;
+
+	int Kfinal = findCorrespondingVK(lattice, maxDistance, finalSites);
+
+	int rowIndex = getBasisIndexInVK(lattice, Kfinal, finalSites);
+
+	bool saveATilde;
+	bool saveA;
+	if (Kfinal==Kinitial) { //the required green function can be extracted from VKCenter
+		saveATilde = false;
+		saveA = false;
+	} else if (Kfinal>Kinitial) {//start from VKCenter and go to the right end
+		saveATilde = false;
+		saveA = true;
+	} else if (Kfinal<Kinitial) {//start from VKCenter and go to left end
+		saveATilde = true;
+		saveA = false;
+	}
+
+	gfList.clear();
+	for (int i=0; i<zList.size(); ++i) {
+		dcomplex z = zList[i];
+
+
+		CDMatrix ATildeKLeftStop;
+		fromLeftToCenter(recursionData, z, ATildeKLeftStop, saveATilde);
+
+		CDMatrix AKRightStop;
+		fromRightToCenter(recursionData, z, AKRightStop, saveA);
+
+		CDMatrix VKCenter;
+		solveVKCenter(recursionData, z, ATildeKLeftStop, AKRightStop, VKCenter);
+
+		ATildeKLeftStop.resize(0,0);
+		AKRightStop.resize(0,0);
+
+		dcomplex gf;
+
+		if (Kfinal==Kinitial) {
+			gf = VKCenter(rowIndex, 0);
+		}
+
+		CDMatrix VKfinal = VKCenter;
+		VKCenter.resize(0,0);
+
+
+		if (Kfinal>Kinitial) {
+			for (int K=Kinitial+maxDistance; K<=Kfinal; K+=maxDistance) {
+				CDMatrix A;
+				std::string filename = "A"+itos(K)+".bin";
+				loadMatrix(filename,A);
+				VKfinal = A*VKfinal;
+			}
+		}
+
+		if (Kfinal<Kinitial) {
+			for (int K=Kinitial-maxDistance; K>=Kfinal; K-=maxDistance) {
+				CDMatrix ATilde;
+				std::string filename = "ATilde"+itos(K)+".bin";
+				loadMatrix(filename,ATilde);
+				VKfinal = ATilde*VKfinal;
+			}
+		}
+
+		gf = VKfinal(rowIndex, 0);
+		VKfinal.resize(0,0);
+		gfList.push_back(gf);
+	}
+
+
+
+}
 //
 //
 //// extract the matrix element G(n, m, ni1, ni2) from files stored in disk

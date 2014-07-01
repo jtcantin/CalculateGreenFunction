@@ -29,6 +29,16 @@ void deleteMatrixFiles(std::string files);
 
 void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X);
 
+/**
+ * find out which V_{K} the basis belongs to
+ */
+int findCorrespondingVK(LatticeShape& lattice, int maxDistance, Basis& basis);
+
+/**
+ * find out the index for a basis in V_{K}
+ */
+int getBasisIndexInVK(LatticeShape& lattice, int K, Basis& basis);
+
 void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		            Basis& initialSites, RecursionData& rd);
 
@@ -47,5 +57,14 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		                      InteractionData& interactionData,
 		                      const std::vector<dcomplex>& zList,
 		                      std::vector<double>& rhoList);
+
+/**
+ * calculate all the matrix elements of the Green function
+ * <final_sites| G(z) |initial_sites> for a list of z values
+ */
+void calculateGreenFunc(LatticeShape& lattice, Basis& finalSites, Basis& initialSites,
+		                InteractionData& interactionData,
+                        const std::vector<dcomplex>& zList,
+                        std::vector<dcomplex>& gfList);
 
 #endif /* RECURSIVECALCULATION_HPP_ */

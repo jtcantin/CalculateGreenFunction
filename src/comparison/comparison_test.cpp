@@ -44,9 +44,6 @@ TEST(ComparisonTest, DISABLED_CheckDOS) {
 		save_two_arrays(file1, zRealList, rhoList);
 
 		/*********** Direct calculation *****************/
-		// no need to set up the interaction matrix
-		// because it is already done in the recursive calculation
-		// setInteractions(lattice1D, interactionData);
 
 		densityOfState_direct(lattice1D, initialSites, zList, rhoList);
 		std::string file2 = "rho_xmax100_direct_maxDistance_"
@@ -247,7 +244,7 @@ TEST(ComparisonTest, RandomHopping) {
 
 	int maxDistance = 5;
 
-	// only random onsite energy
+	// only random hopping interaction
 	InteractionData interactionData = {1.0,1.0,1.0,true,
 			false,false,maxDistance,230};
 	setUpIndexInteractions(lattice1D, interactionData);
@@ -295,7 +292,7 @@ TEST(ComparisonTest, NoDisorderNoDyn) {
 
 	int maxDistance = 5;
 
-	// only random onsite energy
+	// no disorder and no dynamic interaction
 	InteractionData interactionData = {1.0,0.0,1.0,false,
 			false,false,maxDistance,230};
 	setUpIndexInteractions(lattice1D, interactionData);
@@ -306,29 +303,29 @@ TEST(ComparisonTest, NoDisorderNoDyn) {
 	std::vector<std::string> fileList;
 
 	/********** Recursive calculations of Green's function******************/
-	fileList.push_back("GF_no_disorder_recursive_E_0.txt");
-	fileList.push_back("GF_no_disorder_recursive_E_1.txt");
+	fileList.push_back("GF_ordered_no_dyn_recursive_E_0.txt");
+	fileList.push_back("GF_ordered_no_dyn_recursive_E_1.txt");
 	calculateAllGreenFunc(lattice1D,  initialSites,
 			              interactionData, zList,
 	                       fileList);
 
 	/********** Direct calculations of Green's function*********************/
 	fileList.clear();
-	fileList.push_back("GF_no_disorder_direct_E_0.txt");
-	fileList.push_back("GF_no_disorder_direct_E_1.txt");
+	fileList.push_back("GF_ordered_no_dyn_direct_E_0.txt");
+	fileList.push_back("GF_ordered_no_dyn_direct_E_1.txt");
 	calculateAllGreenFunc_direct(lattice1D,  initialSites,
 			                      zList, fileList);
 
 	/********** Recursive calculations of density of state ******************/
 	fileList.clear();
-	fileList.push_back("DOS_no_disorder_recursive_E_0.txt");
-	fileList.push_back("DOS_no_disorder_recursive_E_1.txt");
+	fileList.push_back("DOS_ordered_no_dyn_recursive_E_0.txt");
+	fileList.push_back("DOS_ordered_no_dyn_recursive_E_1.txt");
 	calculateDensityOfStateAll(lattice1D, interactionData, zList, fileList);
 
 	/********** Direct calculations of density of state *********************/
 	fileList.clear();
-	fileList.push_back("DOS_no_disorder_direct_E_0.txt");
-	fileList.push_back("DOS_no_disorder_direct_E_1.txt");
+	fileList.push_back("DOS_ordered_no_dyn_direct_E_0.txt");
+	fileList.push_back("DOS_ordered_no_dyn_direct_E_1.txt");
 	densityOfStateAll_direct(lattice1D, zList, fileList);
 
 	EXPECT_TRUE(true);

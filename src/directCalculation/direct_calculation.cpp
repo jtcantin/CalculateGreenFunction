@@ -24,6 +24,10 @@
  * basisIndex(site1, site2) = nth means that the basis set with (site1, site2) is
  * the nth basis set.
  *
+ * before calling this, call
+ * generateIndexMatrix(lattice1D);
+ * setInteractions(lattice1D, interactionData);
+ *
  */
 void formAllBasisSets(LatticeShape& lattice, IMatrix& basisIndex,
 		std::vector<Basis>& basisSets) {
@@ -68,7 +72,11 @@ void formAllBasisSets(LatticeShape& lattice, IMatrix& basisIndex,
 
 }
 
-
+/**
+ * before calling this, call
+ * generateIndexMatrix(lattice1D);
+ * setInteractions(lattice1D, interactionData);
+ */
 void formHamiltonianMatrix(LatticeShape& lattice, DMatrix& hamiltonian, IMatrix& basisIndex,
 		                   std::vector<Basis>& basisSets) {
 	extern Interaction *pInteraction;
@@ -96,6 +104,7 @@ void formHamiltonianMatrix(LatticeShape& lattice, DMatrix& hamiltonian, IMatrix&
 				getLatticeIndex(lattice, bra, bra_site1, bra_site2);
 				row = basisIndex(bra_site1, bra_site2);
 				hamiltonian(row, col) = pInteraction->hop(bra, ket);
+				//hamiltonian(col, row) = hamiltonian(row, col);
 			}
 
 			// negative distance
@@ -105,10 +114,12 @@ void formHamiltonianMatrix(LatticeShape& lattice, DMatrix& hamiltonian, IMatrix&
 				getLatticeIndex(lattice, bra, bra_site1, bra_site2);
 				row = basisIndex(bra_site1, bra_site2);
 				hamiltonian(row, col) = pInteraction->hop(bra, ket);
+				//hamiltonian(col, row) = hamiltonian(row, col);
 			}
 
 		}
-
+		// write the Hamiltonian into file
+		//saveToFile("Hamiltonian.txt", hamiltonian);
 
 	}
 
@@ -168,6 +179,10 @@ dcomplex greenFuncHelper(CDArray& numerator, CDArray& oneOverDenominator) {
 
 /**
  * calculating the green function <bra | G(z) | ket>
+ *
+ * before calling this, call
+ * generateIndexMatrix(lattice1D);
+ * setInteractions(lattice1D, interactionData);
  */
 void greenFunc_direct(LatticeShape& lattice, Basis& bra, Basis& ket, std::vector<dcomplex >& zList,
 		                   std::vector<dcomplex>& gfList) {
@@ -205,6 +220,10 @@ void greenFunc_direct(LatticeShape& lattice, Basis& bra, Basis& ket, std::vector
 /**
  * calculate the density of state at (site1, site2)
  * density_of_state = -Im(<basis | G(z) | basis>)/Pi
+ *
+ * before calling this, call
+ * generateIndexMatrix(lattice1D);
+ * setInteractions(lattice1D, interactionData);
  */
 void densityOfState_direct(LatticeShape& lattice, Basis& basis, std::vector<dcomplex >& zList,
 		                   std::vector<double>& dosList) {
@@ -235,4 +254,126 @@ void densityOfState_direct(LatticeShape& lattice, Basis& basis, std::vector<dcom
 		dosList[i] = -gf.imag()/M_PI;
 	}
 
+}
+
+
+
+/**
+ * calculate the density of state at all possible sites
+ * density_of_state = -Im(<basis | G(z) | basis>)/Pi
+ *
+ * before calling this, call
+ * generateIndexMatrix(lattice1D);
+ * setInteractions(lattice1D, interactionData);
+ */
+void densityOfStateAll_direct(LatticeShape& lattice, std::vector<dcomplex >& zList,
+		                   std::vector<std::string>& fileList) {
+	IMatrix basisIndex;
+	std::vector<Basis> basisSets;
+	formAllBasisSets(lattice, basisIndex, basisSets);
+
+
+	DMatrix hamiltonian;
+	formHamiltonianMatrix(lattice, hamiltonian, basisIndex, basisSets);
+
+
+	DVector eigenValues;
+	DMatrix eigenVectors;
+	obtainEigenVectors(hamiltonian, eigenValues, eigenVectors);
+
+
+	for (int i=0; i<zList.size(); ++i) {
+		dcomplex z = zList[i];
+		std::string file = fileList[i];
+
+		// note the following calculation is for 1D case only
+		int xmax = lattice.getXmax();
+		DMatrix dos= DMatrix::Zero(xmax+1, xmax+1);
+		for (int n1=0; n1<=xmax-1; ++n1) {
+			for (int n2=n1+1; n2<=xmax; ++n2) {
+				if (n1+n2>10 && n1+n2<xmax+xmax-1-10) {
+					Basis basis(n1, n2);
+					CDArray numerator;
+					numeratorHelper(lattice, basis, basis, basisIndex,
+							        eigenVectors, numerator);
+					CDArray oneOverDenominator;
+					denominatorHelper(z, eigenValues, oneOverDenominator);
+					dcomplex gf = greenFuncHelper(numerator, oneOverDenominator);
+					double rho = -gf.imag()/M_PI;
+					dos(n1, n2) = rho;
+					dos(n2, n1) = rho;
+
+				} //end of if
+			}
+		}// end of two for loops
+
+		// save dos into file
+		saveToFile(file, dos);
+	}
+
+}
+
+
+
+/**
+ * calculate all Green's function and save them into files
+ *
+ * before calling this, call
+ * generateIndexMatrix(lattice);
+ * setInteractions(lattice, interactionData);
+ */
+void calculateAllGreenFunc_direct(LatticeShape& lattice,  Basis& initialSites,
+		                          std::vector<dcomplex >& zList,
+                                  std::vector<std::string>& fileList) {
+	IMatrix basisIndex;
+	std::vector<Basis> basisSets;
+	formAllBasisSets(lattice, basisIndex, basisSets);
+
+
+	DMatrix hamiltonian;
+	formHamiltonianMatrix(lattice, hamiltonian, basisIndex, basisSets);
+
+
+	DVector eigenValues;
+	DMatrix eigenVectors;
+	obtainEigenVectors(hamiltonian, eigenValues, eigenVectors);
+
+	for (int i=0; i<zList.size(); ++i) {
+		dcomplex z = zList[i];
+		std::string file = fileList[i];
+
+		switch ( lattice.getDim() )  {
+		case 1:
+		{
+			int xmax = lattice.getXmax();
+			CDMatrix gf(xmax+1, xmax+1);
+			for (int n1=0; n1<=xmax-1; ++n1) {
+				for (int n2=n1+1; n2<=xmax; ++n2) {
+					Basis finalSites(n1, n2);
+
+					CDArray numerator;
+					numeratorHelper(lattice, finalSites, initialSites, basisIndex, eigenVectors, numerator);
+
+					CDArray oneOverDenominator;
+					denominatorHelper(z, eigenValues, oneOverDenominator);
+					gf(n1, n2) = greenFuncHelper(numerator, oneOverDenominator);
+					gf(n2, n1) = gf(n1, n2);
+				}
+			}
+			// make the diagonal terms zero
+			for (int i=0; i<gf.rows(); ++i) {
+				gf(i, i) = dcomplex(0,0);
+			}
+			// save the gf matrix into file
+			saveToFile(file, gf);
+			break;
+		}
+		case 2:
+			break;
+		case 3:
+			break;
+		} // end of switch
+
+
+	}// end of the outmost for loop
 }

@@ -161,7 +161,7 @@ private:
 		for (int i=0; i<xsite-1; ++i) {
 			for (int incr=1; incr<=maxDistance && i+incr<xsite; ++incr) {
 				m(i,i+incr) = maxVal*rng.randomReal()/std::pow(incr,3.0); // range [0, hop)
-				m(i+incr,i) = t(i,i+incr);
+				m(i+incr,i) = m(i,i+incr);
 			}
 		}
 	}
@@ -171,7 +171,7 @@ private:
 		for (int i=0; i<xsite-1; ++i) {
 			for (int incr=1; incr<=maxDistance && i+incr<xsite; ++incr) {
 				m(i,i+incr) = maxVal/std::pow(incr,3.0); // range [0, hop)
-				m(i+incr,i) = t(i,i+incr);
+				m(i+incr,i) = m(i,i+incr);
 			}
 		}
 	}

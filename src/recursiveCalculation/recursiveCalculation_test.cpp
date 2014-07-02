@@ -16,6 +16,7 @@ TEST(SetUpRecursion, RunningOK) {
 	Basis initialSites(60,61);
 	RecursionData rd;
 
+	setUpIndexInteractions(lattice1D, interactionData);
 	setUpRecursion(lattice1D,  interactionData, initialSites, rd);
 
 	std::cout<<"xmax = " << xmax << std::endl;
@@ -38,7 +39,7 @@ TEST(FromRightToCenter, RunningOK) {
 	Basis initialSites(60,61);
 	RecursionData recursionData;
 
-
+	setUpIndexInteractions(lattice1D, interactionData);
 	setUpRecursion(lattice1D,  interactionData, initialSites,recursionData);
 
 	dcomplex z = dcomplex(10, 0.01);
@@ -59,6 +60,7 @@ TEST(FromLeftToCenter, RunningOK) {
 	Basis initialSites(60,61);
 	RecursionData recursionData;
 
+	setUpIndexInteractions(lattice1D, interactionData);
 	setUpRecursion(lattice1D,  interactionData, initialSites, recursionData);
 
 
@@ -80,6 +82,7 @@ TEST(SolveVKCenter, RunningOK) {
 	Basis initialSites(60,61);
 	RecursionData recursionData;
 
+	setUpIndexInteractions(lattice1D, interactionData);
 	setUpRecursion(lattice1D,  interactionData, initialSites,recursionData);
 	std::cout<<"KLeftStart = " << recursionData.KLeftStart << std::endl;
 	std::cout<<"KLeftStop = " << recursionData.KLeftStop << std::endl;
@@ -110,6 +113,8 @@ TEST(GeneratingDensityOfStates, RunningOK) {
 	int xmax = 100;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,2,230};
+	setUpIndexInteractions(lattice1D, interactionData);
+
 	Basis initialSites(xmax/2, xmax/2 + 1);
 	int zsize = 201;
 	std::vector<dcomplex> zList(zsize);

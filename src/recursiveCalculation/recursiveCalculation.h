@@ -9,6 +9,7 @@
 #define RECURSIVECALCULATION_H_
 
 #include "../Utility/types.h"
+#include "../Utility/misc.h"
 #include "../basis_set/basis.h"
 #include "../IO/binaryIO.h"
 #include "../formMatrix/formMatrix.h"
@@ -29,6 +30,8 @@ void deleteMatrixFiles(std::string files);
 
 void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X);
 
+
+
 /**
  * find out which V_{K} the basis belongs to
  */
@@ -38,6 +41,12 @@ int findCorrespondingVK(LatticeShape& lattice, int maxDistance, Basis& basis);
  * find out the index for a basis in V_{K}
  */
 int getBasisIndexInVK(LatticeShape& lattice, int K, Basis& basis);
+
+/**
+ * 	calculate the indexMatrix and set up the interaction matrix
+ */
+void setUpIndexInteractions(LatticeShape& lattice,
+		InteractionData& interactionData);
 
 void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		            Basis& initialSites, RecursionData& rd);
@@ -59,12 +68,31 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		                      std::vector<double>& rhoList);
 
 /**
- * calculate all the matrix elements of the Green function
+ * calculate density of state at all sites
+ *
+ * before calling it, you have to call setUpIndexInteractions(lattice, interactionData)
+ */
+void calculateDensityOfStateAll(LatticeShape& lattice,
+		                      InteractionData& interactionData,
+		                      const std::vector<dcomplex>& zList,
+		                      std::vector<std::string>& fileList);
+
+
+/**
+ * calculate a matrix element of the Green function
  * <final_sites| G(z) |initial_sites> for a list of z values
  */
 void calculateGreenFunc(LatticeShape& lattice, Basis& finalSites, Basis& initialSites,
 		                InteractionData& interactionData,
                         const std::vector<dcomplex>& zList,
                         std::vector<dcomplex>& gfList);
+
+/**
+ * calculate all the matrix elements of the Green function and save them into a text file
+ *
+ */
+void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
+		                InteractionData& interactionData, std::vector<dcomplex> zList,
+                        std::vector< std::string > fileList);
 
 #endif /* RECURSIVECALCULATION_HPP_ */

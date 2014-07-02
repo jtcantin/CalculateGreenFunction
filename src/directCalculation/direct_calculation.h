@@ -9,6 +9,7 @@
 #define DIRECT_CALCULATION_H_
 
 #include "../Utility/types.h"
+#include "../Utility/misc.h"
 #include "../basis_set/basis.h"
 #include "../formMatrix/formMatrix.h"
 
@@ -33,5 +34,23 @@ void greenFunc_direct(LatticeShape& lattice, Basis& bra, Basis& ket, std::vector
 
 void densityOfState_direct(LatticeShape& lattice, Basis& basis, std::vector<dcomplex >& zList,
 		                   std::vector<double>& dosList);
+
+/**
+ * calculate all Green's function and save them into files
+ */
+void calculateAllGreenFunc_direct(LatticeShape& lattice,  Basis& initialSites,
+		                          std::vector<dcomplex >& zList,
+                                  std::vector<std::string>& fileList);
+
+/**
+ * calculate the density of state at all possible sites
+ * density_of_state = -Im(<basis | G(z) | basis>)/Pi
+ *
+ * before calling this, call
+ * generateIndexMatrix(lattice1D);
+ * setInteractions(lattice1D, interactionData);
+ */
+void densityOfStateAll_direct(LatticeShape& lattice, std::vector<dcomplex >& zList,
+		                   std::vector<std::string>& fileList);
 
 #endif /* DIRECT_CALCULATION_H_ */

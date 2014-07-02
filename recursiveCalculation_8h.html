@@ -17,6 +17,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <h1>/home/pxiang/workspace_new/CalculateGreenFunction/src/recursiveCalculation/recursiveCalculation.h File Reference</h1><code>#include &quot;<a class="el" href="types_8h-source.html">../Utility/types.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="misc_8h-source.html">../Utility/misc.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="basis_8h-source.html">../basis_set/basis.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="binaryIO_8h-source.html">../IO/binaryIO.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="formMatrix_8h-source.html">../formMatrix/formMatrix.h</a>&quot;</code><br>
@@ -36,6 +37,8 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#6ae3e59ab41f6710e7d84c7ff3e98eef">getBasisIndexInVK</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, int K, <a class="el" href="classBasis.html">Basis</a> &amp;basis)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#ead9ae01562e18a0e89996750378d71f">setUpIndexInteractions</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#cfed0b2a759fecb4de581223ec6b5a29">setUpRecursion</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structRecursionData.html">RecursionData</a> &amp;rd)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#8da3dfb029980c8d340e6b15fc4aefc3">fromRightToCenter</a> (<a class="el" href="structRecursionData.html">RecursionData</a> &amp;recursionData, <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;AKRightStop, bool saveAMatrices=true)</td></tr>
@@ -46,10 +49,62 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#606df39775b7266829a71b5550656fb1">calculateDensityOfState</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; double &gt; &amp;rhoList)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#bc7b339a0db5da1f5fa236b809b49be3">calculateDensityOfStateAll</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; std::string &gt; &amp;fileList)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#785526870b794d5138028250473ddeaa">calculateGreenFunc</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;finalSites, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;gfList)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#f04ff891db725b2ec3ebf788c19363ef">calculateAllGreenFunc</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; zList, std::vector&lt; std::string &gt; fileList)</td></tr>
 
 </table>
 <hr><h2>Function Documentation</h2>
+<a class="anchor" name="f04ff891db725b2ec3ebf788c19363ef"></a><!-- doxytag: member="recursiveCalculation.h::calculateAllGreenFunc" ref="f04ff891db725b2ec3ebf788c19363ef" args="(LatticeShape &amp;lattice, Basis &amp;initialSites, InteractionData &amp;interactionData, std::vector&lt; dcomplex &gt; zList, std::vector&lt; std::string &gt; fileList)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void calculateAllGreenFunc           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classBasis.html">Basis</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>initialSites</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structInteractionData.html">InteractionData</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>interactionData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt;&nbsp;</td>
+          <td class="paramname"> <em>zList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt;&nbsp;</td>
+          <td class="paramname"> <em>fileList</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+calculate all the matrix elements of the Green function and save them into a text file<p>
+before calling it, you have to call setUpIndexInteractions(lattice, interactionData) first 
+</div>
+</div><p>
 <a class="anchor" name="606df39775b7266829a71b5550656fb1"></a><!-- doxytag: member="recursiveCalculation.h::calculateDensityOfState" ref="606df39775b7266829a71b5550656fb1" args="(LatticeShape &amp;lattice, Basis &amp;initialSites, InteractionData &amp;interactionData, const std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; double &gt; &amp;rhoList)" -->
 <div class="memitem">
 <div class="memproto">
@@ -94,7 +149,50 @@
 <div class="memdoc">
 
 <p>
-calculate density of state at the initial sites 
+calculate density of state at the initial sites<p>
+before calling it, you have to call setUpIndexInteractions(lattice, interactionData) 
+</div>
+</div><p>
+<a class="anchor" name="bc7b339a0db5da1f5fa236b809b49be3"></a><!-- doxytag: member="recursiveCalculation.h::calculateDensityOfStateAll" ref="bc7b339a0db5da1f5fa236b809b49be3" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData, const std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; std::string &gt; &amp;fileList)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void calculateDensityOfStateAll           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structInteractionData.html">InteractionData</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>interactionData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>zList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>fileList</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+calculate density of state at all sites<p>
+before calling it, you have to call setUpIndexInteractions(lattice, interactionData) 
 </div>
 </div><p>
 <a class="anchor" name="785526870b794d5138028250473ddeaa"></a><!-- doxytag: member="recursiveCalculation.h::calculateGreenFunc" ref="785526870b794d5138028250473ddeaa" args="(LatticeShape &amp;lattice, Basis &amp;finalSites, Basis &amp;initialSites, InteractionData &amp;interactionData, const std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; dcomplex &gt; &amp;gfList)" -->
@@ -147,7 +245,8 @@ calculate density of state at the initial sites
 <div class="memdoc">
 
 <p>
-calculate all the matrix elements of the Green function &lt;final_sites| G(z) |initial_sites&gt; for a list of z values 
+calculate a matrix element of the Green function &lt;final_sites| G(z) |initial_sites&gt; for a list of z values<p>
+before calling it, you have to call setUpIndexInteractions(lattice, interactionData) 
 </div>
 </div><p>
 <a class="anchor" name="09bb0743532eb10149446411001b1a13"></a><!-- doxytag: member="recursiveCalculation.h::deleteMatrixFiles" ref="09bb0743532eb10149446411001b1a13" args="(std::string files)" -->
@@ -350,6 +449,36 @@ Then A_{K} can be obtained by solving the above linear equations
 find out the index for a basis in V_{K} 
 </div>
 </div><p>
+<a class="anchor" name="ead9ae01562e18a0e89996750378d71f"></a><!-- doxytag: member="recursiveCalculation.h::setUpIndexInteractions" ref="ead9ae01562e18a0e89996750378d71f" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setUpIndexInteractions           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structInteractionData.html">InteractionData</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>interactionData</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+calculate the indexMatrix and set up the interaction matrix<p>
+This has to be called before any recursive calculations begin 
+</div>
+</div><p>
 <a class="anchor" name="cfed0b2a759fecb4de581223ec6b5a29"></a><!-- doxytag: member="recursiveCalculation.h::setUpRecursion" ref="cfed0b2a759fecb4de581223ec6b5a29" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData, Basis &amp;initialSites, RecursionData &amp;rd)" -->
 <div class="memitem">
 <div class="memproto">
@@ -388,7 +517,8 @@ find out the index for a basis in V_{K}
 <div class="memdoc">
 
 <p>
-set up the precondition for the recursive calculations: fromRightToCenter and fromLeftToCenter 
+set up the precondition for the recursive calculations: fromRightToCenter and fromLeftToCenter<p>
+before calling this, you have to call void setUpIndexInteractions(<a class="el" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="el" href="structInteractionData.html">InteractionData</a>&amp; interactionData) 
 <p>
 To find out KRightStart, we start from V_{KRightStop}=[ v_{KRightStop}, v_{KRightStop+1}, ..., v_{KRightStop+maxDistance-1} ]. We can let K = KRightStop+maxDistance-1 and increase K by maxDistance each time until K &gt; Kmax, then the value of KRightStart is given by current_value_of_K - maxDistance - (maxDistance-1) 
 </div>
@@ -479,7 +609,7 @@ Substituting the above two equations into the first equation, we obtain [ W_{KCe
 Then V_{KCenter} can be obtained by solving the above linear equation 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Jun 30 23:52:13 2014 for CalculateGreenFunction by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Wed Jul 2 15:38:21 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

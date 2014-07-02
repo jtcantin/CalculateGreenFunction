@@ -54,6 +54,10 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::vector&lt; double &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="misc_8h.html#4a72af61a51276042a07a3b425ee4ac2">linspace</a> (double start, double stop, int num=100)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="misc_8h.html#806282aef686e2abbec0390b26225eb4">saveToFile</a> (std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;m)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="misc_8h.html#12aec6ce8bc7701ff54581fa3e5b5ad2">saveToFile</a> (std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;m)</td></tr>
+
 </table>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="5bdcfae08119c4a7fe8ad391584d4e89"></a><!-- doxytag: member="misc.h::itos" ref="5bdcfae08119c4a7fe8ad391584d4e89" args="(int n)" -->
@@ -329,6 +333,66 @@
 
 </div>
 </div><p>
+<a class="anchor" name="12aec6ce8bc7701ff54581fa3e5b5ad2"></a><!-- doxytag: member="misc.h::saveToFile" ref="12aec6ce8bc7701ff54581fa3e5b5ad2" args="(std::string filename, DMatrix &amp;m)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void saveToFile           </td>
+          <td>(</td>
+          <td class="paramtype">std::string&nbsp;</td>
+          <td class="paramname"> <em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+save a real matrix into a text file<p>
+row_index col_index matrix_element 
+</div>
+</div><p>
+<a class="anchor" name="806282aef686e2abbec0390b26225eb4"></a><!-- doxytag: member="misc.h::saveToFile" ref="806282aef686e2abbec0390b26225eb4" args="(std::string filename, CDMatrix &amp;m)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void saveToFile           </td>
+          <td>(</td>
+          <td class="paramtype">std::string&nbsp;</td>
+          <td class="paramname"> <em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+save a complex matrix into a text file<p>
+row_index col_index real_part imag_part 
+</div>
+</div><p>
 <a class="anchor" name="9cd29d9805fac3c5d278f2f3587d79f7"></a><!-- doxytag: member="misc.h::stringConverter" ref="9cd29d9805fac3c5d278f2f3587d79f7" args="(int K, int nth)" -->
 <div class="memitem">
 <div class="memproto">
@@ -418,7 +482,7 @@
 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Jun 30 23:52:13 2014 for CalculateGreenFunction by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Wed Jul 2 15:38:21 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

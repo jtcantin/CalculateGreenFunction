@@ -36,8 +36,54 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="direct__calculation_8cpp.html#6ded389bdf2a7892de3692b6bbaafcd2">densityOfState_direct</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;basis, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; double &gt; &amp;dosList)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="direct__calculation_8cpp.html#09d1385fb4d1dc553d6d7286b55b5935">densityOfStateAll_direct</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; std::string &gt; &amp;fileList)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="direct__calculation_8cpp.html#1556aa35e384fb90450449d59ccf6678">calculateAllGreenFunc_direct</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; std::string &gt; &amp;fileList)</td></tr>
+
 </table>
 <hr><h2>Function Documentation</h2>
+<a class="anchor" name="1556aa35e384fb90450449d59ccf6678"></a><!-- doxytag: member="direct_calculation.cpp::calculateAllGreenFunc_direct" ref="1556aa35e384fb90450449d59ccf6678" args="(LatticeShape &amp;lattice, Basis &amp;initialSites, std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; std::string &gt; &amp;fileList)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void calculateAllGreenFunc_direct           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classBasis.html">Basis</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>initialSites</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>zList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>fileList</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+calculate all Green's function and save them into files<p>
+before calling this, call generateIndexMatrix(lattice); setInteractions(lattice, interactionData); 
+</div>
+</div><p>
 <a class="anchor" name="32da09796146c558ea3066caac0864a7"></a><!-- doxytag: member="direct_calculation.cpp::denominatorHelper" ref="32da09796146c558ea3066caac0864a7" args="(dcomplex z, DVector &amp;eigenValues, CDArray &amp;oneOverDenominator)" -->
 <div class="memitem">
 <div class="memproto">
@@ -111,7 +157,44 @@
 <div class="memdoc">
 
 <p>
-calculate the density of state at (site1, site2) density_of_state = -Im(&lt;basis | G(z) | basis&gt;)/Pi 
+calculate the density of state at (site1, site2) density_of_state = -Im(&lt;basis | G(z) | basis&gt;)/Pi<p>
+before calling this, call generateIndexMatrix(lattice1D); setInteractions(lattice1D, interactionData); 
+</div>
+</div><p>
+<a class="anchor" name="09d1385fb4d1dc553d6d7286b55b5935"></a><!-- doxytag: member="direct_calculation.cpp::densityOfStateAll_direct" ref="09d1385fb4d1dc553d6d7286b55b5935" args="(LatticeShape &amp;lattice, std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; std::string &gt; &amp;fileList)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void densityOfStateAll_direct           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>zList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>fileList</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+calculate the density of state at all possible sites density_of_state = -Im(&lt;basis | G(z) | basis&gt;)/Pi<p>
+before calling this, call generateIndexMatrix(lattice1D); setInteractions(lattice1D, interactionData); 
 </div>
 </div><p>
 <a class="anchor" name="87734694a477ec9ea1257f5112de110a"></a><!-- doxytag: member="direct_calculation.cpp::formAllBasisSets" ref="87734694a477ec9ea1257f5112de110a" args="(LatticeShape &amp;lattice, IMatrix &amp;basisIndex, std::vector&lt; Basis &gt; &amp;basisSets)" -->
@@ -148,7 +231,8 @@ calculate the density of state at (site1, site2) density_of_state = -Im(&lt;basi
 <p>
 forming all the basis sets<p>
 A two-particle basis can be generally written as basis( index_for_site1, index_for_site2 ) = basis( i, j ) In 1D, a site can be labeled by the corresponding lattice coordinate x. In 2D, a site is specified by the lattice coordinate (x,y), and it can be labeled by index = x + y*(xmax + 1). We have a function: void <a class="el" href="basis_8h.html#c79dd08aec760821bccb305800cd4887">getLatticeIndex(LatticeShape&amp; lattice, Basis&amp; basis, int &amp;site1, int &amp;site2)</a> which can be used to calculate the index for site1 and site2 given a basis set<p>
-basisIndex(site1, site2) = nth means that the basis set with (site1, site2) is the nth basis set. 
+basisIndex(site1, site2) = nth means that the basis set with (site1, site2) is the nth basis set.<p>
+before calling this, call generateIndexMatrix(lattice1D); setInteractions(lattice1D, interactionData); 
 </div>
 </div><p>
 <a class="anchor" name="1ce8461a389691c969adda2662ffa10e"></a><!-- doxytag: member="direct_calculation.cpp::formHamiltonianMatrix" ref="1ce8461a389691c969adda2662ffa10e" args="(LatticeShape &amp;lattice, DMatrix &amp;hamiltonian, IMatrix &amp;basisIndex, std::vector&lt; Basis &gt; &amp;basisSets)" -->
@@ -189,7 +273,7 @@ basisIndex(site1, site2) = nth means that the basis set with (site1, site2) is t
 <div class="memdoc">
 
 <p>
-
+before calling this, call generateIndexMatrix(lattice1D); setInteractions(lattice1D, interactionData); 
 </div>
 </div><p>
 <a class="anchor" name="34bec35a69b8b60587d5e0cfd6a25cd6"></a><!-- doxytag: member="direct_calculation.cpp::greenFunc_direct" ref="34bec35a69b8b60587d5e0cfd6a25cd6" args="(LatticeShape &amp;lattice, Basis &amp;bra, Basis &amp;ket, std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; dcomplex &gt; &amp;gfList)" -->
@@ -236,7 +320,8 @@ basisIndex(site1, site2) = nth means that the basis set with (site1, site2) is t
 <div class="memdoc">
 
 <p>
-calculating the green function &lt;bra | G(z) | ket&gt; 
+calculating the green function &lt;bra | G(z) | ket&gt;<p>
+before calling this, call generateIndexMatrix(lattice1D); setInteractions(lattice1D, interactionData); 
 </div>
 </div><p>
 <a class="anchor" name="8032f606b52ff11887658b30de0e0bea"></a><!-- doxytag: member="direct_calculation.cpp::greenFuncHelper" ref="8032f606b52ff11887658b30de0e0bea" args="(CDArray &amp;numerator, CDArray &amp;oneOverDenominator)" -->
@@ -357,7 +442,7 @@ for 1D: &lt;bra| = basis(n1f, n2f) |ket&gt; = basis(n1i, n1i)
 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Jun 30 23:52:13 2014 for CalculateGreenFunction by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Wed Jul 2 15:38:21 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

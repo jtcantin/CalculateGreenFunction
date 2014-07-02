@@ -164,7 +164,7 @@
 <a name="l00161"></a>00161                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;xsite-1; ++i) {
 <a name="l00162"></a>00162                         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> incr=1; incr&lt;=maxDistance &amp;&amp; i+incr&lt;xsite; ++incr) {
 <a name="l00163"></a>00163                                 m(i,i+incr) = maxVal*rng.<a class="code" href="classRandomNumberGenerator.html#2cf46b64c1a1c8c62f4ac3720df43ffc">randomReal</a>()/std::pow(incr,3.0); <span class="comment">// range [0, hop)</span>
-<a name="l00164"></a>00164                                 m(i+incr,i) = t(i,i+incr);
+<a name="l00164"></a>00164                                 m(i+incr,i) = m(i,i+incr);
 <a name="l00165"></a>00165                         }
 <a name="l00166"></a>00166                 }
 <a name="l00167"></a>00167         }
@@ -174,7 +174,7 @@
 <a name="l00171"></a>00171                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;xsite-1; ++i) {
 <a name="l00172"></a>00172                         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> incr=1; incr&lt;=maxDistance &amp;&amp; i+incr&lt;xsite; ++incr) {
 <a name="l00173"></a>00173                                 m(i,i+incr) = maxVal/std::pow(incr,3.0); <span class="comment">// range [0, hop)</span>
-<a name="l00174"></a>00174                                 m(i+incr,i) = t(i,i+incr);
+<a name="l00174"></a>00174                                 m(i+incr,i) = m(i,i+incr);
 <a name="l00175"></a>00175                         }
 <a name="l00176"></a>00176                 }
 <a name="l00177"></a>00177         }
@@ -214,7 +214,7 @@
 <a name="l00211"></a>00211 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#793ae8928e4b20869ef625b6e6d4d159">formMatrixBeta</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; BetaK);
 <a name="l00212"></a>00212 
 <a name="l00213"></a>00213 <span class="preprocessor">#endif </span><span class="comment">/* FORMMATRIX_H_ */</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Mon Jun 30 23:52:13 2014 for CalculateGreenFunction by&nbsp;
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Wed Jul 2 15:38:21 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

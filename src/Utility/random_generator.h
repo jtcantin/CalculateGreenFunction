@@ -58,28 +58,28 @@ public:
 	RandomNumberMatrix(int row_count, int col_count, unsigned seed) {
 		rows = row_count;
 		cols = col_count;
-		p = NULL;
-		p = new double[rows*cols];
+		m.resize(rows, cols);
 		rng.SetSeed(seed);
-		for (int i=0; i<rows*cols; i++) {
-			p[i] = rng.randomReal();
+		for (int i=0; i<rows; i++) {
+			for (int j=0; j<cols; ++j) {
+				m(i, j) = rng.randomReal();
+			}
 		}
 	}
 
 	double operator()(const int r, const int c) const {
-		return p[r*cols + c];
+		return m(r, c);
 	}
 
 
 	~RandomNumberMatrix() {
-		delete [] p;
-		p = NULL;
+		m.resize(0, 0);
 		rows = 0;
 		cols = 0;
 	}
 
 private:
-	double *p;
+	DMatrix m;
 	int rows;
 	int cols;
 	RandomNumberGenerator rng;

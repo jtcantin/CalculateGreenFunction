@@ -195,8 +195,8 @@ TEST(ComparisonTest, RandomOnSiteEnergy) {
 	int maxDistance = 5;
 
 	// only random onsite energy
-	InteractionData interactionData = {1.0,1.0,1.0,false,
-			false,true,maxDistance,230};
+	InteractionData interactionData = {1.0,1.0,1.0,true,
+			false,false,maxDistance,230};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;
@@ -245,8 +245,8 @@ TEST(ComparisonTest, RandomHopping) {
 	int maxDistance = 5;
 
 	// only random hopping interaction
-	InteractionData interactionData = {1.0,1.0,1.0,true,
-			false,false,maxDistance,230};
+	InteractionData interactionData = {1.0,1.0,1.0,false,
+			true,false,maxDistance,230};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;
@@ -293,7 +293,7 @@ TEST(ComparisonTest, NoDisorderNoDyn) {
 	int maxDistance = 5;
 
 	// no disorder and no dynamic interaction
-	InteractionData interactionData = {1.0,0.0,1.0,false,
+	InteractionData interactionData = {1.0,1.0,0.0,false,
 			false,false,maxDistance,230};
 	setUpIndexInteractions(lattice1D, interactionData);
 
@@ -330,3 +330,105 @@ TEST(ComparisonTest, NoDisorderNoDyn) {
 
 	EXPECT_TRUE(true);
 }
+
+
+
+TEST(ComparisonTest, RandomHoppingLargeDyn) {
+	LatticeShape lattice1D(1);
+	int xmax = 50;
+	lattice1D.setXmax(xmax); //xsite = xmax + 1
+	Basis initialSites(xmax/2,xmax/2+1);
+
+	int maxDistance = 5;
+
+	// no disorder and no dynamic interaction
+	InteractionData interactionData = {1.0,1.0,4.0,false,
+			true,false,maxDistance,230};
+	setUpIndexInteractions(lattice1D, interactionData);
+
+	std::vector< dcomplex > zList;
+	zList.push_back(dcomplex(0, 0.01));
+	zList.push_back(dcomplex(1, 0.01));
+	std::vector<std::string> fileList;
+
+	/********** Recursive calculations of Green's function******************/
+	fileList.push_back("GF_random_hopping_large_dyn_recursive_E_0.txt");
+	fileList.push_back("GF_random_hopping_large_dyn_recursive_E_1.txt");
+	calculateAllGreenFunc(lattice1D,  initialSites,
+			              interactionData, zList,
+	                       fileList);
+
+	/********** Direct calculations of Green's function*********************/
+	fileList.clear();
+	fileList.push_back("GF_random_hopping_large_dyn_direct_E_0.txt");
+	fileList.push_back("GF_random_hopping_large_dyn_direct_E_1.txt");
+	calculateAllGreenFunc_direct(lattice1D,  initialSites,
+			                      zList, fileList);
+
+	/********** Recursive calculations of density of state ******************/
+	fileList.clear();
+	fileList.push_back("DOS_random_hopping_large_dyn_recursive_E_0.txt");
+	fileList.push_back("DOS_random_hopping_large_dyn_recursive_E_1.txt");
+	calculateDensityOfStateAll(lattice1D, interactionData, zList, fileList);
+
+	/********** Direct calculations of density of state *********************/
+	fileList.clear();
+	fileList.push_back("DOS_random_hopping_large_dyn_direct_E_0.txt");
+	fileList.push_back("DOS_random_hopping_large_dyn_direct_E_1.txt");
+	densityOfStateAll_direct(lattice1D, zList, fileList);
+
+	EXPECT_TRUE(true);
+}
+
+
+
+TEST(ComparisonTest, NoDisorderLargeDyn) {
+	LatticeShape lattice1D(1);
+	int xmax = 50;
+	lattice1D.setXmax(xmax); //xsite = xmax + 1
+	Basis initialSites(xmax/2,xmax/2+1);
+
+	int maxDistance = 5;
+
+	// no disorder and no dynamic interaction
+	InteractionData interactionData = {1.0,1.0,4.0,false,
+			false,false,maxDistance,230};
+	setUpIndexInteractions(lattice1D, interactionData);
+
+	std::vector< dcomplex > zList;
+	zList.push_back(dcomplex(0, 0.01));
+	zList.push_back(dcomplex(1, 0.01));
+	std::vector<std::string> fileList;
+
+	/********** Recursive calculations of Green's function******************/
+	fileList.push_back("GF_ordered_large_dyn_recursive_E_0.txt");
+	fileList.push_back("GF_ordered_large_dyn_recursive_E_1.txt");
+	calculateAllGreenFunc(lattice1D,  initialSites,
+			              interactionData, zList,
+	                       fileList);
+
+	/********** Direct calculations of Green's function*********************/
+	fileList.clear();
+	fileList.push_back("GF_ordered_large_dyn_direct_E_0.txt");
+	fileList.push_back("GF_ordered_large_dyn_direct_E_1.txt");
+	calculateAllGreenFunc_direct(lattice1D,  initialSites,
+			                      zList, fileList);
+
+	/********** Recursive calculations of density of state ******************/
+	fileList.clear();
+	fileList.push_back("DOS_ordered_large_dyn_recursive_E_0.txt");
+	fileList.push_back("DOS_ordered_large_dyn_recursive_E_1.txt");
+	calculateDensityOfStateAll(lattice1D, interactionData, zList, fileList);
+
+	/********** Direct calculations of density of state *********************/
+	fileList.clear();
+	fileList.push_back("DOS_ordered_large_dyn_direct_E_0.txt");
+	fileList.push_back("DOS_ordered_large_dyn_direct_E_1.txt");
+	densityOfStateAll_direct(lattice1D, zList, fileList);
+
+	EXPECT_TRUE(true);
+}
+
+
+
+

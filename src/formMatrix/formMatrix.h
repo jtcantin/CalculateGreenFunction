@@ -23,7 +23,7 @@
  */
 typedef struct {
 	double onsiteE, hop, dyn;
-	bool randomHop, randomDyn, randomOnSite;
+	bool randomOnSite, randomHop, randomDyn;
 	int maxDistance; // beyond which the interaction is set to zero
 	unsigned seed;
 } InteractionData;
@@ -51,7 +51,7 @@ public:
 			// initialize the hopping matrix
 			t = DMatrix::Zero(xsite,xsite);
 			if (interactionData.randomHop) {
-				setRandomMatrix(t, interactionData.hop, maxDistance);
+				setRandomMatrix(t, interactionData.hop, maxDistance, seed+10);
 			} else {
 				// set all element to constant
 				setConstantMatrix(t, interactionData.hop, maxDistance);
@@ -60,7 +60,7 @@ public:
 			// initialize the dynamic matrix
 			d = DMatrix::Zero(xsite,xsite);
 			if (interactionData.randomDyn) {
-				setRandomMatrix(d, interactionData.dyn, maxDistance);
+				setRandomMatrix(d, interactionData.dyn, maxDistance, seed+20);
 			} else {
 				// set all element to constant
 				setConstantMatrix(d, interactionData.dyn, maxDistance);
@@ -156,11 +156,15 @@ private:
 	unsigned seed;
 	RandomNumberGenerator rng;
 
-	void setRandomMatrix(DMatrix& m, double maxVal, int maxDistance) {
+	void setRandomMatrix(DMatrix& m, double maxVal, int maxDistance, unsigned seed_) {
+		//RandomNumberMatrix rnm(m.rows(), m.cols(), seed_);
+		//rng.SetSeed(seed_);
+		srand(seed_);
+		DMatrix rnm = DMatrix::Random(m.rows(), m.cols());
 		int xsite = m.rows();
 		for (int i=0; i<xsite-1; ++i) {
 			for (int incr=1; incr<=maxDistance && i+incr<xsite; ++incr) {
-				m(i,i+incr) = maxVal*rng.randomReal()/std::pow(incr,3.0); // range [0, hop)
+				m(i,i+incr) = maxVal*rnm(i, i+incr)/std::pow(incr,3.0); // range [0, hop)
 				m(i+incr,i) = m(i,i+incr);
 			}
 		}

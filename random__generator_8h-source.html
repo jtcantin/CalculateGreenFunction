@@ -76,28 +76,28 @@
 <a name="l00058"></a><a class="code" href="classRandomNumberMatrix.html#2722bf7a5c538f76e5651d2a019f58c3">00058</a>         <a class="code" href="classRandomNumberMatrix.html#2722bf7a5c538f76e5651d2a019f58c3">RandomNumberMatrix</a>(<span class="keywordtype">int</span> row_count, <span class="keywordtype">int</span> col_count, <span class="keywordtype">unsigned</span> seed) {
 <a name="l00059"></a>00059                 rows = row_count;
 <a name="l00060"></a>00060                 cols = col_count;
-<a name="l00061"></a>00061                 p = NULL;
-<a name="l00062"></a>00062                 p = <span class="keyword">new</span> <span class="keywordtype">double</span>[rows*cols];
-<a name="l00063"></a>00063                 rng.<a class="code" href="classRandomNumberGenerator.html#dc815a543e3b3a78b23a87a7f3d9a4ab">SetSeed</a>(seed);
-<a name="l00064"></a>00064                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;rows*cols; i++) {
-<a name="l00065"></a>00065                         p[i] = rng.<a class="code" href="classRandomNumberGenerator.html#2cf46b64c1a1c8c62f4ac3720df43ffc">randomReal</a>();
-<a name="l00066"></a>00066                 }
-<a name="l00067"></a>00067         }
-<a name="l00068"></a>00068 
-<a name="l00069"></a><a class="code" href="classRandomNumberMatrix.html#206d5e7e6af04dcc4efec8c51234c261">00069</a>         <span class="keywordtype">double</span> <a class="code" href="classRandomNumberMatrix.html#206d5e7e6af04dcc4efec8c51234c261">operator()</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> r, <span class="keyword">const</span> <span class="keywordtype">int</span> c)<span class="keyword"> const </span>{
-<a name="l00070"></a>00070                 <span class="keywordflow">return</span> p[r*cols + c];
-<a name="l00071"></a>00071         }
-<a name="l00072"></a>00072 
+<a name="l00061"></a>00061                 m.resize(rows, cols);
+<a name="l00062"></a>00062                 rng.<a class="code" href="classRandomNumberGenerator.html#dc815a543e3b3a78b23a87a7f3d9a4ab">SetSeed</a>(seed);
+<a name="l00063"></a>00063                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;rows; i++) {
+<a name="l00064"></a>00064                         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j=0; j&lt;cols; ++j) {
+<a name="l00065"></a>00065                                 m(i, j) = rng.<a class="code" href="classRandomNumberGenerator.html#2cf46b64c1a1c8c62f4ac3720df43ffc">randomReal</a>();
+<a name="l00066"></a>00066                         }
+<a name="l00067"></a>00067                 }
+<a name="l00068"></a>00068         }
+<a name="l00069"></a>00069 
+<a name="l00070"></a><a class="code" href="classRandomNumberMatrix.html#206d5e7e6af04dcc4efec8c51234c261">00070</a>         <span class="keywordtype">double</span> <a class="code" href="classRandomNumberMatrix.html#206d5e7e6af04dcc4efec8c51234c261">operator()</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> r, <span class="keyword">const</span> <span class="keywordtype">int</span> c)<span class="keyword"> const </span>{
+<a name="l00071"></a>00071                 <span class="keywordflow">return</span> m(r, c);
+<a name="l00072"></a>00072         }
 <a name="l00073"></a>00073 
-<a name="l00074"></a><a class="code" href="classRandomNumberMatrix.html#9beb5d99b8dce978ecb8af384bf7003e">00074</a>         <a class="code" href="classRandomNumberMatrix.html#9beb5d99b8dce978ecb8af384bf7003e">~RandomNumberMatrix</a>() {
-<a name="l00075"></a>00075                 <span class="keyword">delete</span> [] p;
-<a name="l00076"></a>00076                 p = NULL;
+<a name="l00074"></a>00074 
+<a name="l00075"></a><a class="code" href="classRandomNumberMatrix.html#9beb5d99b8dce978ecb8af384bf7003e">00075</a>         <a class="code" href="classRandomNumberMatrix.html#9beb5d99b8dce978ecb8af384bf7003e">~RandomNumberMatrix</a>() {
+<a name="l00076"></a>00076                 m.resize(0, 0);
 <a name="l00077"></a>00077                 rows = 0;
 <a name="l00078"></a>00078                 cols = 0;
 <a name="l00079"></a>00079         }
 <a name="l00080"></a>00080 
 <a name="l00081"></a>00081 <span class="keyword">private</span>:
-<a name="l00082"></a>00082         <span class="keywordtype">double</span> *p;
+<a name="l00082"></a>00082         <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> m;
 <a name="l00083"></a>00083         <span class="keywordtype">int</span> rows;
 <a name="l00084"></a>00084         <span class="keywordtype">int</span> cols;
 <a name="l00085"></a>00085         <a class="code" href="classRandomNumberGenerator.html">RandomNumberGenerator</a> rng;
@@ -106,7 +106,7 @@
 <a name="l00088"></a>00088 
 <a name="l00089"></a>00089 
 <a name="l00090"></a>00090 <span class="preprocessor">#endif</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Wed Jul 2 15:38:21 2014 for CalculateGreenFunction by&nbsp;
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Jul 3 14:18:34 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

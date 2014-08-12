@@ -29,21 +29,19 @@ typedef std::complex<double> dcomplex;
 #define EIGEN_USE_MKL_ALL
 #include <Eigen/Dense>
 
-
+/**
+ * matrix, vector and array class from eigen lib
+ *
+ * C --- complex
+ * D --- double
+ * I --- integer
+ */
 typedef Eigen::MatrixXcd CDMatrix;
-
 typedef Eigen::MatrixXd DMatrix;
-
-
-typedef Eigen::MatrixXi IMatrix; // integer matrix
-
+typedef Eigen::MatrixXi IMatrix;
 typedef Eigen::VectorXcd CDVector;
-
-
 typedef Eigen::VectorXd DVector;
-
 typedef Eigen::ArrayXd DArray;
-
 typedef Eigen::ArrayXcd CDArray;
 
 

@@ -23,10 +23,12 @@ void getLatticeIndex(LatticeShape& lattice, Basis& basis, int &site1, int &site2
 		site2 = basis[1];
 		break;
 	case 2:
-		int xmax = lattice.getXmax();
-		site1 = basis[0] + basis[1]*(xmax + 1);
-		site2 = basis[2] + basis[3]*(xmax + 1);
-		break;
+		{
+			int xmax = lattice.getXmax();
+			site1 = basis[0] + basis[1]*(xmax + 1);
+			site2 = basis[2] + basis[3]*(xmax + 1);
+			break;
+		}
 	case 3:
 	default:
 		std::cout << "Not supported!" << std::endl;
@@ -112,7 +114,7 @@ void generateNeighbors(Basis basis, int distance, LatticeShape& lattice,
 	neighbors.clear();
 
 	switch (dim) {
-		case 1:
+		case 1: {
 			// generate Neighbors for the 1D case
 			int x1 = basis[0];
 			int x2 = basis[1];
@@ -153,6 +155,7 @@ void generateNeighbors(Basis basis, int distance, LatticeShape& lattice,
 				}
 			}
 			break;
+		}
 		case 2:
 			// generate Neighbors for the 2D case
 			std::cout<<"Dimensions not supported!"<<std::endl;
@@ -176,7 +179,7 @@ void generateIndexMatrix(LatticeShape& lattice) {
 	int dim = lattice.getDim();
 	switch (dim) {
 		// for the 1D case
-		case 1:
+		case 1:{
 			int nth;
 			int xmax = lattice.getXmax();
 			int nsite = xmax + 1; //total number of sites
@@ -216,6 +219,7 @@ void generateIndexMatrix(LatticeShape& lattice) {
 			}
 
 			break;
+		}
 		// for the 2D case
 		case 2:
 		case 3:

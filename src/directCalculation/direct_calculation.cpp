@@ -32,7 +32,7 @@
 void formAllBasisSets(LatticeShape& lattice, IMatrix& basisIndex,
 		std::vector<Basis>& basisSets) {
 	switch (lattice.getDim()) {
-	case 1:
+	case 1: {
 		// generate all basis sets
 		int nbasis = 0; //the total number of basis set
 		int xmax = lattice.getXmax();
@@ -63,7 +63,7 @@ void formAllBasisSets(LatticeShape& lattice, IMatrix& basisIndex,
 			}
 		}
 		break;
-
+	}
 	case 2:
 		break;
 	case 3:

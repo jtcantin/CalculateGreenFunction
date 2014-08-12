@@ -13,8 +13,11 @@
 #include <vector>
 #include <fstream>
 #include <complex>
+#include <limits>
 #include "types.h"
 #include "misc.h"
+
+typedef std::numeric_limits< double > dbl;
 
 std::string itos(int n);
 std::string stringConverter(int K, int nth);

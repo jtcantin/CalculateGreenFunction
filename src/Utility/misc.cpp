@@ -132,6 +132,8 @@ std::vector<double> linspace(double start, double stop, int num) {
  */
 void saveToFile(std::string filename, CDMatrix& m) {
 	std::ofstream out(filename.c_str());
+
+	out.precision(dbl::digits10);
 	for (int row=0; row< m.rows(); ++row) {
 		for (int col=0; col<m.cols(); ++col) {
 			dcomplex v = m(row, col);
@@ -151,6 +153,7 @@ void saveToFile(std::string filename, CDMatrix& m) {
  */
 void saveToFile(std::string filename, DMatrix& m) {
 	std::ofstream out(filename.c_str());
+	out.precision(dbl::digits10);
 	for (int row=0; row< m.rows(); ++row) {
 		for (int col=0; col<m.cols(); ++col) {
 			double v = m(row, col);

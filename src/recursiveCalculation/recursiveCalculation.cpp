@@ -42,7 +42,7 @@ int findCorrespondingVK(LatticeShape& lattice, int maxDistance, Basis& basis) {
 }
 
 /**
- * find out the index for a basis in V_{K}
+ * find out the index of G(basis, ...)for a basis in V_{K}
  */
 int getBasisIndexInVK(LatticeShape& lattice, int K, Basis& basis) {
 	// find out which V_{K} the basis belongs to
@@ -64,9 +64,9 @@ int getBasisIndexInVK(LatticeShape& lattice, int K, Basis& basis) {
 
 
 /**
- * 	calculate the indexMatrix and set up the interaction matrix
+ * 	calculate the index matrices and set up the interactions between sites
  *
- * 	This has to be called before any recursive calculations begin
+ * 	IMPORTANT: this has to be called before any recursive calculations begin
  */
 void setUpIndexInteractions(LatticeShape& lattice,
 		InteractionData& interactionData) {
@@ -468,7 +468,9 @@ void solveVKCenter(RecursionData& recursionData, dcomplex z,
 /**
  * calculate density of state at the initial sites
  *
- * before calling it, you have to call setUpIndexInteractions(lattice, interactionData)
+ * IMPORTANT: before calling calculateDensityOfState, you have to call
+ *            setUpIndexInteractions(lattice, interactionData) to set
+ *            up index matrices and interactions between sites
  */
 void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		                      InteractionData& interactionData,
@@ -476,7 +478,6 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		                      std::vector<double>& rhoList) {
 
 	RecursionData recursionData;
-	//setUpIndexInteractions(lattice, interactionData);
 	setUpRecursion(lattice,  interactionData, initialSites, recursionData);
 
 	rhoList.clear();
@@ -498,10 +499,14 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		ATildeKLeftStop.resize(0,0);
 		AKRightStop.resize(0,0);
 
-		dcomplex gf = VKCenter(recursionData.indexForNonzero,0);
+		/*
+		 * extract the diagonal element of the Green's function
+		 * <initial_sites | G(z) | initial_sites>
+		 */
+		dcomplex gf_diagonal = VKCenter(recursionData.indexForNonzero,0);
 //		std::cout<< "gf OK" << std::endl;
 
-		double rho = -gf.imag()/M_PI;
+		double rho = -gf_diagonal.imag()/M_PI;
 		rhoList.push_back(rho);
 	}
 
@@ -532,6 +537,10 @@ void calculateDensityOfStateAll(LatticeShape& lattice,
 		DMatrix dos= DMatrix::Zero(xmax+1, xmax+1);
 		for (int n1=0; n1<=xmax-1; ++n1) {
 			for (int n2=n1+1; n2<=xmax; ++n2) {
+				/*
+				 * the current code can't handle the case where the initial sites
+                 * are very close to the boundaries
+				 */
 				if (n1+n2>10 && n1+n2<xmax+xmax-1-10) {
 					Basis initialSites(n1, n2);
 					RecursionData recursionData;
@@ -551,9 +560,13 @@ void calculateDensityOfStateAll(LatticeShape& lattice,
 					ATildeKLeftStop.resize(0,0);
 					AKRightStop.resize(0,0);
 
-					dcomplex gf = VKCenter(recursionData.indexForNonzero,0);
+					/*
+					 * extract the diagonal element of the Green's function
+					 * <initial_sites | G(z) | initial_sites>
+					 */
+					dcomplex gf_diagonal = VKCenter(recursionData.indexForNonzero,0);
 
-					double rho = -gf.imag()/M_PI;
+					double rho = -gf_diagonal.imag()/M_PI;
 					dos(n1, n2) = rho;
 					dos(n2, n1) = rho;
 				} // end of if
@@ -696,7 +709,7 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 
 	for (int i=0; i<zList.size(); ++i) {
 		dcomplex z = zList[i];
-		std::string file = fileList[i];
+		std::string filename = fileList[i];
 		/*
 		 * calculate VKCenter and save all A and ATilde matrices into binary files
 		 * for later usage
@@ -792,8 +805,13 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 			for (int i=0; i<gf.rows(); ++i) {
 				gf(i, i) = dcomplex(0,0);
 			}
-			// save the gf matrix into file
-			saveToFile(file, gf);
+
+			if (filename.substr(filename.length()-3, 3)=="bin") {
+				saveMatrix(filename, gf); // save as binary
+			} else {
+				// save the gf matrix into text file
+				saveToFile(filename, gf);
+			}
 			break;
 		}
 		case 2:
@@ -807,16 +825,29 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 
 
 
-//
-//
-//// extract the matrix element G(n, m, ni1, ni2) from files stored in disk
-//// it requires the index matrix which tells the order of G(n, m, ni1, ni2) in V_{n+m}
-//complex_mkl extractMatrixElement(int n, int m, int ni1, int ni2, IMatrix& indexMatrix) {
-//	int nsum = n + m;
-//	std::string filename;
-//	filename = "V_" + itos(nsum) + ".bin";
-//	CDMatrix V_nsum;
-//	bytesToCDMatrix(V_nsum, filename);
-//	int nth = indexMatrix(n, m);
-//	return V_nsum(nth, 0);
-//}
+
+/*
+ * extract the matrix element G(n, m, initial_sites) from files stored in disk
+ *
+ * lattice --- contains the information about the size and shape of the crystal
+ * maxDistance --- the range of dipole-dipole interaction
+ *                 (in the unit of lattice constant)
+ */
+
+dcomplex extractMatrixElement(int n, int m, LatticeShape& lattice, int maxDistance) {
+	Basis finalSites(n, m);
+	/*
+	 *find out what V_K the Green's function G(n1, n2, ...)
+	 *belongs to
+	 */
+	int Kfinal = findCorrespondingVK(lattice, maxDistance,
+			                          finalSites);
+	// find out the row index for G(n1, n2, ...) within V_K
+	int rowIndex = getBasisIndexInVK(lattice, Kfinal, finalSites);
+	CDMatrix VKfinal;
+	std::string fileV = "V"+itos(Kfinal)+".bin";
+	loadMatrix(fileV, VKfinal);
+	return VKfinal(rowIndex, 0);
+}
+
+

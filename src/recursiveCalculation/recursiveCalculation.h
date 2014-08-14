@@ -95,4 +95,15 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 		                InteractionData& interactionData, std::vector<dcomplex> zList,
                         std::vector< std::string > fileList);
 
+
+/*
+ * extract the matrix element G(n, m, initial_sites) from files stored in disk
+ *
+ * lattice --- contains the information about the size and shape of the crystal
+ * maxDistance --- the range of dipole-dipole interaction
+ *                 (in the unit of lattice constant)
+ */
+
+dcomplex extractMatrixElement(int n, int m, LatticeShape& lattice, int maxDistance);
+
 #endif /* RECURSIVECALCULATION_HPP_ */

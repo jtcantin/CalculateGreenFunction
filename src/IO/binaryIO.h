@@ -16,10 +16,10 @@
 #include <complex>
 
 
-void saveMatrix(std::string filename, const CDMatrix& m);
-void loadMatrix(std::string filename, CDMatrix& m);
+void saveMatrixBin(std::string filename, const CDMatrix& m);
+void loadMatrixBin(std::string filename, CDMatrix& m);
 
-void saveMatrix(std::string filename, const DMatrix& m);
-void loadMatrix(std::string filename, DMatrix& m);
+void saveMatrixBin(std::string filename, const DMatrix& m);
+void loadMatrixBin(std::string filename, DMatrix& m);
 
 #endif /* BINARYIO_H_ */

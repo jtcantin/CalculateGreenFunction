@@ -12,6 +12,8 @@
 #include "../Utility/misc.h"
 #include "../basis_set/basis.h"
 #include "../formMatrix/formMatrix.h"
+#include "../IO/binaryIO.h"
+#include "../IO/textIO.h"
 
 
 void formAllBasisSets(LatticeShape& lattice, IMatrix& basisIndex,

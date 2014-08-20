@@ -17,7 +17,7 @@
 #include "types.h"
 #include "misc.h"
 
-typedef std::numeric_limits< double > dbl;
+
 
 std::string itos(int n);
 std::string stringConverter(int K, int nth);
@@ -49,20 +49,7 @@ void read_double_column(std::string filename, int column, std::vector<double>& a
 
 std::vector<double> linspace(double start, double stop, int num=100);
 
-/**
- * save a complex matrix into a text file
- *
- * row_index  col_index   real_part   imag_part
- */
-void saveToFile(std::string filename, CDMatrix& m);
 
-
-/**
- * save a real matrix into a text file
- *
- * row_index  col_index   matrix_element
- */
-void saveToFile(std::string filename, DMatrix& m);
 
 
 #endif /* MICS_H_ */

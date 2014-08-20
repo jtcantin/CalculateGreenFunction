@@ -12,6 +12,7 @@
 #include "../Utility/misc.h"
 #include "../basis_set/basis.h"
 #include "../IO/binaryIO.h"
+#include "../IO/textIO.h"
 #include "../formMatrix/formMatrix.h"
 
 typedef struct {

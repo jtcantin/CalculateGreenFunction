@@ -219,7 +219,7 @@ void fromRightToCenter( RecursionData& recursionData,
 	std::string filename;
 	if (saveAMatrices==true) {
 		filename="A"+ itos(KRightStart) + ".bin";
-		saveMatrix(filename, AKPlus);
+		saveMatrixBin(filename, AKPlus);
 	}
 
 	/**
@@ -276,7 +276,7 @@ void fromRightToCenter( RecursionData& recursionData,
 		// save the AK matrix into a binary file
 		if (saveAMatrices==true) {
 			filename="A"+ itos(K) + ".bin";
-			saveMatrix(filename, AKPlus);
+			saveMatrixBin(filename, AKPlus);
 		}
 	}
 
@@ -346,7 +346,7 @@ void fromLeftToCenter( RecursionData& recursionData,
 	std::string filename;
 	if (saveAMatrices==true) {
 		filename="ATilde"+ itos(KLeftStart) + ".bin";
-		saveMatrix(filename, ATildeKMinus);
+		saveMatrixBin(filename, ATildeKMinus);
 	}
 
 	/**
@@ -401,7 +401,7 @@ void fromLeftToCenter( RecursionData& recursionData,
 		// save the AK matrix into a binary file
 		if (saveAMatrices==true) {
 			filename="ATilde"+ itos(K) + ".bin";
-			saveMatrix(filename, ATildeKMinus);
+			saveMatrixBin(filename, ATildeKMinus);
 		}
 	}
 
@@ -573,7 +573,7 @@ void calculateDensityOfStateAll(LatticeShape& lattice,
 			}
 		} // end of the two for loop
 		// save dos into file
-		saveToFile(file, dos);
+		saveMatrixText(file, dos);
 	}
 
 
@@ -658,7 +658,7 @@ void calculateGreenFunc(LatticeShape& lattice, Basis& finalSites,
 			for (int K=Kinitial+maxDistance; K<=Kfinal; K+=maxDistance) {
 				CDMatrix A;
 				std::string filename = "A"+itos(K)+".bin";
-				loadMatrix(filename,A);
+				loadMatrixBin(filename,A);
 				VKfinal = A*VKfinal;
 			}
 		}
@@ -668,7 +668,7 @@ void calculateGreenFunc(LatticeShape& lattice, Basis& finalSites,
 			for (int K=Kinitial-maxDistance; K>=Kfinal; K-=maxDistance) {
 				CDMatrix ATilde;
 				std::string filename = "ATilde"+itos(K)+".bin";
-				loadMatrix(filename,ATilde);
+				loadMatrixBin(filename,ATilde);
 				VKfinal = ATilde*VKfinal;
 			}
 		}
@@ -730,7 +730,7 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 		// save VKCenter into a file
 		int KCenter = recursionData.KCenter;
 		std::string fileV = "V"+itos(KCenter)+".bin";
-		saveMatrix(fileV, VKCenter);
+		saveMatrixBin(fileV, VKCenter);
 
 		/*
 		 * go from the center to the right and calculate all VK with K>KCenter
@@ -742,10 +742,10 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 		for (int K=KRightStop; K<=KRightStart; K+=maxDistance) {
 			CDMatrix A;
 			std::string filename = "A"+itos(K)+".bin";
-			loadMatrix(filename,A);
+			loadMatrixBin(filename,A);
 			VK = A*VK;
 			std::string fileV = "V"+itos(K)+".bin";
-			saveMatrix(fileV, VK);
+			saveMatrixBin(fileV, VK);
 		}
 
 		/*
@@ -758,10 +758,10 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 		for (int K=KLeftStop; K>=KLeftStart; K-=maxDistance) {
 			CDMatrix ATilde;
 			std::string filename = "ATilde"+itos(K)+".bin";
-			loadMatrix(filename,ATilde);
+			loadMatrixBin(filename,ATilde);
 			VK = ATilde*VK;
 			std::string fileV = "V"+itos(K)+".bin";
-			saveMatrix(fileV, VK);
+			saveMatrixBin(fileV, VK);
 		}
 
 		// release memory because they are no longer needed
@@ -796,7 +796,7 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 					int rowIndex = getBasisIndexInVK(lattice, Kfinal, finalSites);
 					CDMatrix VKfinal;
 					std::string fileV = "V"+itos(Kfinal)+".bin";
-					loadMatrix(fileV, VKfinal);
+					loadMatrixBin(fileV, VKfinal);
 					gf(n1, n2) = VKfinal(rowIndex, 0);
 					gf(n2, n1) = gf(n1, n2);
 				}
@@ -807,10 +807,10 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 			}
 
 			if (filename.substr(filename.length()-3, 3)=="bin") {
-				saveMatrix(filename, gf); // save as binary
+				saveMatrixBin(filename, gf); // save as binary
 			} else {
 				// save the gf matrix into text file
-				saveToFile(filename, gf);
+				saveMatrixText(filename, gf);
 			}
 			break;
 		}
@@ -846,7 +846,7 @@ dcomplex extractMatrixElement(int n, int m, LatticeShape& lattice, int maxDistan
 	int rowIndex = getBasisIndexInVK(lattice, Kfinal, finalSites);
 	CDMatrix VKfinal;
 	std::string fileV = "V"+itos(Kfinal)+".bin";
-	loadMatrix(fileV, VKfinal);
+	loadMatrixBin(fileV, VKfinal);
 	return VKfinal(rowIndex, 0);
 }
 

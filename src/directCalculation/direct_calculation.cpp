@@ -308,7 +308,7 @@ void densityOfStateAll_direct(LatticeShape& lattice, std::vector<dcomplex >& zLi
 		}// end of two for loops
 
 		// save dos into file
-		saveToFile(file, dos);
+		saveMatrixText(file, dos);
 	}
 
 }
@@ -365,7 +365,7 @@ void calculateAllGreenFunc_direct(LatticeShape& lattice,  Basis& initialSites,
 				gf(i, i) = dcomplex(0,0);
 			}
 			// save the gf matrix into file
-			saveToFile(file, gf);
+			saveMatrixText(file, gf);
 			break;
 		}
 		case 2:

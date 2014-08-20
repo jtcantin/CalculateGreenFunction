@@ -156,6 +156,7 @@ private:
 	unsigned seed;
 	RandomNumberGenerator rng;
 
+
 	void setRandomMatrix(DMatrix& m, double maxVal, int maxDistance, unsigned seed_) {
 		//RandomNumberMatrix rnm(m.rows(), m.cols(), seed_);
 		//rng.SetSeed(seed_);
@@ -170,6 +171,8 @@ private:
 		}
 	}
 
+
+
 	void setConstantMatrix(DMatrix& m, double maxVal, int maxDistance) {
 		int xsite = m.rows();
 		for (int i=0; i<xsite-1; ++i) {
@@ -182,7 +185,8 @@ private:
 
 	void setRandomVector(DVector& v, double maxVal) {
 		for (int i=0; i<v.size(); ++i) {
-			v(i) = maxVal*rng.randomReal();
+			// set v(i) a random value between [-maxVal/2, maxVal/2)
+			v(i) = maxVal*(2*rng.randomReal()-1.0)/2;
 		}
 	}
 

@@ -9,7 +9,7 @@
 
 
 // save an eigen matrix into a binary file
-void saveMatrix(std::string filename, const CDMatrix& m) {
+void saveMatrixBin(std::string filename, const CDMatrix& m) {
 	std::ofstream f(filename.c_str(), std::ios::binary);
 	// write the row_count and col_count into the file
 	int rows = m.rows();
@@ -22,7 +22,7 @@ void saveMatrix(std::string filename, const CDMatrix& m) {
 }
 
 // load an eigen matrix from a binary file
-void loadMatrix(std::string filename, CDMatrix& m) {
+void loadMatrixBin(std::string filename, CDMatrix& m) {
 	int rows, cols;
 	std::ifstream f(filename.c_str(), std::ios::binary);
 	f.read((char *)&rows, sizeof(rows));
@@ -36,7 +36,7 @@ void loadMatrix(std::string filename, CDMatrix& m) {
 
 
 // save an eigen matrix into a binary file
-void saveMatrix(std::string filename, const DMatrix& m) {
+void saveMatrixBin(std::string filename, const DMatrix& m) {
 	std::ofstream f(filename.c_str(), std::ios::binary);
 	// write the row_count and col_count into the file
 	int rows = m.rows();
@@ -49,7 +49,7 @@ void saveMatrix(std::string filename, const DMatrix& m) {
 }
 
 // load an eigen matrix from a binary file
-void loadMatrix(std::string filename, DMatrix& m) {
+void loadMatrixBin(std::string filename, DMatrix& m) {
 	int rows, cols;
 	std::ifstream f(filename.c_str(), std::ios::binary);
 	f.read((char *)&rows, sizeof(rows));

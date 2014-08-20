@@ -125,41 +125,4 @@ std::vector<double> linspace(double start, double stop, int num) {
 	return array;
 }
 
-/**
- * save a complex matrix into a text file
- *
- * row_index  col_index   real_part   imag_part
- */
-void saveToFile(std::string filename, CDMatrix& m) {
-	std::ofstream out(filename.c_str());
 
-	out.precision(dbl::digits10);
-	for (int row=0; row< m.rows(); ++row) {
-		for (int col=0; col<m.cols(); ++col) {
-			dcomplex v = m(row, col);
-			out << row <<"  " << col << "  "
-			<< v.real() << "  "
-			<< v.imag() << std::endl;
-		}
-	}
-	out.close();
-}
-
-
-/**
- * save a real matrix into a text file
- *
- * row_index  col_index   matrix_element
- */
-void saveToFile(std::string filename, DMatrix& m) {
-	std::ofstream out(filename.c_str());
-	out.precision(dbl::digits10);
-	for (int row=0; row< m.rows(); ++row) {
-		for (int col=0; col<m.cols(); ++col) {
-			double v = m(row, col);
-			out << row <<"  " << col << "  "
-			<< v << std::endl;
-		}
-	}
-	out.close();
-}

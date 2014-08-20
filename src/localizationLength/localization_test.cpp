@@ -54,7 +54,7 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 
 	InteractionData interactionData = { onsiteE, hop, dyn,
 			                            randomOnsite, randomHop, randomDyn,
-			                            maxDistance,seed };
+			                            maxDistance, seed };
 
 	setUpIndexInteractions(lattice1D, interactionData);
 
@@ -71,14 +71,14 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	zList.push_back(dcomplex(E, eta));
 
 	std::vector<std::string> fileList;
-	fileList.push_back("GF_random_onsite_energy_recursive_E_0.bin");
+	fileList.push_back("GF.bin");
 
 	calculateAllGreenFunc(lattice1D,  initialSites,
 			              interactionData, zList,
 	                       fileList);
 	// extract Green's function from the binary file
 	CDMatrix gf;
-	loadMatrix(fileList[0], gf);
+	loadMatrixBin(fileList[0], gf);
 	std::ofstream myFile;
 
 	std::string output = "localization_length.txt";

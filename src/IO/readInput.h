@@ -17,6 +17,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include <typeinfo>
+
 #include <stdexcept>
 
 class BadConversion : public std::runtime_error {
@@ -49,12 +51,12 @@ public:
 		std::ifstream iFile(filename.c_str());
 		std::string line;
 
+		std::string typeString;
+		std::string nameString;
+		std::string valueString;
 		/* While there is still a line. */
 		while(getline(iFile, line)) {
 			std::istringstream iss(line);
-			std::string typeString;
-			std::string nameString;
-			std::string valueString;
 
 			iss >> typeString >> nameString >> valueString;
 			if (typeString==type_ && nameString==name_) {
@@ -72,11 +74,15 @@ public:
 					unsigned * p = (unsigned *) pValue_;
 					*p = (unsigned) atoi(valueString.c_str());
 				}
+
+				std::cout << typeString << " " << nameString << " is set to be "
+						  << valueString << std::endl;
 				break; // found the input value and jump out of the while loop
 			}
 		}
 
 		iFile.close();
+
 	}
 
 private:
@@ -85,5 +91,12 @@ private:
 	void * pValue_;
 
 };
+
+
+#define READ_INPUT(f, t, v) \
+do { \
+	InputVariable inputVar(t, #v, &v); \
+	inputVar.read(f); \
+} while (0)
 
 #endif /* READINPUT_H_ */

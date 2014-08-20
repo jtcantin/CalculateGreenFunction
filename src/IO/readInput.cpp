@@ -22,8 +22,6 @@ bool to_bool(std::string str) {
 
 
 
-
-
 //std::string stringify(double x) {
 ////	std::ostringstream strs;
 ////	strs << x;

@@ -29,10 +29,8 @@
 TEST(LocalizationTest, RandomOnSiteEnergy) {
 	LatticeShape lattice1D(1);
 	int xmax;
-	/* read xmax */
-	InputVariable xmax_input("int", xstr(xmax), &xmax);
-	xmax_input.read("input.txt");
-	std::cout << "xmax is " << xmax << std::endl;
+	READ_INPUT("input.txt", "int", xmax);
+
 
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	int n = xmax/2;
@@ -40,35 +38,35 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	int nPlusa = n+a;
 	Basis initialSites(n, nPlusa);
 
-	/* read max distance */
+	/* set up interaction data */
+	double onsiteE, hop, dyn;
+	bool randomOnsite, randomHop, randomDyn;
 	int maxDistance;
-	InputVariable maxDistance_input("int", xstr(maxDistance), &maxDistance);
-	maxDistance_input.read("input.txt");
-	std::cout << "maxDistance is " << maxDistance << std::endl;
+	unsigned seed;
+	READ_INPUT("input.txt", "double", onsiteE);
+	READ_INPUT("input.txt", "double", hop);
+	READ_INPUT("input.txt", "double", dyn);
+	READ_INPUT("input.txt", "bool", randomOnsite);
+	READ_INPUT("input.txt", "bool", randomHop);
+	READ_INPUT("input.txt", "bool", randomDyn);
+	READ_INPUT("input.txt", "int", maxDistance);
+	READ_INPUT("input.txt", "unsigned", seed);
 
-	// only random onsite energy
-	unsigned seed = 567;
-	InteractionData interactionData = {1.0,1.0,1.0,true,
-			false,false,maxDistance,seed};
-
-	/* update seed */
-	InputVariable inputVar("unsigned", xstr(interactionData.seed),
-			                &(interactionData.seed));
-	inputVar.read("input.txt");
-	std::cout << "The new seed is " << interactionData.seed << std::endl;
+	InteractionData interactionData = { onsiteE, hop, dyn,
+			                            randomOnsite, randomHop, randomDyn,
+			                            maxDistance,seed };
 
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;
-	double E = 0.5;
-	InputVariable E_input("double", xstr(E), &E);
-	E_input.read("input.txt");
-	std::cout << "E is " << E << std::endl;
 
-	double eta = 0.01;
-	InputVariable eta_input("double", xstr(eta), &eta);
-	eta_input.read("input.txt");
-	std::cout << "eta is " << eta << std::endl;
+	double E;
+	READ_INPUT("input.txt", "double", E);
+
+
+	double eta;
+	READ_INPUT("input.txt", "double", eta);
+
 
 	zList.push_back(dcomplex(E, eta));
 
@@ -94,6 +92,7 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 		myFile << abs(n-m) << "\t"<< localization_length << std::endl;
 	}
 	myFile.close();
+
 	EXPECT_TRUE(true);
 }
 

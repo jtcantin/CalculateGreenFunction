@@ -20,7 +20,15 @@
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#09bb0743532eb10149446411001b1a13">deleteMatrixFiles</a> (std::string files)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#8b0502b36e503f03b11959ced08c314b">saveMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;gf)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#345acfab78b545b49818addd27757351">saveMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;gf)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#833e053961e1cf71fc06d7aca4ec92e9">loadMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;gf)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#2bcdfb297bcffe64c39102973af956d0">loadMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;gf)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#f7a9b154f3052702f5726b3dfeb867d7">deleteMatrixFiles</a> (std::string filename_may_contain_wildcard)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#f519514f8f6d6155af66d593f73e4e1d">solveDenseLinearEqs</a> (<a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;A, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;B, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;X)</td></tr>
 
@@ -45,6 +53,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#785526870b794d5138028250473ddeaa">calculateGreenFunc</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;finalSites, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, const std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;zList, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; &amp;gfList)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#f04ff891db725b2ec3ebf788c19363ef">calculateAllGreenFunc</a> (<a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, <a class="el" href="classBasis.html">Basis</a> &amp;initialSites, <a class="el" href="structInteractionData.html">InteractionData</a> &amp;interactionData, std::vector&lt; <a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> &gt; zList, std::vector&lt; std::string &gt; fileList)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8cpp.html#b548187e9754c58af5df963c7ed110f9">extractMatrixElement</a> (int n, int m, <a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;lattice, int maxDistance)</td></tr>
 
 </table>
 <hr><h2>Function Documentation</h2>
@@ -93,7 +103,8 @@
 
 <p>
 calculate all the matrix elements of the Green function and save them into a text file<p>
-before calling it, you have to call setUpIndexInteractions(lattice, interactionData) first 
+IMPORTANT: before calling calculateAllGreenFunc, you have to call setUpIndexInteractions(lattice, interactionData) first to set up the index matrices and interactions between sites<p>
+zList --- a list of complex energies fileList --- a list of files that the Green's functions will be saved into (each file contains the Green's functions for a specific complex energy) 
 </div>
 </div><p>
 <a class="anchor" name="606df39775b7266829a71b5550656fb1"></a><!-- doxytag: member="recursiveCalculation.cpp::calculateDensityOfState" ref="606df39775b7266829a71b5550656fb1" args="(LatticeShape &amp;lattice, Basis &amp;initialSites, InteractionData &amp;interactionData, const std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; double &gt; &amp;rhoList)" -->
@@ -141,7 +152,7 @@ before calling it, you have to call setUpIndexInteractions(lattice, interactionD
 
 <p>
 calculate density of state at the initial sites<p>
-before calling it, you have to call setUpIndexInteractions(lattice, interactionData) 
+IMPORTANT: before calling calculateDensityOfState, you have to call setUpIndexInteractions(lattice, interactionData) to set up index matrices and interactions between sites 
 </div>
 </div><p>
 <a class="anchor" name="bc7b339a0db5da1f5fa236b809b49be3"></a><!-- doxytag: member="recursiveCalculation.cpp::calculateDensityOfStateAll" ref="bc7b339a0db5da1f5fa236b809b49be3" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData, const std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; std::string &gt; &amp;fileList)" -->
@@ -183,7 +194,7 @@ before calling it, you have to call setUpIndexInteractions(lattice, interactionD
 
 <p>
 calculate density of state at all sites<p>
-before calling it, you have to call setUpIndexInteractions(lattice, interactionData) 
+IMPORTANT: before calling calculateDensityOfStateAll, you have to call setUpIndexInteractions(lattice, interactionData) first to set up index matrices and interactions between sites 
 </div>
 </div><p>
 <a class="anchor" name="785526870b794d5138028250473ddeaa"></a><!-- doxytag: member="recursiveCalculation.cpp::calculateGreenFunc" ref="785526870b794d5138028250473ddeaa" args="(LatticeShape &amp;lattice, Basis &amp;finalSites, Basis &amp;initialSites, InteractionData &amp;interactionData, const std::vector&lt; dcomplex &gt; &amp;zList, std::vector&lt; dcomplex &gt; &amp;gfList)" -->
@@ -236,11 +247,11 @@ before calling it, you have to call setUpIndexInteractions(lattice, interactionD
 <div class="memdoc">
 
 <p>
-calculate a matrix element of the Green function &lt;final_sites| G(z) |initial_sites&gt; for a list of z values<p>
-before calling it, you have to call setUpIndexInteractions(lattice, interactionData) 
+calculate a matrix element of the Green function &lt;final_sites| G(z) |initial_sites&gt; for a list of z values and save it into a vector gfList<p>
+IMPORTANT: before calling calculateGreenFunc, you have to call setUpIndexInteractions(lattice, interactionData) 
 </div>
 </div><p>
-<a class="anchor" name="09bb0743532eb10149446411001b1a13"></a><!-- doxytag: member="recursiveCalculation.cpp::deleteMatrixFiles" ref="09bb0743532eb10149446411001b1a13" args="(std::string files)" -->
+<a class="anchor" name="f7a9b154f3052702f5726b3dfeb867d7"></a><!-- doxytag: member="recursiveCalculation.cpp::deleteMatrixFiles" ref="f7a9b154f3052702f5726b3dfeb867d7" args="(std::string filename_may_contain_wildcard)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -248,7 +259,7 @@ before calling it, you have to call setUpIndexInteractions(lattice, interactionD
           <td class="memname">void deleteMatrixFiles           </td>
           <td>(</td>
           <td class="paramtype">std::string&nbsp;</td>
-          <td class="paramname"> <em>files</em>          </td>
+          <td class="paramname"> <em>filename_may_contain_wildcard</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -258,6 +269,47 @@ before calling it, you have to call setUpIndexInteractions(lattice, interactionD
 
 <p>
 clean up binary files that are used to save the matrices 
+</div>
+</div><p>
+<a class="anchor" name="b548187e9754c58af5df963c7ed110f9"></a><!-- doxytag: member="recursiveCalculation.cpp::extractMatrixElement" ref="b548187e9754c58af5df963c7ed110f9" args="(int n, int m, LatticeShape &amp;lattice, int maxDistance)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> extractMatrixElement           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classLatticeShape.html">LatticeShape</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>lattice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>maxDistance</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
 </div>
 </div><p>
 <a class="anchor" name="3e2393074b4d4555969137b2abaae8dd"></a><!-- doxytag: member="recursiveCalculation.cpp::findCorrespondingVK" ref="3e2393074b4d4555969137b2abaae8dd" args="(LatticeShape &amp;lattice, int maxDistance, Basis &amp;basis)" -->
@@ -437,7 +489,125 @@ Then A_{K} can be obtained by solving the above linear equations
 <div class="memdoc">
 
 <p>
-find out the index for a basis in V_{K} 
+find out the index of G(basis, ...)for a basis in V_{K} 
+</div>
+</div><p>
+<a class="anchor" name="2bcdfb297bcffe64c39102973af956d0"></a><!-- doxytag: member="recursiveCalculation.cpp::loadMatrix" ref="2bcdfb297bcffe64c39102973af956d0" args="(const std::string filename, DMatrix &amp;gf)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void loadMatrix           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string&nbsp;</td>
+          <td class="paramname"> <em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+read a file and save its content into a matrix 
+</div>
+</div><p>
+<a class="anchor" name="833e053961e1cf71fc06d7aca4ec92e9"></a><!-- doxytag: member="recursiveCalculation.cpp::loadMatrix" ref="833e053961e1cf71fc06d7aca4ec92e9" args="(const std::string filename, CDMatrix &amp;gf)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void loadMatrix           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string&nbsp;</td>
+          <td class="paramname"> <em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+read a file and save its content into a matrix 
+</div>
+</div><p>
+<a class="anchor" name="345acfab78b545b49818addd27757351"></a><!-- doxytag: member="recursiveCalculation.cpp::saveMatrix" ref="345acfab78b545b49818addd27757351" args="(const std::string filename, DMatrix &amp;gf)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void saveMatrix           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string&nbsp;</td>
+          <td class="paramname"> <em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+save matrix to file<p>
+if the filename is *.bin, save the matrix in binary format otherwise save the matrix in text format 
+</div>
+</div><p>
+<a class="anchor" name="8b0502b36e503f03b11959ced08c314b"></a><!-- doxytag: member="recursiveCalculation.cpp::saveMatrix" ref="8b0502b36e503f03b11959ced08c314b" args="(const std::string filename, CDMatrix &amp;gf)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void saveMatrix           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string&nbsp;</td>
+          <td class="paramname"> <em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+save matrix to file<p>
+if the filename is *.bin, save the matrix in binary format otherwise save the matrix in text format 
 </div>
 </div><p>
 <a class="anchor" name="ead9ae01562e18a0e89996750378d71f"></a><!-- doxytag: member="recursiveCalculation.cpp::setUpIndexInteractions" ref="ead9ae01562e18a0e89996750378d71f" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData)" -->
@@ -466,8 +636,8 @@ find out the index for a basis in V_{K}
 <div class="memdoc">
 
 <p>
-calculate the indexMatrix and set up the interaction matrix<p>
-This has to be called before any recursive calculations begin 
+calculate the index matrices and set up the interactions between sites<p>
+IMPORTANT: this has to be called before any recursive calculations begin 
 </div>
 </div><p>
 <a class="anchor" name="d26ca3ee87a9f745d2593ca8e8f089d0"></a><!-- doxytag: member="recursiveCalculation.cpp::setUpRecursion" ref="d26ca3ee87a9f745d2593ca8e8f089d0" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData, Basis &amp;initialSites, RecursionData &amp;recursionData)" -->
@@ -600,7 +770,7 @@ Substituting the above two equations into the first equation, we obtain [ W_{KCe
 Then V_{KCenter} can be obtained by solving the above linear equation 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 3 14:18:34 2014 for CalculateGreenFunction by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Aug 21 15:15:04 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>CalculateGreenFunction: /home/pxiang/workspace_new/CalculateGreenFunction/src/IO/binaryIO.h File Reference</title>
+<title>CalculateGreenFunction: /home/pxiang/workspace_new/CalculateGreenFunction/src/IO/textIO.cpp File Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -16,33 +16,26 @@
     <li><a href="files.html"><span>File&nbsp;List</span></a></li>
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
-<h1>/home/pxiang/workspace_new/CalculateGreenFunction/src/IO/binaryIO.h File Reference</h1><code>#include &lt;iostream&gt;</code><br>
-<code>#include &lt;fstream&gt;</code><br>
-<code>#include &lt;string&gt;</code><br>
-<code>#include &quot;<a class="el" href="random__generator_8h-source.html">../Utility/random_generator.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="types_8h-source.html">../Utility/types.h</a>&quot;</code><br>
-<code>#include &lt;complex&gt;</code><br>
-
-<p>
-<a href="binaryIO_8h-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
+<h1>/home/pxiang/workspace_new/CalculateGreenFunction/src/IO/textIO.cpp File Reference</h1><code>#include &quot;<a class="el" href="textIO_8h-source.html">textIO.h</a>&quot;</code><br>
+<table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="binaryIO_8h.html#8fb04f310bec40dbb3dfbc8a06c92f62">saveMatrixBin</a> (std::string filename, const <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;m)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="textIO_8cpp.html#a5093068c5225fe520ac8ea83b4ee7e8">saveMatrixText</a> (std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;m)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="binaryIO_8h.html#86ad520618852467fbcee89fbcdc2b4b">loadMatrixBin</a> (std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;m)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="textIO_8cpp.html#90bc45459a761302dbd656c3af52d0cb">saveMatrixText</a> (std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;m)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="binaryIO_8h.html#e64dc6f13a23156f809a54d4d7b1f229">saveMatrixBin</a> (std::string filename, const <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;m)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="textIO_8cpp.html#765587f9d49de818cd3c0443be60b45a">loadMatrixText</a> (std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;m)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="binaryIO_8h.html#63fcaca913efb398c9dc02442ddc474d">loadMatrixBin</a> (std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;m)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="textIO_8cpp.html#678a01e2ca51b1216478f6b2b23c4e7d">loadMatrixText</a> (std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;m)</td></tr>
 
 </table>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="63fcaca913efb398c9dc02442ddc474d"></a><!-- doxytag: member="binaryIO.h::loadMatrixBin" ref="63fcaca913efb398c9dc02442ddc474d" args="(std::string filename, DMatrix &amp;m)" -->
+<a class="anchor" name="678a01e2ca51b1216478f6b2b23c4e7d"></a><!-- doxytag: member="textIO.cpp::loadMatrixText" ref="678a01e2ca51b1216478f6b2b23c4e7d" args="(std::string filename, DMatrix &amp;m)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void loadMatrixBin           </td>
+          <td class="memname">void loadMatrixText           </td>
           <td>(</td>
           <td class="paramtype">std::string&nbsp;</td>
           <td class="paramname"> <em>filename</em>, </td>
@@ -63,15 +56,16 @@
 <div class="memdoc">
 
 <p>
-
+load a real matrix from a text file (slow compared with the binary version)<p>
+row_index col_index matrix_element 
 </div>
 </div><p>
-<a class="anchor" name="86ad520618852467fbcee89fbcdc2b4b"></a><!-- doxytag: member="binaryIO.h::loadMatrixBin" ref="86ad520618852467fbcee89fbcdc2b4b" args="(std::string filename, CDMatrix &amp;m)" -->
+<a class="anchor" name="765587f9d49de818cd3c0443be60b45a"></a><!-- doxytag: member="textIO.cpp::loadMatrixText" ref="765587f9d49de818cd3c0443be60b45a" args="(std::string filename, CDMatrix &amp;m)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void loadMatrixBin           </td>
+          <td class="memname">void loadMatrixText           </td>
           <td>(</td>
           <td class="paramtype">std::string&nbsp;</td>
           <td class="paramname"> <em>filename</em>, </td>
@@ -92,15 +86,16 @@
 <div class="memdoc">
 
 <p>
-
+load a complex matrix from a text file (slow compared with the binary version)<p>
+row_index col_index real_part imag_part 
 </div>
 </div><p>
-<a class="anchor" name="e64dc6f13a23156f809a54d4d7b1f229"></a><!-- doxytag: member="binaryIO.h::saveMatrixBin" ref="e64dc6f13a23156f809a54d4d7b1f229" args="(std::string filename, const DMatrix &amp;m)" -->
+<a class="anchor" name="90bc45459a761302dbd656c3af52d0cb"></a><!-- doxytag: member="textIO.cpp::saveMatrixText" ref="90bc45459a761302dbd656c3af52d0cb" args="(std::string filename, DMatrix &amp;m)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void saveMatrixBin           </td>
+          <td class="memname">void saveMatrixText           </td>
           <td>(</td>
           <td class="paramtype">std::string&nbsp;</td>
           <td class="paramname"> <em>filename</em>, </td>
@@ -108,7 +103,7 @@
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -121,15 +116,16 @@
 <div class="memdoc">
 
 <p>
-
+save a real matrix into a text file<p>
+row_index col_index matrix_element 
 </div>
 </div><p>
-<a class="anchor" name="8fb04f310bec40dbb3dfbc8a06c92f62"></a><!-- doxytag: member="binaryIO.h::saveMatrixBin" ref="8fb04f310bec40dbb3dfbc8a06c92f62" args="(std::string filename, const CDMatrix &amp;m)" -->
+<a class="anchor" name="a5093068c5225fe520ac8ea83b4ee7e8"></a><!-- doxytag: member="textIO.cpp::saveMatrixText" ref="a5093068c5225fe520ac8ea83b4ee7e8" args="(std::string filename, CDMatrix &amp;m)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void saveMatrixBin           </td>
+          <td class="memname">void saveMatrixText           </td>
           <td>(</td>
           <td class="paramtype">std::string&nbsp;</td>
           <td class="paramname"> <em>filename</em>, </td>
@@ -137,7 +133,7 @@
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -150,7 +146,8 @@
 <div class="memdoc">
 
 <p>
-
+save a complex matrix into a text file<p>
+row_index col_index real_part imag_part 
 </div>
 </div><p>
 <hr size="1"><address style="align: right;"><small>Generated on Thu Aug 21 15:15:04 2014 for CalculateGreenFunction by&nbsp;

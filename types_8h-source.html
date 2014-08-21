@@ -47,30 +47,23 @@
 <a name="l00029"></a><a class="code" href="types_8h.html#5ad034e312ad8321d34f9e6af4fa162f">00029</a> <span class="preprocessor">#define EIGEN_USE_MKL_ALL</span>
 <a name="l00030"></a>00030 <span class="preprocessor"></span><span class="preprocessor">#include &lt;Eigen/Dense&gt;</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 
-<a name="l00033"></a><a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">00033</a> <span class="keyword">typedef</span> Eigen::MatrixXcd <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>;
-<a name="l00034"></a>00034 
-<a name="l00035"></a><a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">00035</a> <span class="keyword">typedef</span> Eigen::MatrixXd <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>;
-<a name="l00036"></a>00036 
-<a name="l00037"></a>00037 
-<a name="l00038"></a><a class="code" href="types_8h.html#212ba5163db4c5e6b818b9cffef24157">00038</a> <span class="keyword">typedef</span> Eigen::MatrixXi <a class="code" href="types_8h.html#212ba5163db4c5e6b818b9cffef24157">IMatrix</a>; <span class="comment">// integer matrix</span>
-<a name="l00039"></a>00039 
-<a name="l00040"></a><a class="code" href="types_8h.html#bc4f0e198f8f06e1a4082f8ad2afba01">00040</a> <span class="keyword">typedef</span> Eigen::VectorXcd <a class="code" href="types_8h.html#bc4f0e198f8f06e1a4082f8ad2afba01">CDVector</a>;
-<a name="l00041"></a>00041 
-<a name="l00042"></a>00042 
+<a name="l00039"></a><a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">00039</a> <span class="keyword">typedef</span> Eigen::MatrixXcd <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>;
+<a name="l00040"></a><a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">00040</a> <span class="keyword">typedef</span> Eigen::MatrixXd <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>;
+<a name="l00041"></a><a class="code" href="types_8h.html#212ba5163db4c5e6b818b9cffef24157">00041</a> <span class="keyword">typedef</span> Eigen::MatrixXi <a class="code" href="types_8h.html#212ba5163db4c5e6b818b9cffef24157">IMatrix</a>;
+<a name="l00042"></a><a class="code" href="types_8h.html#bc4f0e198f8f06e1a4082f8ad2afba01">00042</a> <span class="keyword">typedef</span> Eigen::VectorXcd <a class="code" href="types_8h.html#bc4f0e198f8f06e1a4082f8ad2afba01">CDVector</a>;
 <a name="l00043"></a><a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">00043</a> <span class="keyword">typedef</span> Eigen::VectorXd <a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">DVector</a>;
-<a name="l00044"></a>00044 
-<a name="l00045"></a><a class="code" href="types_8h.html#e860d112b94e13ff08981b4cb56ab127">00045</a> <span class="keyword">typedef</span> Eigen::ArrayXd <a class="code" href="types_8h.html#e860d112b94e13ff08981b4cb56ab127">DArray</a>;
+<a name="l00044"></a><a class="code" href="types_8h.html#e860d112b94e13ff08981b4cb56ab127">00044</a> <span class="keyword">typedef</span> Eigen::ArrayXd <a class="code" href="types_8h.html#e860d112b94e13ff08981b4cb56ab127">DArray</a>;
+<a name="l00045"></a><a class="code" href="types_8h.html#a2066d8f230e4aa544b64a70eb1307e8">00045</a> <span class="keyword">typedef</span> Eigen::ArrayXcd <a class="code" href="types_8h.html#a2066d8f230e4aa544b64a70eb1307e8">CDArray</a>;
 <a name="l00046"></a>00046 
-<a name="l00047"></a><a class="code" href="types_8h.html#a2066d8f230e4aa544b64a70eb1307e8">00047</a> <span class="keyword">typedef</span> Eigen::ArrayXcd <a class="code" href="types_8h.html#a2066d8f230e4aa544b64a70eb1307e8">CDArray</a>;
+<a name="l00047"></a>00047 
 <a name="l00048"></a>00048 
-<a name="l00049"></a>00049 
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051 <span class="preprocessor">#include &lt;list&gt;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &lt;vector&gt;</span>
-<a name="l00053"></a>00053 
+<a name="l00049"></a>00049 <span class="preprocessor">#include &lt;list&gt;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &lt;vector&gt;</span>
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 
+<a name="l00053"></a><a class="code" href="types_8h.html#7926b480347b577f7cab668c2f345f29">00053</a> <span class="keyword">typedef</span> std::vector&lt;double&gt; <a class="code" href="types_8h.html#7926b480347b577f7cab668c2f345f29">Vector</a>;
 <a name="l00054"></a>00054 
-<a name="l00055"></a><a class="code" href="types_8h.html#7926b480347b577f7cab668c2f345f29">00055</a> <span class="keyword">typedef</span> std::vector&lt;double&gt; <a class="code" href="types_8h.html#7926b480347b577f7cab668c2f345f29">Vector</a>;
+<a name="l00055"></a>00055 
 <a name="l00056"></a>00056 
 <a name="l00057"></a>00057 
 <a name="l00058"></a>00058 
@@ -79,10 +72,8 @@
 <a name="l00061"></a>00061 
 <a name="l00062"></a>00062 
 <a name="l00063"></a>00063 
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066 <span class="preprocessor">#endif </span><span class="comment">/* TYPES_H_ */</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Jul 3 14:18:34 2014 for CalculateGreenFunction by&nbsp;
+<a name="l00064"></a>00064 <span class="preprocessor">#endif </span><span class="comment">/* TYPES_H_ */</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Aug 21 15:15:04 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

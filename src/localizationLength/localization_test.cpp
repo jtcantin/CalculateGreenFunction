@@ -71,14 +71,14 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	zList.push_back(dcomplex(E, eta));
 
 	std::vector<std::string> fileList;
-	fileList.push_back("GF.bin");
+	fileList.push_back("GF.txt");
 
 	calculateAllGreenFunc(lattice1D,  initialSites,
 			              interactionData, zList,
 	                       fileList);
 	// extract Green's function from the binary file
 	CDMatrix gf;
-	loadMatrixBin(fileList[0], gf);
+	loadMatrix(fileList[0], gf);
 	std::ofstream myFile;
 
 	std::string output = "localization_length.txt";

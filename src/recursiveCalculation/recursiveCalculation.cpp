@@ -7,6 +7,48 @@
 
 #include "recursiveCalculation.h"
 
+
+void saveMatrix(const std::string filename, CDMatrix& gf) {
+	if (filename.substr(filename.length()-3, 3)=="bin") {
+		saveMatrixBin(filename, gf); // save as binary
+	} else {
+		// save the gf matrix into text file
+		saveMatrixText(filename, gf);
+	}
+}
+
+
+void saveMatrix(const std::string filename, DMatrix& gf) {
+	if (filename.substr(filename.length()-3, 3)=="bin") {
+		saveMatrixBin(filename, gf); // save as binary
+	} else {
+		// save the gf matrix into text file
+		saveMatrixText(filename, gf);
+	}
+}
+
+
+void loadMatrix(const std::string filename, CDMatrix& gf) {
+	if (filename.substr(filename.length()-3, 3)=="bin") {
+		loadMatrixBin(filename, gf); // save as binary
+	} else {
+		// save the gf matrix into text file
+		loadMatrixText(filename, gf);
+	}
+}
+
+
+void loadMatrix(const std::string filename, DMatrix& gf) {
+	if (filename.substr(filename.length()-3, 3)=="bin") {
+		loadMatrixBin(filename, gf); // save as binary
+	} else {
+		// save the gf matrix into text file
+		loadMatrixText(filename, gf);
+	}
+}
+
+
+
 /**
  * clean up binary files that are used to save the matrices
  */
@@ -14,6 +56,7 @@ void deleteMatrixFiles(std::string filename_may_contain_wildcard) {
 	std::string command = "rm " + filename_may_contain_wildcard;
 	system(command.c_str());
 }
+
 
 /**
  * solve the linear equation A*X = B
@@ -806,12 +849,13 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 				gf(i, i) = dcomplex(0,0);
 			}
 
-			if (filename.substr(filename.length()-3, 3)=="bin") {
-				saveMatrixBin(filename, gf); // save as binary
-			} else {
-				// save the gf matrix into text file
-				saveMatrixText(filename, gf);
-			}
+//			if (filename.substr(filename.length()-3, 3)=="bin") {
+//				saveMatrixBin(filename, gf); // save as binary
+//			} else {
+//				// save the gf matrix into text file
+//				saveMatrixText(filename, gf);
+//			}
+			saveMatrix(filename, gf);
 			break;
 		}
 		case 2:

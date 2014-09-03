@@ -26,6 +26,8 @@ typedef struct {
 	bool randomOnSite, randomHop, randomDyn;
 	int maxDistance; // beyond which the interaction is set to zero
 	unsigned seed;
+	bool longRangeHop;
+	bool longRangeDyn;
 } InteractionData;
 
 
@@ -50,20 +52,22 @@ public:
 			maxDistance = interactionData.maxDistance;
 			// initialize the hopping matrix
 			t = DMatrix::Zero(xsite,xsite);
+			hop_maxDistance = interactionData.longRangeHop?maxDistance:1;
 			if (interactionData.randomHop) {
-				setRandomMatrix(t, interactionData.hop, maxDistance, seed+10);
+				setRandomMatrix(t, interactionData.hop, hop_maxDistance, seed+10);
 			} else {
 				// set all element to constant
-				setConstantMatrix(t, interactionData.hop, maxDistance);
+				setConstantMatrix(t, interactionData.hop, hop_maxDistance);
 			}
 
 			// initialize the dynamic matrix
 			d = DMatrix::Zero(xsite,xsite);
+			dyn_maxDistance = interactionData.longRangeDyn?maxDistance:1;
 			if (interactionData.randomDyn) {
-				setRandomMatrix(d, interactionData.dyn, maxDistance, seed+20);
+				setRandomMatrix(d, interactionData.dyn, dyn_maxDistance, seed+20);
 			} else {
 				// set all element to constant
-				setConstantMatrix(d, interactionData.dyn, maxDistance);
+				setConstantMatrix(d, interactionData.dyn, dyn_maxDistance);
 			}
 
 			// initialize the dynamic matrix
@@ -139,6 +143,16 @@ public:
 		return maxDistance;
 	}
 
+	// obtain the range of hopping interactions
+	int getMaxDistanceHop() {
+		return hop_maxDistance;
+	}
+
+	// obtain the range of dynamic interactions
+	int getMaxDistanceDyn() {
+		return dyn_maxDistance;
+	}
+
 	// destructor
 	~Interaction() {
 		// release the memory of the matrices
@@ -152,6 +166,7 @@ private:
 	DMatrix d;
 	DVector e;
 	int maxDistance;
+	int hop_maxDistance, dyn_maxDistance;
 	int dim;
 	unsigned seed;
 	RandomNumberGenerator rng;

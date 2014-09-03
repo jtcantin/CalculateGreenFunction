@@ -43,6 +43,7 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	bool randomOnsite, randomHop, randomDyn;
 	int maxDistance;
 	unsigned seed;
+	bool longRangeHop, longRangeDyn;
 	READ_INPUT("input.txt", "double", onsiteE);
 	READ_INPUT("input.txt", "double", hop);
 	READ_INPUT("input.txt", "double", dyn);
@@ -51,10 +52,13 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	READ_INPUT("input.txt", "bool", randomDyn);
 	READ_INPUT("input.txt", "int", maxDistance);
 	READ_INPUT("input.txt", "unsigned", seed);
+	READ_INPUT("input.txt", "bool", longRangeHop);
+	READ_INPUT("input.txt", "bool", longRangeDyn);
 
 	InteractionData interactionData = { onsiteE, hop, dyn,
 			                            randomOnsite, randomHop, randomDyn,
-			                            maxDistance, seed };
+			                            maxDistance, seed,
+	                                    longRangeHop, longRangeDyn};
 
 	setUpIndexInteractions(lattice1D, interactionData);
 

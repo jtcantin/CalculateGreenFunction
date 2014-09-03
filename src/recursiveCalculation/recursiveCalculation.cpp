@@ -849,12 +849,6 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 				gf(i, i) = dcomplex(0,0);
 			}
 
-//			if (filename.substr(filename.length()-3, 3)=="bin") {
-//				saveMatrixBin(filename, gf); // save as binary
-//			} else {
-//				// save the gf matrix into text file
-//				saveMatrixText(filename, gf);
-//			}
 			saveMatrix(filename, gf);
 			break;
 		}

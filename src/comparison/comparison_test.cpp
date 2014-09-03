@@ -24,7 +24,7 @@ TEST(ComparisonTest, DISABLED_CheckDOS) {
 
 	for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
 		InteractionData interactionData = {0.0,5.0,15.0,false,
-				                           false,false,maxDistance,230};
+				                           false,false,maxDistance,230,true, true};
 		setUpIndexInteractions(lattice1D, interactionData);
 		/*********** Recursive calculation *****************/
 		int zsize = 101;
@@ -68,7 +68,7 @@ TEST(ComparisonTest, DISABLED_CheckOffDiagonalOrdered) {
 	int maxDistance = 30;
 
 	InteractionData interactionData = {0.0,5.0,5.0,false,
-			false,false,maxDistance,230};
+			false,false,maxDistance,230,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	/*********** Recursive calculation *****************/
@@ -132,7 +132,7 @@ TEST(ComparisonTest, DISABLED_CheckOffDiagonalDisordered) {
 	int maxDistance = 30;
 
 	InteractionData interactionData = {5.0,5.0,5.0,true,
-			false,false,maxDistance,230};
+			false,false,maxDistance,230,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	/*********** Recursive calculation *****************/
@@ -196,7 +196,7 @@ TEST(ComparisonTest, RandomOnSiteEnergy) {
 
 	// only random onsite energy
 	InteractionData interactionData = {1.0,1.0,1.0,true,
-			false,false,maxDistance,567};
+			false,false,maxDistance,567,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;
@@ -246,7 +246,7 @@ TEST(ComparisonTest, RandomHopping) {
 
 	// only random hopping interaction
 	InteractionData interactionData = {1.0,1.0,1.0,false,
-			true,false,maxDistance,1234};
+			true,false,maxDistance,1234,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;
@@ -294,7 +294,7 @@ TEST(ComparisonTest, NoDisorderNoDyn) {
 
 	// no disorder and no dynamic interaction
 	InteractionData interactionData = {1.0,1.0,0.0,false,
-			false,false,maxDistance,230};
+			false,false,maxDistance,230,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;
@@ -343,7 +343,7 @@ TEST(ComparisonTest, RandomHoppingLargeDyn) {
 
 	// no disorder and no dynamic interaction
 	InteractionData interactionData = {1.0,1.0,4.0,false,
-			true,false,maxDistance,1234};
+			true,false,maxDistance,1234,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;
@@ -392,7 +392,7 @@ TEST(ComparisonTest, NoDisorderLargeDyn) {
 
 	// no disorder and no dynamic interaction
 	InteractionData interactionData = {1.0,1.0,4.0,false,
-			false,false,maxDistance,230};
+			false,false,maxDistance,230,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
 
 	std::vector< dcomplex > zList;

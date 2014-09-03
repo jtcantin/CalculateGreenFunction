@@ -7,12 +7,43 @@
 #include "gtest/gtest.h"
 #include "formMatrix.h"
 
+TEST(SetUpLongRange, Hop) {
+	extern Interaction *pInteraction;
+	LatticeShape lattice1D(1);
+	int xmax = 200;
+	lattice1D.setXmax(xmax); //xsite = xmax + 1
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230,true,true};
+	generateIndexMatrix(lattice1D);
+
+	setInteractions(lattice1D, interactionData);
+	EXPECT_TRUE(pInteraction->getMaxDistanceHop()==5);
+	EXPECT_TRUE(pInteraction->getMaxDistanceDyn()==5);
+
+	interactionData.longRangeHop = true;
+	interactionData.longRangeDyn = false;
+	setInteractions(lattice1D, interactionData);
+	EXPECT_TRUE(pInteraction->getMaxDistanceHop()==5);
+	EXPECT_TRUE(pInteraction->getMaxDistanceDyn()==1);
+
+	interactionData.longRangeHop = false;
+	interactionData.longRangeDyn = true;
+	setInteractions(lattice1D, interactionData);
+	EXPECT_TRUE(pInteraction->getMaxDistanceHop()==1);
+	EXPECT_TRUE(pInteraction->getMaxDistanceDyn()==5);
+
+	interactionData.longRangeHop = false;
+	interactionData.longRangeDyn = false;
+	setInteractions(lattice1D, interactionData);
+	EXPECT_TRUE(pInteraction->getMaxDistanceHop()==1);
+	EXPECT_TRUE(pInteraction->getMaxDistanceDyn()==1);
+}
+
 
 TEST(FormMatrixZ, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230,true,true};
 	generateIndexMatrix(lattice1D);
 	setInteractions(lattice1D, interactionData);
 	int K = 24;
@@ -27,7 +58,7 @@ TEST(FormMatrixM, RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230};
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,5,230,true,true};
 	generateIndexMatrix(lattice1D);
 	setInteractions(lattice1D, interactionData);
 	CDMatrix MKKp;
@@ -53,7 +84,8 @@ TEST(FormMatrixW, RunningOK) {
 
 	for (int K=1; K<=xmax+xmax-1; ++K) {
 		for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
-			InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
+			InteractionData interactionData = {1.0,1.0,1.0,true,false,true,
+					                           maxDistance,230,true,true};
 			setInteractions(lattice1D, interactionData);
 			CDMatrix WK;
 			formMatrixW(K, energy, WK);
@@ -75,7 +107,8 @@ TEST(FormMatrixAlpha, RunningOK) {
 
 	for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
 		//std::cout <<"numNeighbor = " << numNeighbor << std::endl;
-		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
+		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,
+				                           maxDistance,230,true,true};
 		setInteractions(lattice1D, interactionData);
 		CDMatrix Alpha;
 		// alpha_K: K starts from 2, K=1 is meaningless because V_0 doesn't exist
@@ -100,7 +133,8 @@ TEST(FormMatrixBeta, RunningOK) {
 	int Kmax = xmax+xmax-1;
 
 	for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
-		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,maxDistance,230};
+		InteractionData interactionData = {1.0,1.0,1.0,true,false,true,
+				                           maxDistance,230,true,true};
 		setInteractions(lattice1D, interactionData);
 		CDMatrix Beta;
 		// Beta_K: K is in range [1, Kmax-1] Beta_{Kmax} is meaningless
@@ -113,7 +147,7 @@ TEST(FormMatrixBeta, RunningOK) {
 	}
 
 //	std::cout << "\n\n" << std::endl;
-	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,1,230};
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,1,230,true,true};
 	int rows, cols;
 	int rows_expected, cols_expected;
 	int K = 1;

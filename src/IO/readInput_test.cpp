@@ -34,7 +34,7 @@ TEST(StringificationTest, Struct) {
 
 TEST(InputVariable, Unsigned) {
 	InteractionData interactionData = {1.0,1.0,1.0,true,
-			false,false,10,88};
+			false,false,10,88,true,true};
 	InputVariable inputVar("unsigned", xstr(interactionData.seed),
 			                &(interactionData.seed));
 	std::ofstream myfile;

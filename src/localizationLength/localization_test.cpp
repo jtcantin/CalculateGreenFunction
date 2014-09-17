@@ -33,10 +33,7 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 
 
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	int n = xmax/2;
-	int a = 1;
-	int nPlusa = n+a;
-	Basis initialSites(n, nPlusa);
+	int initialSeperation=1; //default value is 1
 
 	/* set up interaction data */
 	double onsiteE, hop, dyn;
@@ -54,6 +51,11 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	READ_INPUT("input.txt", "unsigned", seed);
 	READ_INPUT("input.txt", "bool", longRangeHop);
 	READ_INPUT("input.txt", "bool", longRangeDyn);
+	READ_INPUT("input.txt", "int", initialSeperation);
+
+	int n = xmax/2;
+	int nPlusa = n + initialSeperation;
+	Basis initialSites(n, nPlusa);
 
 	InteractionData interactionData = { onsiteE, hop, dyn,
 			                            randomOnsite, randomHop, randomDyn,
@@ -83,19 +85,19 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	// extract Green's function from the binary file
 	CDMatrix gf;
 	loadMatrix(fileList[0], gf);
-	std::ofstream myFile;
 
-	std::string output = "localization_length.txt";
-
-	myFile.open(output.c_str());
-	int m = n;
-	int mPlusa = m + a;
-	for (;mPlusa<=xmax;++m, ++mPlusa ) {
-		dcomplex element = gf(m, mPlusa);
-		double localization_length = -1.0/( log(std::abs( element ))/abs(n-m) );
-		myFile << abs(n-m) << "\t"<< localization_length << std::endl;
-	}
-	myFile.close();
+//	std::ofstream myFile;
+//	std::string output = "localization_length.txt";
+//
+//	myFile.open(output.c_str());
+//	int m = n;
+//	int mPlusa = m + a;
+//	for (;mPlusa<=xmax;++m, ++mPlusa ) {
+//		dcomplex element = gf(m, mPlusa);
+//		double localization_length = -1.0/( log(std::abs( element ))/abs(n-m) );
+//		myFile << abs(n-m) << "\t"<< localization_length << std::endl;
+//	}
+//	myFile.close();
 
 	EXPECT_TRUE(true);
 }

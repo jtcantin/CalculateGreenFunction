@@ -13,10 +13,13 @@
  *
  * row_index  col_index   real_part   imag_part
  */
-void saveMatrixText(std::string filename, CDMatrix& m) {
+void saveMatrixText(std::string filename, CDMatrix& m, bool exactValue) {
 	std::ofstream out(filename.c_str());
 	// print to full precision
-	out.precision(dbl::digits10 + 2);
+	if (exactValue) {
+		out.precision(dbl::digits10 + 2);
+	}
+	// use default precision to save space
 	for (int row=0; row< m.rows(); ++row) {
 		for (int col=0; col<m.cols(); ++col) {
 			dcomplex v = m(row, col);
@@ -34,9 +37,13 @@ void saveMatrixText(std::string filename, CDMatrix& m) {
  *
  * row_index  col_index   matrix_element
  */
-void saveMatrixText(std::string filename, DMatrix& m) {
+void saveMatrixText(std::string filename, DMatrix& m, bool exactValue) {
 	std::ofstream out(filename.c_str());
-	out.precision(dbl::digits10 + 2);
+	// print to full precision
+	if (exactValue) {
+		out.precision(dbl::digits10 + 2);
+	}
+	// use default precision to save space
 	for (int row=0; row< m.rows(); ++row) {
 		for (int col=0; col<m.cols(); ++col) {
 			double v = m(row, col);

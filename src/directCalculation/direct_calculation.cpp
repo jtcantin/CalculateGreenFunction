@@ -204,13 +204,13 @@ void greenFunc_direct(LatticeShape& lattice, Basis& bra, Basis& ket, std::vector
 	numeratorHelper(lattice, bra, ket, basisIndex, eigenVectors, numerator);
 
 	gfList.clear();
-	gfList.reserve(zList.size());
+	//gfList.reserve(zList.size());
 	for (int i=0; i<zList.size(); ++i) {
 		dcomplex z = zList[i];
 		CDArray oneOverDenominator;
 		denominatorHelper(z, eigenValues, oneOverDenominator);
 		dcomplex gf = greenFuncHelper(numerator, oneOverDenominator);
-		gfList[i] = gf; //-gf.imag()/M_PI;
+		gfList.push_back(gf);
 	}
 
 }
@@ -245,13 +245,13 @@ void densityOfState_direct(LatticeShape& lattice, Basis& basis, std::vector<dcom
 	numeratorHelper(lattice, basis, basis, basisIndex, eigenVectors, numerator);
 
 	dosList.clear();
-	dosList.reserve(zList.size());
+	//dosList.reserve(zList.size());
 	for (int i=0; i<zList.size(); ++i) {
 		dcomplex z = zList[i];
 		CDArray oneOverDenominator;
 		denominatorHelper(z, eigenValues, oneOverDenominator);
 		dcomplex gf = greenFuncHelper(numerator, oneOverDenominator);
-		dosList[i] = -gf.imag()/M_PI;
+		dosList.push_back( -gf.imag()/M_PI );
 	}
 
 }

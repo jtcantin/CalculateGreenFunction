@@ -25,7 +25,7 @@ typedef std::numeric_limits< double > dbl;
  *
  * row_index  col_index   real_part   imag_part
  */
-void saveMatrixText(std::string filename, CDMatrix& m);
+void saveMatrixText(std::string filename, CDMatrix& m, bool exactValue=false);
 
 
 /**
@@ -33,7 +33,7 @@ void saveMatrixText(std::string filename, CDMatrix& m);
  *
  * row_index  col_index   matrix_element
  */
-void saveMatrixText(std::string filename, DMatrix& m);
+void saveMatrixText(std::string filename, DMatrix& m, bool exactValue=false);
 
 
 /**

@@ -18,7 +18,7 @@ TEST(TextIO, TwoByTwoMatirx) {
 
 	cm(1,1) = dcomplex(1.07899, 0.1135);
 
-	saveMatrixText("cm.txt",cm);
+	saveMatrixText("cm.txt",cm, true);
 	CDMatrix cm2;
 	loadMatrixText("cm.txt",cm2);
 	EXPECT_EQ(cm.rows(), cm2.rows());
@@ -38,7 +38,7 @@ TEST(TextIO, TwoByOneMatirx) {
 	CDMatrix cm(2,1);
 	cm(0,0) = dcomplex(1.0, 0.5);
 	cm(1,0) = dcomplex(1.89, 0.35);
-	saveMatrixText("cm.txt",cm);
+	saveMatrixText("cm.txt",cm, true);
 	CDMatrix cm2;
 	loadMatrixText("cm.txt",cm2);
 	EXPECT_EQ(cm.rows(), cm2.rows());
@@ -58,7 +58,7 @@ TEST(TextIO, OneByTwoMatirx) {
 	CDMatrix cm(1,2);
 	cm(0,0) = dcomplex(1.0, 0.5);
 	cm(0,1) = dcomplex(1.3, 0.3);
-	saveMatrixText("cm.txt",cm);
+	saveMatrixText("cm.txt",cm, true);
 	CDMatrix cm2;
 	loadMatrixText("cm.txt",cm2);
 	EXPECT_EQ(cm.rows(), cm2.rows());
@@ -77,7 +77,7 @@ TEST(TextIO, OneByTwoMatirx) {
 TEST(TextIO, OneByOneMatirx) {
 	CDMatrix cm(1,1);
 	cm(0,0) = dcomplex(1.0, 0.5);
-	saveMatrixText("cm.txt",cm);
+	saveMatrixText("cm.txt",cm, true);
 	CDMatrix cm2;
 	loadMatrixText("cm.txt",cm2);
 	EXPECT_EQ(cm.rows(), cm2.rows());
@@ -101,7 +101,7 @@ TEST(TextIO, ThousandByThousandMatirx) {
 			cm(i,j) = random.randomComplex();
 		}
 	}
-	saveMatrixText("cm.txt",cm);
+	saveMatrixText("cm.txt",cm, true);
 	CDMatrix cm2;
 	loadMatrixText("cm.txt",cm2);
 	EXPECT_EQ(cm.rows(), cm2.rows());

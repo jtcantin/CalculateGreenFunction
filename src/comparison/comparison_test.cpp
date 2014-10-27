@@ -10,22 +10,26 @@
 #include "../Utility/misc.h"
 
 /**
- * test the results from recursive and direct calculations
+ * check the diagonal elements of the Green operator
+ * from recursive and direct calculations
  */
 
-TEST(ComparisonTest, DISABLED_CheckDOS) {
+TEST(ComparisonTest, CheckDOS) {
 	LatticeShape lattice1D(1);
-	int xmax = 100;
+	int xmax = 51;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	Basis initialSites(xmax/2,xmax/2+10);
-	int size = 201;
+
 	//calculate the indexMatrix
 	generateIndexMatrix(lattice1D);
 
-	for (int maxDistance=1; maxDistance<=5; ++maxDistance) {
+	for (int maxDistance=1; maxDistance<=10; ++maxDistance) {
+		/********** Set the stage for the calculations**********/
 		InteractionData interactionData = {0.0,5.0,15.0,false,
 				                           false,false,maxDistance,230,true, true};
 		setUpIndexInteractions(lattice1D, interactionData);
+
+
 		/*********** Recursive calculation *****************/
 		int zsize = 101;
 		std::vector<dcomplex> zList(zsize);
@@ -34,42 +38,58 @@ TEST(ComparisonTest, DISABLED_CheckDOS) {
 			zList[i].real() = zRealList[i];
 			zList[i].imag() = 0.1;
 		}
-		std::vector<double> rhoList;
-
+		std::vector<double> rhoList_recur;
 		calculateDensityOfState(lattice1D, initialSites,
 				                 interactionData,
-				                 zList, rhoList);
-		std::string file1 = "rho_xmax100_recursive_maxDistance_"
+				                 zList, rhoList_recur);
+		std::string file1 = "rho_xmax"+itos(xmax)+"_recursive_maxDistance_"
 				            + itos(maxDistance)+".txt";
-		save_two_arrays(file1, zRealList, rhoList);
+		save_two_arrays(file1, zRealList, rhoList_recur);
+
 
 		/*********** Direct calculation *****************/
-
-		densityOfState_direct(lattice1D, initialSites, zList, rhoList);
-		std::string file2 = "rho_xmax100_direct_maxDistance_"
+		std::vector<double> rhoList_direct;
+		densityOfState_direct(lattice1D, initialSites, zList, rhoList_direct);
+		std::string file2 = "rho_xmax"+itos(xmax)+"_direct_maxDistance_"
 				            + itos(maxDistance)+".txt";
-		save_two_arrays(file2, zRealList, rhoList);
+		save_two_arrays(file2, zRealList, rhoList_direct);
+
+		EXPECT_EQ(rhoList_recur.size(), rhoList_direct.size());
+		double abs_error = 1.e-9;
+		for (int j=0; j<rhoList_recur.size(); ++j) {
+			EXPECT_NEAR(rhoList_recur[j], rhoList_direct[j], abs_error);
+		}
 	}
 
-	EXPECT_TRUE(true);
+	//EXPECT_TRUE(true);
 }
 
 
-
-TEST(ComparisonTest, DISABLED_CheckOffDiagonalOrdered) {
+/**
+ * check the off-diagonal elements of the Green's operator
+ */
+TEST(ComparisonTest, CheckOffDiagonalOrdered) {
 	LatticeShape lattice1D(1);
-	int xmax = 100;
+	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
-	Basis initialSites(xmax/2,xmax/2+1);
-	Basis finalSites(10, 71);
+	int ni = xmax/2;
+	int mi = ni + 1;
+	int n_difference = -40;
+	int m_difference = 10;
+	int nf = ni + n_difference;
+	int mf = mi + m_difference;
+
+	Basis initialSites(ni,mi);
+	Basis finalSites(nf, mf);
 
 
 
+	/********** Set the stage for the calculations**********/
 	int maxDistance = 30;
-
 	InteractionData interactionData = {0.0,5.0,5.0,false,
 			false,false,maxDistance,230,true,true};
 	setUpIndexInteractions(lattice1D, interactionData);
+
 
 	/*********** Recursive calculation *****************/
 	int zsize = 51;
@@ -80,43 +100,60 @@ TEST(ComparisonTest, DISABLED_CheckOffDiagonalOrdered) {
 		zList[i].imag() = 0.01;
 	}
 	std::vector<dcomplex> gfList;
-	std::vector<double> gf_real;
-	std::vector<double> gf_imag;
+	std::vector<double> gf_real_recur;
+	std::vector<double> gf_imag_recur;
 
 	calculateGreenFunc(lattice1D, finalSites, initialSites,
 			           interactionData, zList, gfList);
 
 	for (int i=0; i<gfList.size(); ++i) {
-		gf_real.push_back(gfList[i].real());
-		gf_imag.push_back(gfList[i].imag());
+		gf_real_recur.push_back(gfList[i].real());
+		gf_imag_recur.push_back(gfList[i].imag());
 	}
 
-	std::string file1 = "GF_minus40_20_recursive_real.txt";
-	save_two_arrays(file1, zRealList, gf_real);
-	file1 = "GF_minus40_20_recursive_imag.txt";
-	save_two_arrays(file1, zRealList, gf_imag);
+	std::string file1 = "GF_"+ itos(nf)+"," + itos(mf) + "," +
+			               itos(ni)+"," + itos(mi) + "_recursive_real.txt";
+	save_two_arrays(file1, zRealList, gf_real_recur);
+
+	file1 = "GF_"+ itos(nf)+"," + itos(mf) + "," +
+            itos(ni)+"," + itos(mi) + "_recursive_imag.txt";
+	save_two_arrays(file1, zRealList, gf_imag_recur);
+
+
 
 	/*********** Direct calculation *****************/
 	// no need to set up the interaction matrix
 	// because it is already done in the recursive calculation
 	// setInteractions(lattice1D, interactionData);
 
-	gf_real.clear();
-	gf_imag.clear();
+	std::vector<double> gf_real_direct;
+	std::vector<double> gf_imag_direct;
 	greenFunc_direct(lattice1D, finalSites, initialSites, zList, gfList);
 
 	for (int i=0; i<gfList.size(); ++i) {
-		gf_real.push_back(gfList[i].real());
-		gf_imag.push_back(gfList[i].imag());
+		gf_real_direct.push_back(gfList[i].real());
+		gf_imag_direct.push_back(gfList[i].imag());
 	}
 
-	file1 = "GF_minus40_20_real.txt";
-	save_two_arrays(file1, zRealList, gf_real);
-	file1 = "GF_minus40_20_imag.txt";
-	save_two_arrays(file1, zRealList, gf_imag);
+	file1 = "GF_"+ itos(nf)+"," + itos(mf) + "," +
+            itos(ni)+"," + itos(mi) + "_direct_real.txt";
+	save_two_arrays(file1, zRealList, gf_real_direct);
+
+	file1 = "GF_"+ itos(nf)+"," + itos(mf) + "," +
+            itos(ni)+"," + itos(mi) + "_direct_imag.txt";
+	save_two_arrays(file1, zRealList, gf_imag_direct);
 
 
-	EXPECT_TRUE(true);
+	// test equality
+	EXPECT_EQ(gf_real_recur.size(), gf_real_direct.size());
+	EXPECT_EQ(gf_imag_recur.size(), gf_imag_direct.size());
+
+	double abs_error = 1.e-9;
+	for (int j=0; j<gf_real_recur.size(); ++j) {
+		EXPECT_NEAR(gf_real_recur[j], gf_real_direct[j], abs_error);
+		EXPECT_NEAR(gf_imag_recur[j], gf_imag_direct[j], abs_error);
+	}
+
 }
 
 

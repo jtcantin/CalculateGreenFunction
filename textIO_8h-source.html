@@ -35,22 +35,25 @@
 <a name="l00017"></a>00017 <span class="preprocessor">#include "../Utility/types.h"</span>
 <a name="l00018"></a>00018 <span class="preprocessor">#include "../Utility/misc.h"</span>
 <a name="l00019"></a>00019 <span class="preprocessor">#include "../Utility/random_generator.h"</span>
-<a name="l00020"></a>00020 
-<a name="l00021"></a><a class="code" href="textIO_8h.html#a979e26735592ee060322d9102eeb5f0">00021</a> <span class="keyword">typedef</span> std::numeric_limits&lt; double &gt; <a class="code" href="textIO_8h.html#a979e26735592ee060322d9102eeb5f0">dbl</a>;
-<a name="l00022"></a>00022 
-<a name="l00028"></a>00028 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#a5093068c5225fe520ac8ea83b4ee7e8">saveMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; m);
-<a name="l00029"></a>00029 
-<a name="l00030"></a>00030 
-<a name="l00036"></a>00036 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#a5093068c5225fe520ac8ea83b4ee7e8">saveMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m);
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 
-<a name="l00044"></a>00044 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#765587f9d49de818cd3c0443be60b45a">loadMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; m);
-<a name="l00045"></a>00045 
-<a name="l00046"></a>00046 
-<a name="l00052"></a>00052 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#765587f9d49de818cd3c0443be60b45a">loadMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m);
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="preprocessor">#endif </span><span class="comment">/* TEXTIO_H_ */</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Aug 21 15:15:04 2014 for CalculateGreenFunction by&nbsp;
+<a name="l00020"></a>00020 <span class="preprocessor">#include "<a class="code" href="binaryIO_8h.html">binaryIO.h</a>"</span>
+<a name="l00021"></a>00021 
+<a name="l00022"></a><a class="code" href="textIO_8h.html#a979e26735592ee060322d9102eeb5f0">00022</a> <span class="keyword">typedef</span> std::numeric_limits&lt; double &gt; <a class="code" href="textIO_8h.html#a979e26735592ee060322d9102eeb5f0">dbl</a>;
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025 
+<a name="l00031"></a>00031 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#b698bd8b77bf1194f7f46847b7e409e3">saveMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; m, <span class="keywordtype">bool</span> exactValue=<span class="keyword">false</span>);
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033 
+<a name="l00039"></a>00039 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#b698bd8b77bf1194f7f46847b7e409e3">saveMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m, <span class="keywordtype">bool</span> exactValue=<span class="keyword">false</span>);
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041 
+<a name="l00047"></a>00047 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#765587f9d49de818cd3c0443be60b45a">loadMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; m);
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049 
+<a name="l00055"></a>00055 <span class="keywordtype">void</span> <a class="code" href="textIO_8cpp.html#765587f9d49de818cd3c0443be60b45a">loadMatrixText</a>(std::string filename, <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m);
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057 <span class="preprocessor">#endif </span><span class="comment">/* TEXTIO_H_ */</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Oct 31 16:58:45 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

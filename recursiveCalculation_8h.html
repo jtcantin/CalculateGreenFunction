@@ -21,6 +21,7 @@
 <code>#include &quot;<a class="el" href="basis_8h-source.html">../basis_set/basis.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="binaryIO_8h-source.html">../IO/binaryIO.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="textIO_8h-source.html">../IO/textIO.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="MatrixIO_8h-source.html">../IO/MatrixIO.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="formMatrix_8h-source.html">../formMatrix/formMatrix.h</a>&quot;</code><br>
 
 <p>
@@ -30,14 +31,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structRecursionData.html">RecursionData</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#8b0502b36e503f03b11959ced08c314b">saveMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;gf)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#345acfab78b545b49818addd27757351">saveMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;gf)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#833e053961e1cf71fc06d7aca4ec92e9">loadMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;gf)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#2bcdfb297bcffe64c39102973af956d0">loadMatrix</a> (const std::string filename, <a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;gf)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#09bb0743532eb10149446411001b1a13">deleteMatrixFiles</a> (std::string files)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="recursiveCalculation_8h.html#f519514f8f6d6155af66d593f73e4e1d">solveDenseLinearEqs</a> (<a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;A, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;B, <a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;X)</td></tr>
@@ -502,124 +495,6 @@ Then A_{K} can be obtained by solving the above linear equations
 find out the index of G(basis, ...)for a basis in V_{K} 
 </div>
 </div><p>
-<a class="anchor" name="2bcdfb297bcffe64c39102973af956d0"></a><!-- doxytag: member="recursiveCalculation.h::loadMatrix" ref="2bcdfb297bcffe64c39102973af956d0" args="(const std::string filename, DMatrix &amp;gf)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void loadMatrix           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string&nbsp;</td>
-          <td class="paramname"> <em>filename</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-read a file and save its content into a matrix 
-</div>
-</div><p>
-<a class="anchor" name="833e053961e1cf71fc06d7aca4ec92e9"></a><!-- doxytag: member="recursiveCalculation.h::loadMatrix" ref="833e053961e1cf71fc06d7aca4ec92e9" args="(const std::string filename, CDMatrix &amp;gf)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void loadMatrix           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string&nbsp;</td>
-          <td class="paramname"> <em>filename</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-read a file and save its content into a matrix 
-</div>
-</div><p>
-<a class="anchor" name="345acfab78b545b49818addd27757351"></a><!-- doxytag: member="recursiveCalculation.h::saveMatrix" ref="345acfab78b545b49818addd27757351" args="(const std::string filename, DMatrix &amp;gf)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void saveMatrix           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string&nbsp;</td>
-          <td class="paramname"> <em>filename</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-save matrix to file<p>
-if the filename is *.bin, save the matrix in binary format otherwise save the matrix in text format 
-</div>
-</div><p>
-<a class="anchor" name="8b0502b36e503f03b11959ced08c314b"></a><!-- doxytag: member="recursiveCalculation.h::saveMatrix" ref="8b0502b36e503f03b11959ced08c314b" args="(const std::string filename, CDMatrix &amp;gf)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void saveMatrix           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string&nbsp;</td>
-          <td class="paramname"> <em>filename</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>gf</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-save matrix to file<p>
-if the filename is *.bin, save the matrix in binary format otherwise save the matrix in text format 
-</div>
-</div><p>
 <a class="anchor" name="ead9ae01562e18a0e89996750378d71f"></a><!-- doxytag: member="recursiveCalculation.h::setUpIndexInteractions" ref="ead9ae01562e18a0e89996750378d71f" args="(LatticeShape &amp;lattice, InteractionData &amp;interactionData)" -->
 <div class="memitem">
 <div class="memproto">
@@ -780,7 +655,7 @@ Substituting the above two equations into the first equation, we obtain [ W_{KCe
 Then V_{KCenter} can be obtained by solving the above linear equation 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Aug 21 15:15:04 2014 for CalculateGreenFunction by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Fri Oct 31 16:58:45 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

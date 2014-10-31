@@ -31,88 +31,82 @@
 <a name="l00013"></a>00013 <span class="preprocessor">#include "../basis_set/basis.h"</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include "../IO/binaryIO.h"</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include "../IO/textIO.h"</span>
-<a name="l00016"></a>00016 <span class="preprocessor">#include "../formMatrix/formMatrix.h"</span>
-<a name="l00017"></a>00017 
-<a name="l00018"></a><a class="code" href="structRecursionData.html">00018</a> <span class="keyword">typedef</span> <span class="keyword">struct </span>{
-<a name="l00019"></a><a class="code" href="structRecursionData.html#a8ea6d2e16d29953d026d1fe12184917">00019</a>         <span class="keywordtype">int</span> KLeftStart;
-<a name="l00020"></a><a class="code" href="structRecursionData.html#db469655364d6a37c23f95f12cde72fe">00020</a>         <span class="keywordtype">int</span> KLeftStop;
-<a name="l00021"></a><a class="code" href="structRecursionData.html#c6d4b57fe47bbae3aa19be50fa004fc8">00021</a>         <span class="keywordtype">int</span> KCenter;
-<a name="l00022"></a><a class="code" href="structRecursionData.html#50d56d65a37d28aa1edb4694e3fdd60b">00022</a>         <span class="keywordtype">int</span> KRightStop;
-<a name="l00023"></a><a class="code" href="structRecursionData.html#246cc4e77a6262eceec19396ce561110">00023</a>         <span class="keywordtype">int</span> KRightStart;
-<a name="l00024"></a><a class="code" href="structRecursionData.html#762ffc708ad05f0f71b3a25968ddca17">00024</a>         <span class="keywordtype">int</span> maxDistance; <span class="comment">//step size of the Recursion</span>
-<a name="l00025"></a><a class="code" href="structRecursionData.html#971f64de9bd03c3f2c91c528554f6d40">00025</a>         <span class="keywordtype">int</span> Csize; <span class="comment">// the size of the constant vector C in the quation for V_{KCenter}</span>
-<a name="l00026"></a><a class="code" href="structRecursionData.html#b8b2f77913abeebdf8681d672ea0b7ff">00026</a>         <span class="keywordtype">int</span> indexForNonzero; <span class="comment">// the index for the only nonzero element in vector C</span>
-<a name="l00027"></a>00027 } <a class="code" href="structRecursionData.html">RecursionData</a>;
-<a name="l00028"></a>00028 
-<a name="l00035"></a>00035 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#8b0502b36e503f03b11959ced08c314b">saveMatrix</a>(<span class="keyword">const</span> std::string filename, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; gf);
+<a name="l00016"></a>00016 <span class="preprocessor">#include "../IO/MatrixIO.h"</span>
+<a name="l00017"></a>00017 <span class="preprocessor">#include "../formMatrix/formMatrix.h"</span>
+<a name="l00018"></a>00018 
+<a name="l00019"></a><a class="code" href="structRecursionData.html">00019</a> <span class="keyword">typedef</span> <span class="keyword">struct </span>{
+<a name="l00020"></a><a class="code" href="structRecursionData.html#a8ea6d2e16d29953d026d1fe12184917">00020</a>         <span class="keywordtype">int</span> KLeftStart;
+<a name="l00021"></a><a class="code" href="structRecursionData.html#db469655364d6a37c23f95f12cde72fe">00021</a>         <span class="keywordtype">int</span> KLeftStop;
+<a name="l00022"></a><a class="code" href="structRecursionData.html#c6d4b57fe47bbae3aa19be50fa004fc8">00022</a>         <span class="keywordtype">int</span> KCenter;
+<a name="l00023"></a><a class="code" href="structRecursionData.html#50d56d65a37d28aa1edb4694e3fdd60b">00023</a>         <span class="keywordtype">int</span> KRightStop;
+<a name="l00024"></a><a class="code" href="structRecursionData.html#246cc4e77a6262eceec19396ce561110">00024</a>         <span class="keywordtype">int</span> KRightStart;
+<a name="l00025"></a><a class="code" href="structRecursionData.html#762ffc708ad05f0f71b3a25968ddca17">00025</a>         <span class="keywordtype">int</span> maxDistance; <span class="comment">//step size of the Recursion</span>
+<a name="l00026"></a><a class="code" href="structRecursionData.html#971f64de9bd03c3f2c91c528554f6d40">00026</a>         <span class="keywordtype">int</span> Csize; <span class="comment">// the size of the constant vector C in the quation for V_{KCenter}</span>
+<a name="l00027"></a><a class="code" href="structRecursionData.html#b8b2f77913abeebdf8681d672ea0b7ff">00027</a>         <span class="keywordtype">int</span> indexForNonzero; <span class="comment">// the index for the only nonzero element in vector C</span>
+<a name="l00028"></a>00028 } <a class="code" href="structRecursionData.html">RecursionData</a>;
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#f7a9b154f3052702f5726b3dfeb867d7">deleteMatrixFiles</a>(std::string files);
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#f519514f8f6d6155af66d593f73e4e1d">solveDenseLinearEqs</a>(<a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; A, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; B, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; X);
+<a name="l00035"></a>00035 
 <a name="l00036"></a>00036 
-<a name="l00043"></a>00043 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#8b0502b36e503f03b11959ced08c314b">saveMatrix</a>(<span class="keyword">const</span> std::string filename, <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; gf);
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045 
-<a name="l00049"></a>00049 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#833e053961e1cf71fc06d7aca4ec92e9">loadMatrix</a>(<span class="keyword">const</span> std::string filename, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; gf);
-<a name="l00050"></a>00050 
-<a name="l00054"></a>00054 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#833e053961e1cf71fc06d7aca4ec92e9">loadMatrix</a>(<span class="keyword">const</span> std::string filename, <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; gf);
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#f7a9b154f3052702f5726b3dfeb867d7">deleteMatrixFiles</a>(std::string files);
+<a name="l00037"></a>00037 
+<a name="l00041"></a>00041 <span class="keywordtype">int</span> <a class="code" href="recursiveCalculation_8cpp.html#3e2393074b4d4555969137b2abaae8dd">findCorrespondingVK</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <span class="keywordtype">int</span> maxDistance, <a class="code" href="classBasis.html">Basis</a>&amp; basis);
+<a name="l00042"></a>00042 
+<a name="l00046"></a>00046 <span class="keywordtype">int</span> <a class="code" href="recursiveCalculation_8cpp.html#6ae3e59ab41f6710e7d84c7ff3e98eef">getBasisIndexInVK</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <span class="keywordtype">int</span> K, <a class="code" href="classBasis.html">Basis</a>&amp; basis);
+<a name="l00047"></a>00047 
+<a name="l00051"></a>00051 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#ead9ae01562e18a0e89996750378d71f">setUpIndexInteractions</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice,
+<a name="l00052"></a>00052                 <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData);
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#d26ca3ee87a9f745d2593ca8e8f089d0">setUpRecursion</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
+<a name="l00055"></a>00055                             <a class="code" href="classBasis.html">Basis</a>&amp; initialSites, <a class="code" href="structRecursionData.html">RecursionData</a>&amp; rd);
+<a name="l00056"></a>00056 
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#f519514f8f6d6155af66d593f73e4e1d">solveDenseLinearEqs</a>(<a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; A, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; B, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; X);
-<a name="l00059"></a>00059 
+<a name="l00058"></a>00058 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#1a03ed5a49ba999850f231f2f81b32a5">fromRightToCenter</a>(<a class="code" href="structRecursionData.html">RecursionData</a>&amp; recursionData,
+<a name="l00059"></a>00059                 <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; AKRightStop, <span class="keywordtype">bool</span> saveAMatrices=<span class="keyword">true</span>);
 <a name="l00060"></a>00060 
-<a name="l00061"></a>00061 
-<a name="l00065"></a>00065 <span class="keywordtype">int</span> <a class="code" href="recursiveCalculation_8cpp.html#3e2393074b4d4555969137b2abaae8dd">findCorrespondingVK</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <span class="keywordtype">int</span> maxDistance, <a class="code" href="classBasis.html">Basis</a>&amp; basis);
-<a name="l00066"></a>00066 
-<a name="l00070"></a>00070 <span class="keywordtype">int</span> <a class="code" href="recursiveCalculation_8cpp.html#6ae3e59ab41f6710e7d84c7ff3e98eef">getBasisIndexInVK</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <span class="keywordtype">int</span> K, <a class="code" href="classBasis.html">Basis</a>&amp; basis);
-<a name="l00071"></a>00071 
-<a name="l00075"></a>00075 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#ead9ae01562e18a0e89996750378d71f">setUpIndexInteractions</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice,
-<a name="l00076"></a>00076                 <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData);
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#d26ca3ee87a9f745d2593ca8e8f089d0">setUpRecursion</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
-<a name="l00079"></a>00079                             <a class="code" href="classBasis.html">Basis</a>&amp; initialSites, <a class="code" href="structRecursionData.html">RecursionData</a>&amp; rd);
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#1a03ed5a49ba999850f231f2f81b32a5">fromRightToCenter</a>(<a class="code" href="structRecursionData.html">RecursionData</a>&amp; recursionData,
-<a name="l00083"></a>00083                 <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; AKRightStop, <span class="keywordtype">bool</span> saveAMatrices=<span class="keyword">true</span>);
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#688998cb6b3bb9cb3a37353ee115f303">fromLeftToCenter</a>(<a class="code" href="structRecursionData.html">RecursionData</a>&amp; recursionData,
-<a name="l00086"></a>00086                 <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; ATildeKLeftStop, <span class="keywordtype">bool</span> saveAMatrices=<span class="keyword">true</span>);
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#e097b7a86f8594f1b00c6f8c99c17a08">solveVKCenter</a>(<a class="code" href="structRecursionData.html">RecursionData</a>&amp; recursionData, <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z,
-<a name="l00089"></a>00089                            <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; ATildeKLeftStop, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; AKRightStop,
-<a name="l00090"></a>00090                            <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; VKCenter);
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#606df39775b7266829a71b5550656fb1">calculateDensityOfState</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="classBasis.html">Basis</a>&amp; initialSites,
-<a name="l00093"></a>00093                                       <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
-<a name="l00094"></a>00094                                       <span class="keyword">const</span> std::vector&lt;dcomplex&gt;&amp; zList,
-<a name="l00095"></a>00095                                       std::vector&lt;double&gt;&amp; rhoList);
-<a name="l00096"></a>00096 
-<a name="l00102"></a>00102 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#bc7b339a0db5da1f5fa236b809b49be3">calculateDensityOfStateAll</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice,
-<a name="l00103"></a>00103                                       <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
-<a name="l00104"></a>00104                                       <span class="keyword">const</span> std::vector&lt;dcomplex&gt;&amp; zList,
-<a name="l00105"></a>00105                                       std::vector&lt;std::string&gt;&amp; fileList);
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107 
-<a name="l00112"></a>00112 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#785526870b794d5138028250473ddeaa">calculateGreenFunc</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="classBasis.html">Basis</a>&amp; finalSites, <a class="code" href="classBasis.html">Basis</a>&amp; initialSites,
-<a name="l00113"></a>00113                                 <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
-<a name="l00114"></a>00114                         <span class="keyword">const</span> std::vector&lt;dcomplex&gt;&amp; zList,
-<a name="l00115"></a>00115                         std::vector&lt;dcomplex&gt;&amp; gfList);
-<a name="l00116"></a>00116 
-<a name="l00121"></a>00121 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#f04ff891db725b2ec3ebf788c19363ef">calculateAllGreenFunc</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice,  <a class="code" href="classBasis.html">Basis</a>&amp; initialSites,
-<a name="l00122"></a>00122                                 <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData, std::vector&lt;dcomplex&gt; zList,
-<a name="l00123"></a>00123                         std::vector&lt; std::string &gt; fileList);
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126 <span class="comment">/*</span>
-<a name="l00127"></a>00127 <span class="comment"> * extract the matrix element G(n, m, initial_sites) from files stored in disk</span>
-<a name="l00128"></a>00128 <span class="comment"> *</span>
-<a name="l00129"></a>00129 <span class="comment"> * lattice --- contains the information about the size and shape of the crystal</span>
-<a name="l00130"></a>00130 <span class="comment"> * maxDistance --- the range of dipole-dipole interaction</span>
-<a name="l00131"></a>00131 <span class="comment"> *                 (in the unit of lattice constant)</span>
-<a name="l00132"></a>00132 <span class="comment"> */</span>
-<a name="l00133"></a>00133 
-<a name="l00134"></a>00134 <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> <a class="code" href="recursiveCalculation_8cpp.html#b548187e9754c58af5df963c7ed110f9">extractMatrixElement</a>(<span class="keywordtype">int</span> n, <span class="keywordtype">int</span> m, <a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <span class="keywordtype">int</span> maxDistance);
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136 <span class="preprocessor">#endif </span><span class="comment">/* RECURSIVECALCULATION_HPP_ */</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Aug 21 15:15:04 2014 for CalculateGreenFunction by&nbsp;
+<a name="l00061"></a>00061 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#688998cb6b3bb9cb3a37353ee115f303">fromLeftToCenter</a>(<a class="code" href="structRecursionData.html">RecursionData</a>&amp; recursionData,
+<a name="l00062"></a>00062                 <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; ATildeKLeftStop, <span class="keywordtype">bool</span> saveAMatrices=<span class="keyword">true</span>);
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#e097b7a86f8594f1b00c6f8c99c17a08">solveVKCenter</a>(<a class="code" href="structRecursionData.html">RecursionData</a>&amp; recursionData, <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> z,
+<a name="l00065"></a>00065                            <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; ATildeKLeftStop, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; AKRightStop,
+<a name="l00066"></a>00066                            <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; VKCenter);
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#606df39775b7266829a71b5550656fb1">calculateDensityOfState</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="classBasis.html">Basis</a>&amp; initialSites,
+<a name="l00069"></a>00069                                       <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
+<a name="l00070"></a>00070                                       <span class="keyword">const</span> std::vector&lt;dcomplex&gt;&amp; zList,
+<a name="l00071"></a>00071                                       std::vector&lt;double&gt;&amp; rhoList);
+<a name="l00072"></a>00072 
+<a name="l00078"></a>00078 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#bc7b339a0db5da1f5fa236b809b49be3">calculateDensityOfStateAll</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice,
+<a name="l00079"></a>00079                                       <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
+<a name="l00080"></a>00080                                       <span class="keyword">const</span> std::vector&lt;dcomplex&gt;&amp; zList,
+<a name="l00081"></a>00081                                       std::vector&lt;std::string&gt;&amp; fileList);
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 
+<a name="l00088"></a>00088 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#785526870b794d5138028250473ddeaa">calculateGreenFunc</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="classBasis.html">Basis</a>&amp; finalSites, <a class="code" href="classBasis.html">Basis</a>&amp; initialSites,
+<a name="l00089"></a>00089                                 <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData,
+<a name="l00090"></a>00090                         <span class="keyword">const</span> std::vector&lt;dcomplex&gt;&amp; zList,
+<a name="l00091"></a>00091                         std::vector&lt;dcomplex&gt;&amp; gfList);
+<a name="l00092"></a>00092 
+<a name="l00097"></a>00097 <span class="keywordtype">void</span> <a class="code" href="recursiveCalculation_8cpp.html#f04ff891db725b2ec3ebf788c19363ef">calculateAllGreenFunc</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice,  <a class="code" href="classBasis.html">Basis</a>&amp; initialSites,
+<a name="l00098"></a>00098                                 <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData, std::vector&lt;dcomplex&gt; zList,
+<a name="l00099"></a>00099                         std::vector&lt; std::string &gt; fileList);
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102 <span class="comment">/*</span>
+<a name="l00103"></a>00103 <span class="comment"> * extract the matrix element G(n, m, initial_sites) from files stored in disk</span>
+<a name="l00104"></a>00104 <span class="comment"> *</span>
+<a name="l00105"></a>00105 <span class="comment"> * lattice --- contains the information about the size and shape of the crystal</span>
+<a name="l00106"></a>00106 <span class="comment"> * maxDistance --- the range of dipole-dipole interaction</span>
+<a name="l00107"></a>00107 <span class="comment"> *                 (in the unit of lattice constant)</span>
+<a name="l00108"></a>00108 <span class="comment"> */</span>
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> <a class="code" href="recursiveCalculation_8cpp.html#b548187e9754c58af5df963c7ed110f9">extractMatrixElement</a>(<span class="keywordtype">int</span> n, <span class="keywordtype">int</span> m, <a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <span class="keywordtype">int</span> maxDistance);
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112 <span class="preprocessor">#endif </span><span class="comment">/* RECURSIVECALCULATION_HPP_ */</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Oct 31 16:58:45 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

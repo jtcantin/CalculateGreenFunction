@@ -38,191 +38,206 @@
 <a name="l00026"></a><a class="code" href="structInteractionData.html#23930e2118f574b886f271a2bbbff979">00026</a>         <span class="keywordtype">bool</span> randomOnSite, randomHop, randomDyn;
 <a name="l00027"></a><a class="code" href="structInteractionData.html#22b948fd54d8a7179295971063ba1094">00027</a>         <span class="keywordtype">int</span> maxDistance; <span class="comment">// beyond which the interaction is set to zero</span>
 <a name="l00028"></a><a class="code" href="structInteractionData.html#2d9b8834967ee457c0df6b8160c564a9">00028</a>         <span class="keywordtype">unsigned</span> seed;
-<a name="l00029"></a>00029 } <a class="code" href="structInteractionData.html">InteractionData</a>;
-<a name="l00030"></a>00030 
-<a name="l00031"></a>00031 
+<a name="l00029"></a><a class="code" href="structInteractionData.html#701cf9ded2fa50ef9fa7459a4d87cb86">00029</a>         <span class="keywordtype">bool</span> longRangeHop;
+<a name="l00030"></a><a class="code" href="structInteractionData.html#c450d097db65d86fdcde1b993577bd10">00030</a>         <span class="keywordtype">bool</span> longRangeDyn;
+<a name="l00031"></a>00031 } <a class="code" href="structInteractionData.html">InteractionData</a>;
 <a name="l00032"></a>00032 
-<a name="l00042"></a><a class="code" href="classInteraction.html">00042</a> <span class="keyword">class </span><a class="code" href="classInteraction.html">Interaction</a> {
-<a name="l00043"></a>00043 <span class="keyword">public</span>:
-<a name="l00044"></a><a class="code" href="classInteraction.html#d2b114281bde2e5d1a9f02d73ca10c47">00044</a>         <a class="code" href="classInteraction.html#d2b114281bde2e5d1a9f02d73ca10c47">Interaction</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData) {
-<a name="l00045"></a>00045                 dim = lattice.<a class="code" href="classLatticeShape.html#68c414be0c4f148e7a74481bc835d126">getDim</a>();
-<a name="l00046"></a>00046                 seed = interactionData.<a class="code" href="structInteractionData.html#2d9b8834967ee457c0df6b8160c564a9">seed</a>;
-<a name="l00047"></a>00047                 rng.<a class="code" href="classRandomNumberGenerator.html#dc815a543e3b3a78b23a87a7f3d9a4ab">SetSeed</a>(seed);
-<a name="l00048"></a>00048                 <span class="keywordflow">if</span> (dim==1) {
-<a name="l00049"></a>00049                         <span class="keywordtype">int</span> xsite = lattice.<a class="code" href="classLatticeShape.html#605654bf88002971cabfaecd12c43a68">getXmax</a>() + 1;
-<a name="l00050"></a>00050                         maxDistance = interactionData.<a class="code" href="structInteractionData.html#22b948fd54d8a7179295971063ba1094">maxDistance</a>;
-<a name="l00051"></a>00051                         <span class="comment">// initialize the hopping matrix</span>
-<a name="l00052"></a>00052                         t = DMatrix::Zero(xsite,xsite);
-<a name="l00053"></a>00053                         <span class="keywordflow">if</span> (interactionData.<a class="code" href="structInteractionData.html#56b95d7f78ea36221d7e616c0de8fae7">randomHop</a>) {
-<a name="l00054"></a>00054                                 setRandomMatrix(t, interactionData.<a class="code" href="structInteractionData.html#34ad476d249865e00cd0728a9ebb3006">hop</a>, maxDistance, seed+10);
-<a name="l00055"></a>00055                         } <span class="keywordflow">else</span> {
-<a name="l00056"></a>00056                                 <span class="comment">// set all element to constant</span>
-<a name="l00057"></a>00057                                 setConstantMatrix(t, interactionData.<a class="code" href="structInteractionData.html#34ad476d249865e00cd0728a9ebb3006">hop</a>, maxDistance);
-<a name="l00058"></a>00058                         }
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060                         <span class="comment">// initialize the dynamic matrix</span>
-<a name="l00061"></a>00061                         d = DMatrix::Zero(xsite,xsite);
-<a name="l00062"></a>00062                         <span class="keywordflow">if</span> (interactionData.<a class="code" href="structInteractionData.html#64680c3526e2abe0181da8d3ae21f955">randomDyn</a>) {
-<a name="l00063"></a>00063                                 setRandomMatrix(d, interactionData.<a class="code" href="structInteractionData.html#991f1d54ba642bd5615f9b828f4c463c">dyn</a>, maxDistance, seed+20);
-<a name="l00064"></a>00064                         } <span class="keywordflow">else</span> {
-<a name="l00065"></a>00065                                 <span class="comment">// set all element to constant</span>
-<a name="l00066"></a>00066                                 setConstantMatrix(d, interactionData.<a class="code" href="structInteractionData.html#991f1d54ba642bd5615f9b828f4c463c">dyn</a>, maxDistance);
-<a name="l00067"></a>00067                         }
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069                         <span class="comment">// initialize the dynamic matrix</span>
-<a name="l00070"></a>00070                         e = DVector::Zero(xsite);
-<a name="l00071"></a>00071                         <span class="keywordflow">if</span> (interactionData.<a class="code" href="structInteractionData.html#23930e2118f574b886f271a2bbbff979">randomOnSite</a>) {
-<a name="l00072"></a>00072                                 setRandomVector(e, interactionData.<a class="code" href="structInteractionData.html#cae1587a121925e548d1ac08f83b85a2">onsiteE</a>);
-<a name="l00073"></a>00073                         } <span class="keywordflow">else</span> {
-<a name="l00074"></a>00074                                 <span class="comment">// set all element to constant</span>
-<a name="l00075"></a>00075                                 setConstantVector(e, interactionData.<a class="code" href="structInteractionData.html#cae1587a121925e548d1ac08f83b85a2">onsiteE</a>);
-<a name="l00076"></a>00076                         }
-<a name="l00077"></a>00077                 } <span class="comment">//end of if for dim=1</span>
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080         }
-<a name="l00081"></a>00081 
-<a name="l00082"></a><a class="code" href="classInteraction.html#3c420159e97e99f497d34331ff2788d2">00082</a>         <span class="keywordtype">double</span> <a class="code" href="classInteraction.html#3c420159e97e99f497d34331ff2788d2">hop</a>(<a class="code" href="classBasis.html">Basis</a>&amp; basis1, <a class="code" href="classBasis.html">Basis</a>&amp; basis2) {
-<a name="l00083"></a>00083                 <span class="keywordtype">double</span> result;
-<a name="l00084"></a>00084                 <span class="comment">// for 1D case</span>
-<a name="l00085"></a>00085                 <span class="keywordflow">switch</span> (dim) {
-<a name="l00086"></a>00086                 <span class="keywordflow">case</span> 1:
-<a name="l00087"></a>00087                         <span class="keywordflow">if</span> (basis1[0]==basis2[0]) {
-<a name="l00088"></a>00088                                 result = t(basis1[1], basis2[1]);
-<a name="l00089"></a>00089                         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (basis1[1]==basis2[1]) {
-<a name="l00090"></a>00090                                 result = t(basis1[0], basis2[0]);
-<a name="l00091"></a>00091                         } <span class="keywordflow">else</span> {
-<a name="l00092"></a>00092                                 result = 0.0;
-<a name="l00093"></a>00093                         }
-<a name="l00094"></a>00094                         <span class="keywordflow">break</span>;
-<a name="l00095"></a>00095                 <span class="keywordflow">case</span> 2:
-<a name="l00096"></a>00096                 <span class="keywordflow">case</span> 3:
-<a name="l00097"></a>00097                 <span class="keywordflow">default</span>:
-<a name="l00098"></a>00098                         result = 0.0;
-<a name="l00099"></a>00099                 }
-<a name="l00100"></a>00100                 <span class="keywordflow">return</span> result;
-<a name="l00101"></a>00101         }
-<a name="l00102"></a>00102 
-<a name="l00103"></a><a class="code" href="classInteraction.html#c8649aa7beec2e8c376eb7778a338340">00103</a>         <span class="keywordtype">double</span> <a class="code" href="classInteraction.html#c8649aa7beec2e8c376eb7778a338340">dyn</a>(<a class="code" href="classBasis.html">Basis</a>&amp; basis) {
-<a name="l00104"></a>00104                 <span class="keywordtype">double</span> result;
-<a name="l00105"></a>00105                 <span class="keywordflow">switch</span> (dim) {
-<a name="l00106"></a>00106                 <span class="keywordflow">case</span> 1:
-<a name="l00107"></a>00107                         result = d(basis[0], basis[1]);
-<a name="l00108"></a>00108                         <span class="keywordflow">break</span>;
-<a name="l00109"></a>00109                 <span class="keywordflow">case</span> 2:
-<a name="l00110"></a>00110                 <span class="keywordflow">case</span> 3:
-<a name="l00111"></a>00111                 <span class="keywordflow">default</span>:
-<a name="l00112"></a>00112                         result = 0.0;
-<a name="l00113"></a>00113                 }
-<a name="l00114"></a>00114                 <span class="keywordflow">return</span> result;
-<a name="l00115"></a>00115         }
-<a name="l00116"></a>00116 
-<a name="l00117"></a><a class="code" href="classInteraction.html#80c4750fec2c49eae8cd469d778e4075">00117</a>         <span class="keywordtype">double</span> <a class="code" href="classInteraction.html#80c4750fec2c49eae8cd469d778e4075">onsiteE</a>(<a class="code" href="classBasis.html">Basis</a>&amp; basis) {
-<a name="l00118"></a>00118                 <span class="keywordtype">double</span> result;
-<a name="l00119"></a>00119                 <span class="keywordflow">switch</span> (dim) {
-<a name="l00120"></a>00120                 <span class="keywordflow">case</span> 1:
-<a name="l00121"></a>00121                         result = e(basis[0]) +  e(basis[1]);
-<a name="l00122"></a>00122                         <span class="keywordflow">break</span>;
-<a name="l00123"></a>00123                 <span class="keywordflow">case</span> 2:
-<a name="l00124"></a>00124                 <span class="keywordflow">case</span> 3:
-<a name="l00125"></a>00125                 <span class="keywordflow">default</span>:
-<a name="l00126"></a>00126                         result = 0.0;
-<a name="l00127"></a>00127                 }
-<a name="l00128"></a>00128                 <span class="keywordflow">return</span> result;
-<a name="l00129"></a>00129         }
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131         <span class="comment">// if the seed is not set, use the default one</span>
-<a name="l00132"></a><a class="code" href="classInteraction.html#49b8d828e29a19bfe4f4566e71d30faf">00132</a>         <span class="keywordtype">void</span> <a class="code" href="classInteraction.html#49b8d828e29a19bfe4f4566e71d30faf">setRandomSeed</a>(<span class="keywordtype">unsigned</span> inputSeed) {
-<a name="l00133"></a>00133                 seed = inputSeed;
-<a name="l00134"></a>00134                 rng.<a class="code" href="classRandomNumberGenerator.html#dc815a543e3b3a78b23a87a7f3d9a4ab">SetSeed</a>(seed);
-<a name="l00135"></a>00135         }
-<a name="l00136"></a>00136 
-<a name="l00137"></a>00137         <span class="comment">// obtain the range of interactions</span>
-<a name="l00138"></a><a class="code" href="classInteraction.html#104ed2e736c2139c43a11345c478a310">00138</a>         <span class="keywordtype">int</span> <a class="code" href="classInteraction.html#104ed2e736c2139c43a11345c478a310">getMaxDistance</a>() {
-<a name="l00139"></a>00139                 <span class="keywordflow">return</span> maxDistance;
-<a name="l00140"></a>00140         }
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142         <span class="comment">// destructor</span>
-<a name="l00143"></a><a class="code" href="classInteraction.html#17ea05be1fd6d5f6187d17c54609d344">00143</a>         <a class="code" href="classInteraction.html#17ea05be1fd6d5f6187d17c54609d344">~Interaction</a>() {
-<a name="l00144"></a>00144                 <span class="comment">// release the memory of the matrices</span>
-<a name="l00145"></a>00145                 t.resize(0,0);
-<a name="l00146"></a>00146                 d.resize(0,0);
-<a name="l00147"></a>00147                 e.resize(0);
-<a name="l00148"></a>00148         }
-<a name="l00149"></a>00149 
-<a name="l00150"></a>00150 <span class="keyword">private</span>:
-<a name="l00151"></a>00151         <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> t;
-<a name="l00152"></a>00152         <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> d;
-<a name="l00153"></a>00153         <a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">DVector</a> e;
-<a name="l00154"></a>00154         <span class="keywordtype">int</span> maxDistance;
-<a name="l00155"></a>00155         <span class="keywordtype">int</span> dim;
-<a name="l00156"></a>00156         <span class="keywordtype">unsigned</span> seed;
-<a name="l00157"></a>00157         <a class="code" href="classRandomNumberGenerator.html">RandomNumberGenerator</a> rng;
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159 
-<a name="l00160"></a>00160         <span class="keywordtype">void</span> setRandomMatrix(<a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m, <span class="keywordtype">double</span> maxVal, <span class="keywordtype">int</span> maxDistance, <span class="keywordtype">unsigned</span> seed_) {
-<a name="l00161"></a>00161                 <span class="comment">//RandomNumberMatrix rnm(m.rows(), m.cols(), seed_);</span>
-<a name="l00162"></a>00162                 <span class="comment">//rng.SetSeed(seed_);</span>
-<a name="l00163"></a>00163                 srand(seed_);
-<a name="l00164"></a>00164                 <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> rnm = DMatrix::Random(m.rows(), m.cols());
-<a name="l00165"></a>00165                 <span class="keywordtype">int</span> xsite = m.rows();
-<a name="l00166"></a>00166                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;xsite-1; ++i) {
-<a name="l00167"></a>00167                         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> incr=1; incr&lt;=maxDistance &amp;&amp; i+incr&lt;xsite; ++incr) {
-<a name="l00168"></a>00168                                 m(i,i+incr) = maxVal*rnm(i, i+incr)/std::pow(incr,3.0); <span class="comment">// range [0, hop)</span>
-<a name="l00169"></a>00169                                 m(i+incr,i) = m(i,i+incr);
-<a name="l00170"></a>00170                         }
-<a name="l00171"></a>00171                 }
-<a name="l00172"></a>00172         }
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 
+<a name="l00044"></a><a class="code" href="classInteraction.html">00044</a> <span class="keyword">class </span><a class="code" href="classInteraction.html">Interaction</a> {
+<a name="l00045"></a>00045 <span class="keyword">public</span>:
+<a name="l00046"></a><a class="code" href="classInteraction.html#d2b114281bde2e5d1a9f02d73ca10c47">00046</a>         <a class="code" href="classInteraction.html#d2b114281bde2e5d1a9f02d73ca10c47">Interaction</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData) {
+<a name="l00047"></a>00047                 dim = lattice.<a class="code" href="classLatticeShape.html#68c414be0c4f148e7a74481bc835d126">getDim</a>();
+<a name="l00048"></a>00048                 seed = interactionData.<a class="code" href="structInteractionData.html#2d9b8834967ee457c0df6b8160c564a9">seed</a>;
+<a name="l00049"></a>00049                 rng.<a class="code" href="classRandomNumberGenerator.html#dc815a543e3b3a78b23a87a7f3d9a4ab">SetSeed</a>(seed);
+<a name="l00050"></a>00050                 <span class="keywordflow">if</span> (dim==1) {
+<a name="l00051"></a>00051                         <span class="keywordtype">int</span> xsite = lattice.<a class="code" href="classLatticeShape.html#605654bf88002971cabfaecd12c43a68">getXmax</a>() + 1;
+<a name="l00052"></a>00052                         maxDistance = interactionData.<a class="code" href="structInteractionData.html#22b948fd54d8a7179295971063ba1094">maxDistance</a>;
+<a name="l00053"></a>00053                         <span class="comment">// initialize the hopping matrix</span>
+<a name="l00054"></a>00054                         t = DMatrix::Zero(xsite,xsite);
+<a name="l00055"></a>00055                         hop_maxDistance = interactionData.<a class="code" href="structInteractionData.html#701cf9ded2fa50ef9fa7459a4d87cb86">longRangeHop</a>?maxDistance:1;
+<a name="l00056"></a>00056                         <span class="keywordflow">if</span> (interactionData.<a class="code" href="structInteractionData.html#56b95d7f78ea36221d7e616c0de8fae7">randomHop</a>) {
+<a name="l00057"></a>00057                                 setRandomMatrix(t, interactionData.<a class="code" href="structInteractionData.html#34ad476d249865e00cd0728a9ebb3006">hop</a>, hop_maxDistance, seed+10);
+<a name="l00058"></a>00058                         } <span class="keywordflow">else</span> {
+<a name="l00059"></a>00059                                 <span class="comment">// set all element to constant</span>
+<a name="l00060"></a>00060                                 setConstantMatrix(t, interactionData.<a class="code" href="structInteractionData.html#34ad476d249865e00cd0728a9ebb3006">hop</a>, hop_maxDistance);
+<a name="l00061"></a>00061                         }
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063                         <span class="comment">// initialize the dynamic matrix</span>
+<a name="l00064"></a>00064                         d = DMatrix::Zero(xsite,xsite);
+<a name="l00065"></a>00065                         dyn_maxDistance = interactionData.<a class="code" href="structInteractionData.html#c450d097db65d86fdcde1b993577bd10">longRangeDyn</a>?maxDistance:1;
+<a name="l00066"></a>00066                         <span class="keywordflow">if</span> (interactionData.<a class="code" href="structInteractionData.html#64680c3526e2abe0181da8d3ae21f955">randomDyn</a>) {
+<a name="l00067"></a>00067                                 setRandomMatrix(d, interactionData.<a class="code" href="structInteractionData.html#991f1d54ba642bd5615f9b828f4c463c">dyn</a>, dyn_maxDistance, seed+20);
+<a name="l00068"></a>00068                         } <span class="keywordflow">else</span> {
+<a name="l00069"></a>00069                                 <span class="comment">// set all element to constant</span>
+<a name="l00070"></a>00070                                 setConstantMatrix(d, interactionData.<a class="code" href="structInteractionData.html#991f1d54ba642bd5615f9b828f4c463c">dyn</a>, dyn_maxDistance);
+<a name="l00071"></a>00071                         }
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073                         <span class="comment">// initialize the dynamic matrix</span>
+<a name="l00074"></a>00074                         e = DVector::Zero(xsite);
+<a name="l00075"></a>00075                         <span class="keywordflow">if</span> (interactionData.<a class="code" href="structInteractionData.html#23930e2118f574b886f271a2bbbff979">randomOnSite</a>) {
+<a name="l00076"></a>00076                                 setRandomVector(e, interactionData.<a class="code" href="structInteractionData.html#cae1587a121925e548d1ac08f83b85a2">onsiteE</a>);
+<a name="l00077"></a>00077                         } <span class="keywordflow">else</span> {
+<a name="l00078"></a>00078                                 <span class="comment">// set all element to constant</span>
+<a name="l00079"></a>00079                                 setConstantVector(e, interactionData.<a class="code" href="structInteractionData.html#cae1587a121925e548d1ac08f83b85a2">onsiteE</a>);
+<a name="l00080"></a>00080                         }
+<a name="l00081"></a>00081                 } <span class="comment">//end of if for dim=1</span>
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084         }
+<a name="l00085"></a>00085 
+<a name="l00086"></a><a class="code" href="classInteraction.html#3c420159e97e99f497d34331ff2788d2">00086</a>         <span class="keywordtype">double</span> <a class="code" href="classInteraction.html#3c420159e97e99f497d34331ff2788d2">hop</a>(<a class="code" href="classBasis.html">Basis</a>&amp; basis1, <a class="code" href="classBasis.html">Basis</a>&amp; basis2) {
+<a name="l00087"></a>00087                 <span class="keywordtype">double</span> result;
+<a name="l00088"></a>00088                 <span class="comment">// for 1D case</span>
+<a name="l00089"></a>00089                 <span class="keywordflow">switch</span> (dim) {
+<a name="l00090"></a>00090                 <span class="keywordflow">case</span> 1:
+<a name="l00091"></a>00091                         <span class="keywordflow">if</span> (basis1[0]==basis2[0]) {
+<a name="l00092"></a>00092                                 result = t(basis1[1], basis2[1]);
+<a name="l00093"></a>00093                         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (basis1[1]==basis2[1]) {
+<a name="l00094"></a>00094                                 result = t(basis1[0], basis2[0]);
+<a name="l00095"></a>00095                         } <span class="keywordflow">else</span> {
+<a name="l00096"></a>00096                                 result = 0.0;
+<a name="l00097"></a>00097                         }
+<a name="l00098"></a>00098                         <span class="keywordflow">break</span>;
+<a name="l00099"></a>00099                 <span class="keywordflow">case</span> 2:
+<a name="l00100"></a>00100                 <span class="keywordflow">case</span> 3:
+<a name="l00101"></a>00101                 <span class="keywordflow">default</span>:
+<a name="l00102"></a>00102                         result = 0.0;
+<a name="l00103"></a>00103                 }
+<a name="l00104"></a>00104                 <span class="keywordflow">return</span> result;
+<a name="l00105"></a>00105         }
+<a name="l00106"></a>00106 
+<a name="l00107"></a><a class="code" href="classInteraction.html#c8649aa7beec2e8c376eb7778a338340">00107</a>         <span class="keywordtype">double</span> <a class="code" href="classInteraction.html#c8649aa7beec2e8c376eb7778a338340">dyn</a>(<a class="code" href="classBasis.html">Basis</a>&amp; basis) {
+<a name="l00108"></a>00108                 <span class="keywordtype">double</span> result;
+<a name="l00109"></a>00109                 <span class="keywordflow">switch</span> (dim) {
+<a name="l00110"></a>00110                 <span class="keywordflow">case</span> 1:
+<a name="l00111"></a>00111                         result = d(basis[0], basis[1]);
+<a name="l00112"></a>00112                         <span class="keywordflow">break</span>;
+<a name="l00113"></a>00113                 <span class="keywordflow">case</span> 2:
+<a name="l00114"></a>00114                 <span class="keywordflow">case</span> 3:
+<a name="l00115"></a>00115                 <span class="keywordflow">default</span>:
+<a name="l00116"></a>00116                         result = 0.0;
+<a name="l00117"></a>00117                 }
+<a name="l00118"></a>00118                 <span class="keywordflow">return</span> result;
+<a name="l00119"></a>00119         }
+<a name="l00120"></a>00120 
+<a name="l00121"></a><a class="code" href="classInteraction.html#80c4750fec2c49eae8cd469d778e4075">00121</a>         <span class="keywordtype">double</span> <a class="code" href="classInteraction.html#80c4750fec2c49eae8cd469d778e4075">onsiteE</a>(<a class="code" href="classBasis.html">Basis</a>&amp; basis) {
+<a name="l00122"></a>00122                 <span class="keywordtype">double</span> result;
+<a name="l00123"></a>00123                 <span class="keywordflow">switch</span> (dim) {
+<a name="l00124"></a>00124                 <span class="keywordflow">case</span> 1:
+<a name="l00125"></a>00125                         result = e(basis[0]) +  e(basis[1]);
+<a name="l00126"></a>00126                         <span class="keywordflow">break</span>;
+<a name="l00127"></a>00127                 <span class="keywordflow">case</span> 2:
+<a name="l00128"></a>00128                 <span class="keywordflow">case</span> 3:
+<a name="l00129"></a>00129                 <span class="keywordflow">default</span>:
+<a name="l00130"></a>00130                         result = 0.0;
+<a name="l00131"></a>00131                 }
+<a name="l00132"></a>00132                 <span class="keywordflow">return</span> result;
+<a name="l00133"></a>00133         }
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135         <span class="comment">// if the seed is not set, use the default one</span>
+<a name="l00136"></a><a class="code" href="classInteraction.html#49b8d828e29a19bfe4f4566e71d30faf">00136</a>         <span class="keywordtype">void</span> <a class="code" href="classInteraction.html#49b8d828e29a19bfe4f4566e71d30faf">setRandomSeed</a>(<span class="keywordtype">unsigned</span> inputSeed) {
+<a name="l00137"></a>00137                 seed = inputSeed;
+<a name="l00138"></a>00138                 rng.<a class="code" href="classRandomNumberGenerator.html#dc815a543e3b3a78b23a87a7f3d9a4ab">SetSeed</a>(seed);
+<a name="l00139"></a>00139         }
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141         <span class="comment">// obtain the range of interactions</span>
+<a name="l00142"></a><a class="code" href="classInteraction.html#104ed2e736c2139c43a11345c478a310">00142</a>         <span class="keywordtype">int</span> <a class="code" href="classInteraction.html#104ed2e736c2139c43a11345c478a310">getMaxDistance</a>() {
+<a name="l00143"></a>00143                 <span class="keywordflow">return</span> maxDistance;
+<a name="l00144"></a>00144         }
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146         <span class="comment">// obtain the range of hopping interactions</span>
+<a name="l00147"></a><a class="code" href="classInteraction.html#1996c71d556ac35b2f20cc0640c684c6">00147</a>         <span class="keywordtype">int</span> <a class="code" href="classInteraction.html#1996c71d556ac35b2f20cc0640c684c6">getMaxDistanceHop</a>() {
+<a name="l00148"></a>00148                 <span class="keywordflow">return</span> hop_maxDistance;
+<a name="l00149"></a>00149         }
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151         <span class="comment">// obtain the range of dynamic interactions</span>
+<a name="l00152"></a><a class="code" href="classInteraction.html#6fe7c441370335b4fd143531a20ab2ca">00152</a>         <span class="keywordtype">int</span> <a class="code" href="classInteraction.html#6fe7c441370335b4fd143531a20ab2ca">getMaxDistanceDyn</a>() {
+<a name="l00153"></a>00153                 <span class="keywordflow">return</span> dyn_maxDistance;
+<a name="l00154"></a>00154         }
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156         <span class="comment">// destructor</span>
+<a name="l00157"></a><a class="code" href="classInteraction.html#17ea05be1fd6d5f6187d17c54609d344">00157</a>         <a class="code" href="classInteraction.html#17ea05be1fd6d5f6187d17c54609d344">~Interaction</a>() {
+<a name="l00158"></a>00158                 <span class="comment">// release the memory of the matrices</span>
+<a name="l00159"></a>00159                 t.resize(0,0);
+<a name="l00160"></a>00160                 d.resize(0,0);
+<a name="l00161"></a>00161                 e.resize(0);
+<a name="l00162"></a>00162         }
+<a name="l00163"></a>00163 
+<a name="l00164"></a>00164 <span class="keyword">private</span>:
+<a name="l00165"></a>00165         <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> t;
+<a name="l00166"></a>00166         <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> d;
+<a name="l00167"></a>00167         <a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">DVector</a> e;
+<a name="l00168"></a>00168         <span class="keywordtype">int</span> maxDistance;
+<a name="l00169"></a>00169         <span class="keywordtype">int</span> hop_maxDistance, dyn_maxDistance;
+<a name="l00170"></a>00170         <span class="keywordtype">int</span> dim;
+<a name="l00171"></a>00171         <span class="keywordtype">unsigned</span> seed;
+<a name="l00172"></a>00172         <a class="code" href="classRandomNumberGenerator.html">RandomNumberGenerator</a> rng;
 <a name="l00173"></a>00173 
 <a name="l00174"></a>00174 
-<a name="l00175"></a>00175 
-<a name="l00176"></a>00176         <span class="keywordtype">void</span> setConstantMatrix(<a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m, <span class="keywordtype">double</span> maxVal, <span class="keywordtype">int</span> maxDistance) {
-<a name="l00177"></a>00177                 <span class="keywordtype">int</span> xsite = m.rows();
-<a name="l00178"></a>00178                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;xsite-1; ++i) {
-<a name="l00179"></a>00179                         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> incr=1; incr&lt;=maxDistance &amp;&amp; i+incr&lt;xsite; ++incr) {
-<a name="l00180"></a>00180                                 m(i,i+incr) = maxVal/std::pow(incr,3.0); <span class="comment">// range [0, hop)</span>
-<a name="l00181"></a>00181                                 m(i+incr,i) = m(i,i+incr);
-<a name="l00182"></a>00182                         }
-<a name="l00183"></a>00183                 }
-<a name="l00184"></a>00184         }
-<a name="l00185"></a>00185 
-<a name="l00186"></a>00186         <span class="keywordtype">void</span> setRandomVector(<a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">DVector</a>&amp; v, <span class="keywordtype">double</span> maxVal) {
-<a name="l00187"></a>00187                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;v.size(); ++i) {
-<a name="l00188"></a>00188                         <span class="comment">// set v(i) a random value between [-maxVal/2, maxVal/2)</span>
-<a name="l00189"></a>00189                         v(i) = maxVal*(2*rng.<a class="code" href="classRandomNumberGenerator.html#2cf46b64c1a1c8c62f4ac3720df43ffc">randomReal</a>()-1.0)/2;
-<a name="l00190"></a>00190                 }
-<a name="l00191"></a>00191         }
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193         <span class="keywordtype">void</span> setConstantVector(<a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">DVector</a>&amp; v, <span class="keywordtype">double</span> maxVal) {
-<a name="l00194"></a>00194                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;v.size(); ++i) {
-<a name="l00195"></a>00195                         v(i) = maxVal;
-<a name="l00196"></a>00196                 }
-<a name="l00197"></a>00197         }
-<a name="l00198"></a>00198 
-<a name="l00199"></a>00199 };
+<a name="l00175"></a>00175         <span class="keywordtype">void</span> setRandomMatrix(<a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m, <span class="keywordtype">double</span> maxVal, <span class="keywordtype">int</span> maxDistance, <span class="keywordtype">unsigned</span> seed_) {
+<a name="l00176"></a>00176                 <span class="comment">//RandomNumberMatrix rnm(m.rows(), m.cols(), seed_);</span>
+<a name="l00177"></a>00177                 <span class="comment">//rng.SetSeed(seed_);</span>
+<a name="l00178"></a>00178                 srand(seed_);
+<a name="l00179"></a>00179                 <a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a> rnm = DMatrix::Random(m.rows(), m.cols());
+<a name="l00180"></a>00180                 <span class="keywordtype">int</span> xsite = m.rows();
+<a name="l00181"></a>00181                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;xsite-1; ++i) {
+<a name="l00182"></a>00182                         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> incr=1; incr&lt;=maxDistance &amp;&amp; i+incr&lt;xsite; ++incr) {
+<a name="l00183"></a>00183                                 m(i,i+incr) = maxVal*rnm(i, i+incr)/std::pow(incr,3.0); <span class="comment">// range [0, hop)</span>
+<a name="l00184"></a>00184                                 m(i+incr,i) = m(i,i+incr);
+<a name="l00185"></a>00185                         }
+<a name="l00186"></a>00186                 }
+<a name="l00187"></a>00187         }
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189 
+<a name="l00190"></a>00190 
+<a name="l00191"></a>00191         <span class="keywordtype">void</span> setConstantMatrix(<a class="code" href="types_8h.html#4c52c4c12187e6b425a9d4717b825d69">DMatrix</a>&amp; m, <span class="keywordtype">double</span> maxVal, <span class="keywordtype">int</span> maxDistance) {
+<a name="l00192"></a>00192                 <span class="keywordtype">int</span> xsite = m.rows();
+<a name="l00193"></a>00193                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;xsite-1; ++i) {
+<a name="l00194"></a>00194                         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> incr=1; incr&lt;=maxDistance &amp;&amp; i+incr&lt;xsite; ++incr) {
+<a name="l00195"></a>00195                                 m(i,i+incr) = maxVal/std::pow(incr,3.0); <span class="comment">// range [0, hop)</span>
+<a name="l00196"></a>00196                                 m(i+incr,i) = m(i,i+incr);
+<a name="l00197"></a>00197                         }
+<a name="l00198"></a>00198                 }
+<a name="l00199"></a>00199         }
 <a name="l00200"></a>00200 
-<a name="l00201"></a>00201 <span class="comment">// a pointer to an Interaction object</span>
-<a name="l00202"></a>00202 <span class="keyword">extern</span> <a class="code" href="classInteraction.html">Interaction</a> *<a class="code" href="formMatrix_8cpp.html#5354ce41f767351460d03b3d5203b4da">pInteraction</a>;
-<a name="l00203"></a>00203 <span class="keyword">extern</span> <a class="code" href="classLatticeShape.html">LatticeShape</a> *<a class="code" href="formMatrix_8cpp.html#995e12561dba9ddbd5da2457750cddfe">pLattice</a>;
-<a name="l00204"></a>00204 
-<a name="l00205"></a>00205 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#858c61930dc7a86ad85acb2bb68f44bb">getMSize</a>(<span class="keywordtype">int</span> K, <span class="keywordtype">int</span> Kp, <span class="keywordtype">int</span>&amp; rows, <span class="keywordtype">int</span>&amp; cols);
-<a name="l00206"></a>00206 
-<a name="l00207"></a>00207 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#008529cdc8023eed39be623b816e6a23">getZSize</a>(<span class="keywordtype">int</span> K, <span class="keywordtype">int</span>&amp; rows, <span class="keywordtype">int</span>&amp; cols);
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#b04012a5dd8eb03ae564f71a91688f6b">setInteractions</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData);
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#347561b0ed125c2c93e690f2706ed7cf">formMatrixZ</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> Energy, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; ZK);
-<a name="l00212"></a>00212 
-<a name="l00213"></a>00213 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#bbf8ffa077dab22774ec12be45149537">formMatrixM</a>(<span class="keywordtype">int</span> K, <span class="keywordtype">int</span> Kp, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; MKKp);
-<a name="l00214"></a>00214 
-<a name="l00215"></a>00215 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#72cb8fc198033075571aacc4f8f7f397">formMatrixW</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> energy, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; WK);
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#7273c2925996b508af3448b7fe53c1cf">formMatrixAlpha</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; AlphaK);
-<a name="l00218"></a>00218 
-<a name="l00219"></a>00219 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#793ae8928e4b20869ef625b6e6d4d159">formMatrixBeta</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; BetaK);
-<a name="l00220"></a>00220 
-<a name="l00221"></a>00221 <span class="preprocessor">#endif </span><span class="comment">/* FORMMATRIX_H_ */</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Aug 21 15:15:04 2014 for CalculateGreenFunction by&nbsp;
+<a name="l00201"></a>00201         <span class="keywordtype">void</span> setRandomVector(<a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">DVector</a>&amp; v, <span class="keywordtype">double</span> maxVal) {
+<a name="l00202"></a>00202                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;v.size(); ++i) {
+<a name="l00203"></a>00203                         <span class="comment">// set v(i) a random value between [-maxVal/2, maxVal/2)</span>
+<a name="l00204"></a>00204                         v(i) = maxVal*(2*rng.<a class="code" href="classRandomNumberGenerator.html#2cf46b64c1a1c8c62f4ac3720df43ffc">randomReal</a>()-1.0)/2;
+<a name="l00205"></a>00205                 }
+<a name="l00206"></a>00206         }
+<a name="l00207"></a>00207 
+<a name="l00208"></a>00208         <span class="keywordtype">void</span> setConstantVector(<a class="code" href="types_8h.html#925211c73e1180fdbac37dabf2023e6d">DVector</a>&amp; v, <span class="keywordtype">double</span> maxVal) {
+<a name="l00209"></a>00209                 <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;v.size(); ++i) {
+<a name="l00210"></a>00210                         v(i) = maxVal;
+<a name="l00211"></a>00211                 }
+<a name="l00212"></a>00212         }
+<a name="l00213"></a>00213 
+<a name="l00214"></a>00214 };
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216 <span class="comment">// a pointer to an Interaction object</span>
+<a name="l00217"></a>00217 <span class="keyword">extern</span> <a class="code" href="classInteraction.html">Interaction</a> *<a class="code" href="formMatrix_8cpp.html#5354ce41f767351460d03b3d5203b4da">pInteraction</a>;
+<a name="l00218"></a>00218 <span class="keyword">extern</span> <a class="code" href="classLatticeShape.html">LatticeShape</a> *<a class="code" href="formMatrix_8cpp.html#995e12561dba9ddbd5da2457750cddfe">pLattice</a>;
+<a name="l00219"></a>00219 
+<a name="l00220"></a>00220 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#858c61930dc7a86ad85acb2bb68f44bb">getMSize</a>(<span class="keywordtype">int</span> K, <span class="keywordtype">int</span> Kp, <span class="keywordtype">int</span>&amp; rows, <span class="keywordtype">int</span>&amp; cols);
+<a name="l00221"></a>00221 
+<a name="l00222"></a>00222 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#008529cdc8023eed39be623b816e6a23">getZSize</a>(<span class="keywordtype">int</span> K, <span class="keywordtype">int</span>&amp; rows, <span class="keywordtype">int</span>&amp; cols);
+<a name="l00223"></a>00223 
+<a name="l00224"></a>00224 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#b04012a5dd8eb03ae564f71a91688f6b">setInteractions</a>(<a class="code" href="classLatticeShape.html">LatticeShape</a>&amp; lattice, <a class="code" href="structInteractionData.html">InteractionData</a>&amp; interactionData);
+<a name="l00225"></a>00225 
+<a name="l00226"></a>00226 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#347561b0ed125c2c93e690f2706ed7cf">formMatrixZ</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> Energy, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; ZK);
+<a name="l00227"></a>00227 
+<a name="l00228"></a>00228 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#bbf8ffa077dab22774ec12be45149537">formMatrixM</a>(<span class="keywordtype">int</span> K, <span class="keywordtype">int</span> Kp, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; MKKp);
+<a name="l00229"></a>00229 
+<a name="l00230"></a>00230 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#72cb8fc198033075571aacc4f8f7f397">formMatrixW</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#9cd6246c3665bdbc2377b9c902f311e3">dcomplex</a> energy, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; WK);
+<a name="l00231"></a>00231 
+<a name="l00232"></a>00232 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#7273c2925996b508af3448b7fe53c1cf">formMatrixAlpha</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; AlphaK);
+<a name="l00233"></a>00233 
+<a name="l00234"></a>00234 <span class="keywordtype">void</span> <a class="code" href="formMatrix_8cpp.html#793ae8928e4b20869ef625b6e6d4d159">formMatrixBeta</a>(<span class="keywordtype">int</span> K, <a class="code" href="types_8h.html#faef33e67aa5007ecfd81e470e5fcf05">CDMatrix</a>&amp; BetaK);
+<a name="l00235"></a>00235 
+<a name="l00236"></a>00236 <span class="preprocessor">#endif </span><span class="comment">/* FORMMATRIX_H_ */</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Oct 31 16:58:45 2014 for CalculateGreenFunction by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

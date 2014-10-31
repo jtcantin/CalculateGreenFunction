@@ -747,6 +747,10 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 			CDMatrix A;
 			std::string filename = "A"+itos(K)+".bin";
 			loadMatrixBin(filename,A);
+
+			// once you load the A matrix, the binary file is no longer need
+			deleteMatrixFiles(filename);
+
 			VK = A*VK;
 			std::string fileV = "V"+itos(K)+".bin";
 			saveMatrixBin(fileV, VK);
@@ -763,6 +767,10 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 			CDMatrix ATilde;
 			std::string filename = "ATilde"+itos(K)+".bin";
 			loadMatrixBin(filename,ATilde);
+
+			// once you load the ATilde matrix, the binary file is no longer need
+			deleteMatrixFiles(filename);
+
 			VK = ATilde*VK;
 			std::string fileV = "V"+itos(K)+".bin";
 			saveMatrixBin(fileV, VK);

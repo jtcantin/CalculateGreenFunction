@@ -163,7 +163,7 @@ TEST(ComparisonTest, CheckOffDiagonalOrdered) {
  */
 TEST(ComparisonTest, CheckAllMatrixElements) {
 	LatticeShape lattice1D(1);
-	int xmax = 51;
+	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	int ni = xmax/2;
 	int mi = ni + 1;
@@ -184,7 +184,7 @@ TEST(ComparisonTest, CheckAllMatrixElements) {
 	zList.push_back(z);
 
 	std::vector< std::string > fileList_recur;
-	fileList_recur.push_back("GF_recur.txt");
+	fileList_recur.push_back("GF_recur.bin");
 
 	calculateAllGreenFunc(lattice1D,  initialSites,
 			                   interactionData, zList, fileList_recur);
@@ -201,7 +201,7 @@ TEST(ComparisonTest, CheckAllMatrixElements) {
 	// setInteractions(lattice1D, interactionData);
 
 	std::vector< std::string > fileList_direct;
-	fileList_direct.push_back("GF_direct.txt");
+	fileList_direct.push_back("GF_direct.bin");
 
 	calculateAllGreenFunc_direct(lattice1D,  initialSites,
 			                          zList, fileList_direct);
@@ -233,7 +233,7 @@ TEST(ComparisonTest, CheckAllMatrixElements) {
 
 
 
-TEST(ComparisonTest, RandomOnSiteEnergy) {
+TEST(ComparisonTest, DISABLED_RandomOnSiteEnergy) {
 	LatticeShape lattice1D(1);
 	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -283,7 +283,7 @@ TEST(ComparisonTest, RandomOnSiteEnergy) {
 
 
 
-TEST(ComparisonTest, RandomHopping) {
+TEST(ComparisonTest, DISABLED_RandomHopping) {
 	LatticeShape lattice1D(1);
 	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -331,7 +331,7 @@ TEST(ComparisonTest, RandomHopping) {
 }
 
 
-TEST(ComparisonTest, NoDisorderNoDyn) {
+TEST(ComparisonTest, DISABLED_NoDisorderNoDyn) {
 	LatticeShape lattice1D(1);
 	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -380,7 +380,7 @@ TEST(ComparisonTest, NoDisorderNoDyn) {
 
 
 
-TEST(ComparisonTest, RandomHoppingLargeDyn) {
+TEST(ComparisonTest, DISABLED_RandomHoppingLargeDyn) {
 	LatticeShape lattice1D(1);
 	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -429,7 +429,7 @@ TEST(ComparisonTest, RandomHoppingLargeDyn) {
 
 
 
-TEST(ComparisonTest, NoDisorderLargeDyn) {
+TEST(ComparisonTest, DISABLED_NoDisorderLargeDyn) {
 	LatticeShape lattice1D(1);
 	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1

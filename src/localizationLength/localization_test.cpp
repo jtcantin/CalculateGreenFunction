@@ -82,7 +82,7 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	calculateAllGreenFunc(lattice1D,  initialSites,
 			              interactionData, zList,
 	                       fileList);
-	// extract Green's function from the binary file
+	// extract Green's function from the file
 	CDMatrix gf;
 	loadMatrix(fileList[0], gf);
 

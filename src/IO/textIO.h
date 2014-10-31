@@ -17,8 +17,11 @@
 #include "../Utility/types.h"
 #include "../Utility/misc.h"
 #include "../Utility/random_generator.h"
+#include "binaryIO.h"
 
 typedef std::numeric_limits< double > dbl;
+
+
 
 /**
  * save a complex matrix into a text file

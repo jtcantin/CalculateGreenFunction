@@ -365,7 +365,7 @@ void calculateAllGreenFunc_direct(LatticeShape& lattice,  Basis& initialSites,
 				gf(i, i) = dcomplex(0,0);
 			}
 			// save the gf matrix into file
-			saveMatrixText(file, gf);
+			saveMatrix(file, gf);
 			break;
 		}
 		case 2:

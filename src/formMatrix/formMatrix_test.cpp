@@ -7,6 +7,86 @@
 #include "gtest/gtest.h"
 #include "formMatrix.h"
 
+TEST(SetUpInteraction, CheckMagnitude) {
+	extern Interaction *pInteraction;
+	LatticeShape lattice1D(1);
+	int xmax = 200;
+	lattice1D.setXmax(xmax); //xsite = xmax + 1
+	double onSiteE = 1.0;
+	double hop = 2.0;
+	double dyn = 3.0;
+	bool randomOnsite = true;
+	bool randomHop = false;
+	bool randomDyn = false;
+	int maxDistance = 1;
+	unsigned seed = 22667;
+	bool longRangeHop = false;
+	bool longRangeDyn = false;
+
+	InteractionData interactionData = {onSiteE,hop,dyn,randomOnsite,
+			                           randomHop,randomDyn,maxDistance,seed,
+			                           longRangeHop,longRangeDyn};
+//	generateIndexMatrix(lattice1D);
+
+	setInteractions(lattice1D, interactionData);
+
+	// check whether the values of hop and dyn are in the right range
+	for (int i=0; i<=xmax; ++i) {
+		for (int j=0; j<=xmax; ++j) {
+			double t_element = tMatrix(*pInteraction, i,j);
+			double d_element = dMatrix(*pInteraction, i,j);
+			if (i==j) {
+				EXPECT_DOUBLE_EQ(t_element, 0.0);
+				EXPECT_DOUBLE_EQ(d_element, 0.0);
+			} else {
+				// check the range of the matrix elements
+				EXPECT_TRUE(t_element>=0.0 && t_element<=hop);
+				EXPECT_TRUE(d_element>=0.0 && d_element<=dyn);
+				// check the symmetry
+				EXPECT_DOUBLE_EQ(t_element, tMatrix(*pInteraction, j,i));
+				EXPECT_DOUBLE_EQ(d_element, dMatrix(*pInteraction, j,i));
+
+				// check the long range behavior
+				if (longRangeHop) {
+					double max = hop/std::pow(std::abs(i-j), 3.0);
+					EXPECT_TRUE(t_element>=0.0 && t_element<=max);
+				} else {
+					if (std::abs(i-j)==1) {
+						EXPECT_TRUE(t_element>=0.0 && t_element<=hop);
+					} else {
+						EXPECT_DOUBLE_EQ(t_element, 0.0);
+					}
+				}
+
+				if (longRangeDyn) {
+					double max = dyn/std::pow(std::abs(i-j), 3.0);
+					EXPECT_TRUE(t_element>=0.0 && t_element<=max);
+				} else {
+					if (std::abs(i-j)==1) {
+						EXPECT_TRUE(t_element>=0.0 && t_element<=dyn);
+					} else {
+						EXPECT_DOUBLE_EQ(d_element, 0.0);
+					}
+				}
+
+
+			}
+		}
+	}
+
+	// check whether the values of onSiteE are in the right range
+	for (int i=0; i<=xmax; ++i) {
+		double e_element = eVector(*pInteraction, i);
+		if (randomOnsite) {
+			EXPECT_TRUE(e_element>=-onSiteE/2 && e_element<=onSiteE/2);
+		} else {
+			EXPECT_DOUBLE_EQ(e_element, onSiteE);
+		}
+	}
+
+}
+
+
 TEST(SetUpLongRange, Hop) {
 	extern Interaction *pInteraction;
 	LatticeShape lattice1D(1);

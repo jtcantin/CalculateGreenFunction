@@ -32,6 +32,8 @@ typedef struct {
 
 
 
+
+
 /** form the matrix describing the interaction between sites
  * hop(index1,index2) is the hopping interaction
  * dyn(index1,index2) is the dynamic interaction
@@ -42,6 +44,11 @@ typedef struct {
  */
 
 class Interaction {
+
+	friend double tMatrix(Interaction& interaction, int i, int j);
+	friend double dMatrix(Interaction& interaction, int i, int j);
+	friend double eVector(Interaction& interaction, int i);
+
 public:
 	Interaction(LatticeShape& lattice, InteractionData& interactionData) {
 		dim = lattice.getDim();
@@ -212,6 +219,9 @@ private:
 	}
 
 };
+
+
+
 
 // a pointer to an Interaction object
 extern Interaction *pInteraction;

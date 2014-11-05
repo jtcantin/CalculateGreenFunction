@@ -12,6 +12,7 @@
 #include "../IO/readInput.h"
 
 
+
 /**
  * 1D crystal
  * Randomize the on-site energies to be between 0 an 1
@@ -77,7 +78,8 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	zList.push_back(dcomplex(E, eta));
 
 	std::vector<std::string> fileList;
-	fileList.push_back("GF.txt");
+	//fileList.push_back("GF.txt");
+	fileList.push_back("GF.bin");
 
 	calculateAllGreenFunc(lattice1D,  initialSites,
 			              interactionData, zList,
@@ -86,18 +88,18 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	CDMatrix gf;
 	loadMatrix(fileList[0], gf);
 
-//	std::ofstream myFile;
-//	std::string output = "localization_length.txt";
-//
-//	myFile.open(output.c_str());
-//	int m = n;
-//	int mPlusa = m + a;
-//	for (;mPlusa<=xmax;++m, ++mPlusa ) {
-//		dcomplex element = gf(m, mPlusa);
-//		double localization_length = -1.0/( log(std::abs( element ))/abs(n-m) );
-//		myFile << abs(n-m) << "\t"<< localization_length << std::endl;
-//	}
-//	myFile.close();
+	std::ofstream myFile;
+	std::string output = "a_" + itos(initialSeperation)+".txt";
+
+	myFile.open(output.c_str());
+	int m = n;
+	int mPlusa = m + initialSeperation;
+	for ( ; mPlusa<=xmax; ++m, mPlusa=m+initialSeperation ) {
+		dcomplex element = gf(m, mPlusa);
+		double G_n_m = std::log( std::abs( element ) );
+		myFile << (m-n) << "\t"<< G_n_m << std::endl;
+	}
+	myFile.close();
 
 	EXPECT_TRUE(true);
 }

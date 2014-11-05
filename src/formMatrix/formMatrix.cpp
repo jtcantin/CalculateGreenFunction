@@ -7,6 +7,20 @@
 
 #include "formMatrix.h"
 
+// the following three functions are defined for testing purposes
+double tMatrix(Interaction& interaction, int i, int j) {
+	return interaction.t(i,j);
+}
+
+double dMatrix(Interaction& interaction, int i, int j) {
+	return interaction.d(i,j);
+}
+
+double eVector(Interaction& interaction, int i) {
+	return interaction.e(i);
+}
+
+
 
 // form all sorts of matrices
 

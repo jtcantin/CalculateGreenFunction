@@ -199,8 +199,7 @@ void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 	// find out the size of alpha matrix
 	int total_rows=0;
 	int total_cols=0;
-	// go through the blocks that on the diagonal
-//	for (int i=0; i<maxDistance; ++i) {
+
 	// it may happen that the number of blocks is < maxDistance
 	extern std::vector<int> DimsOfV;
 	int Kmax = DimsOfV.size()-1;
@@ -284,12 +283,6 @@ void formMatrixBeta(int K, CDMatrix& BetaK) {
 //	std::cout << "numBlockRow = " << numBlockRow << std::endl;
 	int numBlockCol = min(Kmax-(K+maxDistance)+1, maxDistance); //the number of blocks
 
-//	for (int i=0; i<maxDistance; ++i) {
-//		int rows, cols;
-//		getMSize(K+i, min(K+i+maxDistance,Kmax), rows, cols);
-//		total_rows += rows;
-//		total_cols += cols;
-//	}
 
 	// go through the first column of blocks row by row
 	for (int i=0; i<numBlockRow; ++i) {

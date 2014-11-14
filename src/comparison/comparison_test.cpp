@@ -163,7 +163,7 @@ TEST(ComparisonTest, CheckOffDiagonalOrdered) {
  */
 TEST(ComparisonTest, CheckAllMatrixElements) {
 	LatticeShape lattice1D(1);
-	int xmax = 101;
+	int xmax = 201;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	int ni = xmax/2;
 	int mi = ni + 1;

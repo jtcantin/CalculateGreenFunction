@@ -18,10 +18,10 @@ TEST(SetUpInteraction, CheckMagnitude) {
 	bool randomOnsite = true;
 	bool randomHop = false;
 	bool randomDyn = false;
-	int maxDistance = 1;
+	int maxDistance = 10;
 	unsigned seed = 22667;
-	bool longRangeHop = false;
-	bool longRangeDyn = false;
+	bool longRangeHop = true;
+	bool longRangeDyn = true;
 
 	InteractionData interactionData = {onSiteE,hop,dyn,randomOnsite,
 			                           randomHop,randomDyn,maxDistance,seed,
@@ -48,8 +48,13 @@ TEST(SetUpInteraction, CheckMagnitude) {
 
 				// check the long range behavior
 				if (longRangeHop) {
-					double max = hop/std::pow(std::abs(i-j), 3.0);
-					EXPECT_TRUE(t_element>=0.0 && t_element<=max);
+
+					if (std::abs(i-j)<=maxDistance) {
+						double max = hop/std::pow(std::abs(i-j), 3.0);
+						EXPECT_TRUE(t_element>=0.0 && t_element<=max);
+					} else {
+						EXPECT_DOUBLE_EQ(t_element, 0.0);
+					}
 				} else {
 					if (std::abs(i-j)==1) {
 						EXPECT_TRUE(t_element>=0.0 && t_element<=hop);
@@ -59,8 +64,13 @@ TEST(SetUpInteraction, CheckMagnitude) {
 				}
 
 				if (longRangeDyn) {
-					double max = dyn/std::pow(std::abs(i-j), 3.0);
-					EXPECT_TRUE(t_element>=0.0 && t_element<=max);
+
+					if (std::abs(i-j)<=maxDistance) {
+						double max = dyn/std::pow(std::abs(i-j), 3.0);
+						EXPECT_TRUE(t_element>=0.0 && t_element<=max);
+					} else {
+						EXPECT_DOUBLE_EQ(d_element, 0.0);
+					}
 				} else {
 					if (std::abs(i-j)==1) {
 						EXPECT_TRUE(t_element>=0.0 && t_element<=dyn);
@@ -200,7 +210,66 @@ TEST(FormMatrixAlpha, RunningOK) {
 		}
 	}
 
-	EXPECT_TRUE(true);
+	InteractionData interactionData = {1.0,1.0,1.0,true,false,true,1,230,true,true};
+	int rows, cols;
+	int rows_expected, cols_expected;
+	int K;
+	int Kmax = xmax + xmax - 1;
+	CDMatrix Alpha;
+
+	K = xmax+xmax-1; // this is Kmax
+	interactionData.maxDistance = 1;
+	setInteractions(lattice1D, interactionData);
+	formMatrixAlpha(K, Alpha);
+	rows = Alpha.rows();
+	cols = Alpha.cols();
+	rows_expected = DimsOfV[K];
+	cols_expected = DimsOfV[K-1];
+	EXPECT_EQ(rows, rows_expected);
+	EXPECT_EQ(cols, cols_expected);
+
+	interactionData.maxDistance = 2;
+	setInteractions(lattice1D, interactionData);
+	formMatrixAlpha(K-1, Alpha);
+	rows = Alpha.rows();
+	cols = Alpha.cols();
+	rows_expected = DimsOfV[K-1] + DimsOfV[K];
+	cols_expected = DimsOfV[K-3] + DimsOfV[K-2];
+	EXPECT_EQ(rows, rows_expected);
+	EXPECT_EQ(cols, cols_expected);
+
+	interactionData.maxDistance = 3;
+	setInteractions(lattice1D, interactionData);
+	formMatrixAlpha(K-2, Alpha);
+	rows = Alpha.rows();
+	cols = Alpha.cols();
+	rows_expected = DimsOfV[K-2] + DimsOfV[K-1] + DimsOfV[K];
+	cols_expected = DimsOfV[K-5] + DimsOfV[K-4] + DimsOfV[K-3];
+	EXPECT_EQ(rows, rows_expected);
+	EXPECT_EQ(cols, cols_expected);
+
+	interactionData.maxDistance = 4;
+	setInteractions(lattice1D, interactionData);
+	formMatrixAlpha(K-3, Alpha);
+	rows = Alpha.rows();
+	cols = Alpha.cols();
+	rows_expected = DimsOfV[K-3] + DimsOfV[K-2] + DimsOfV[K-1] + DimsOfV[K];
+	cols_expected = DimsOfV[K-7] + DimsOfV[K-6] + DimsOfV[K-5] + DimsOfV[K-4];
+	EXPECT_EQ(rows, rows_expected);
+	EXPECT_EQ(cols, cols_expected);
+
+
+	interactionData.maxDistance = 4;
+	setInteractions(lattice1D, interactionData);
+	K = Kmax-1;
+	formMatrixAlpha(K, Alpha);
+	rows = Alpha.rows();
+	cols = Alpha.cols();
+	rows_expected = DimsOfV[K] + DimsOfV[K+1];
+	cols_expected = DimsOfV[K-4] + DimsOfV[K-3] + DimsOfV[K-2] + DimsOfV[K-1];
+	EXPECT_EQ(rows, rows_expected);
+	EXPECT_EQ(cols, cols_expected);
+
 }
 
 
@@ -297,6 +366,5 @@ TEST(FormMatrixBeta, RunningOK) {
 	EXPECT_EQ(rows, rows_expected);
 	EXPECT_EQ(cols, cols_expected);
 
-	EXPECT_TRUE(true);
 }
 

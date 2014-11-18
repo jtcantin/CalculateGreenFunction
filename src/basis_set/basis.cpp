@@ -11,9 +11,35 @@
  * In a lattice, we give each site an index. For example, in 1D, we can use the
  * index numbers 0 ... xmax to denote each sites. In 2D, we still want to use a
  * single number to denote each lattice site, so we assign a number to each
- * position (x,y). This is a mapping from (x, y) to a positive integer nth.
+ * position (x,y). This is a mapping from (x, y) to a nonnegative integer nth.
  *
- * Given a basis (1D or 2D), this function return the corresponding lattice index.
+ * 1D case (x_for_particle1, x_for_particle1):
+ *
+ * x------x------x------x------...------x------x------x
+ * 0      1      2      3      ...   xmax-2  xmax-1  xmax
+ *
+ *
+ *
+ * 2D case (x_for_p1, y_for_p1; x_for_p2, y_for_p2):
+ *
+ *	 x------x------x------x------...------x------x------x
+ *	 |      |      |      |      ...      |      |      |
+ *	 x------x------x------x------...------x------x------x
+ *	 |      |      |      |      ...      |      |      |
+ *	 x------x------x------x------...------x------x------x
+ *	 |      |      |      |      ...      |      |      |
+ *	 .      .      .      .      ...      .      .      .
+ *	 .      .      .      .      ...      .      .      .
+ *	 .      .      .      .      ...      .      .      .
+ *	 |      |      |      |      ...      |      |      |
+ *	 x------x------x------x------...------x------x------x
+ *(xmax+1)                                          (2*xmax+1)
+ *	 |      |      |      |      ...      |      |      |
+ *	 x------x------x------x------...------x------x------x
+ *	(0)    (1)    (2)            ...                  (xmax)
+ *
+ * Given a two-particle basis (1D or 2D), this function returns the corresponding
+ * lattice indexes for the two sites
  *
  */
 void getLatticeIndex(LatticeShape& lattice, Basis& basis, int &site1, int &site2) {
@@ -31,17 +57,22 @@ void getLatticeIndex(LatticeShape& lattice, Basis& basis, int &site1, int &site2
 		}
 	case 3:
 	default:
-		std::cout << "Not supported!" << std::endl;
+		std::cout << "Dimension >= 3, not supported!" << std::endl;
 	}
 }
 
 
 
-// obtain the ''distance'' between two basis,
-// for example, in 1D the distance between (1,2) and (2,3) is 3-1=2
-// in 2D, the distance between (1,2,3,4) and (1,2,5,6) is sqrt((5-3)^2 + (6-4)^2)
-// if the distance is negative, it means that the two basis doesn't share
-// a common site. In this case, it is meaningless to calculate the distance
+/** This function calculate the ''distance'' between two basis
+ *
+ * For example, in 1D the distance between (1,2) and (2,3) is 3-1=2.
+ * in 2D, the distance between (1,2,3,4) and (1,2,5,6) is sqrt((5-3)^2 + (6-4)^2)
+ *
+ * Note if the two basis don't share a common site, it is meaniningless to
+ * calculate the distance. In this case, the function return -1, indicating
+ * that the function cannot handle the current case.
+ *
+ */
 double distance(Basis& b1, Basis& b2) {
 	// if the two basis are of different dimension, it is meaningless to calculate
 	// the distance
@@ -71,30 +102,83 @@ double distance(Basis& b1, Basis& b2) {
 
 
 /*************************** global variables ***********************/
-//for 1D case: VtoG[K, nth] = G(x1,x2) or basis(x1,x2)
-//for 2D case: VtoG[K, nth] = G(x1, y1, x2, y2) or basis(x1,y1,x2,y2)
-// each element of VtoG is a basis type (an array of size 2 or 4)
-//Basis **VtoG;
+/**
+ * VtoG is a Matrix that is used to convert a vector V to the corresponding
+ * Green's function
+ *
+ * for 1D case: VtoG[K, nth] gives the value of G(x1,x2) that is nth element of V
+ * for 2D case: VtoG[K, nth] gives the value of G(x1, y1, x2, y2) that is nth
+ *              element of V
+ */
 std::vector< std::vector<BasisPointer> > VtoG;
 
-// to store the dimension of V = ( .., G(i-1,j+1), G(i,j), ...)
+// each element of VtoG is a basis type (an array of size 2 or 4)
+//Basis **VtoG;
+
+
+
+
+/**
+ * We group Green's functions into vectors V_K = ( .., G(i-1,j+1), G(i,j), ...)
+ * where K = i + j.
+ *
+ * DimsOfV is used to record the size of various V_K:
+ * size_of_V_K = DimsOfV[K]  (Kmin <= K <= Kmax)
+ */
 std::vector<int> DimsOfV;
 
-//for 1D case: IndexMatrix[x1][x2]=nth  ==>  G(x1,x2) is the nth item in vector V_{x1+x2}
-//for 2D case: IndexMatrix[i][j] = nth with i = x1*(xmax+1) + y1, j = x2*(xmax + 1) + y2
-//              ==> G(x1, y1, x2, y2) is the nth item in vector V_{x1+y1+x2+y2}
+
+/**
+ * IndexMatrix maps a pairs of site index (site1, site2) to an number nth, which
+ * has the following meaning:
+ *
+ * 1D case:
+ *          G(x1, x2) --> 1D basis(x1, x2)
+ *
+ *                    --> (site1=x1, site2=x2) or it can obtained from function
+ *                        getLatticeIndex(lattice, basis, site1, site2)
+ *
+ *                    --> IndexMatrix(site1, site2) = nth
+ *
+ *                    ==> G(x1, x2) is the nth item in the corresponding
+ *                        vector V_{x1+x2}
+ *
+ * 2D case:
+ *          G(x1, y1, x2, y2) --> 2D basis(x1, y1, x2, y2)
+ *
+ *                            --> (site1, site2) can be obtained from function
+ *                                getLatticeIndex(lattice, basis, site1, site2)
+ *
+ *                            --> IndexMatrix(site1, site2) = nth
+ *
+ *                            ==> G(x1, y1, x2, y2) is the nth item in the
+ *                                corresponding vector V_{x1+y1+x2+y2}
+ */
 IMatrix IndexMatrix;
+/***********************************************************************/
 
 
-
+/**
+ * print an array of neighbors for testing purposes
+ */
 void printNeighbors(Neighbors& neighbors) {
 	std::cout << "Print neighbors: " << std::endl;
 	for (int i=0; i<neighbors.size(); ++i) {
 		int dim = neighbors[i].getDim();
+
 		if (dim==1) {
 			std::cout << "x1 = " << neighbors[i][0]
 			          << "\t\t x2 = " << neighbors[i][0] << std::endl;
 		}
+
+		if (dim==2) {
+			// placeholder
+		}
+
+		if (dim==3) {
+			// placeholder
+		}
+
 	}
 }
 
@@ -102,7 +186,7 @@ void printNeighbors(Neighbors& neighbors) {
 
 
 /**
- * Given a two-particle state, this function generate its neighbors that
+ * Given a two-particle basis, this function generates its neighbors that
  * at some distance. The distance can take both positive and negative values.
  * If distance < 0, we call the neighbors left neighbors. If distance > 0,
  * we call the neighbors right neighbors.

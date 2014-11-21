@@ -110,10 +110,8 @@ double distance(Basis& b1, Basis& b2) {
  * for 2D case: VtoG[K, nth] gives the value of G(x1, y1, x2, y2) that is nth
  *              element of V
  */
-std::vector< std::vector<BasisPointer> > VtoG;
+std::vector< std::vector< Basis > > VtoG;
 
-// each element of VtoG is a basis type (an array of size 2 or 4)
-//Basis **VtoG;
 
 
 
@@ -200,6 +198,7 @@ void generateNeighbors(Basis basis, int distance, LatticeShape& lattice,
 	switch (dim) {
 		case 1: {
 			// generate Neighbors for the 1D case
+			// assuming x1 < x2
 			int x1 = basis[0];
 			int x2 = basis[1];
 			int xmax = lattice.getXmax();
@@ -208,7 +207,7 @@ void generateNeighbors(Basis basis, int distance, LatticeShape& lattice,
 			if (distance < 0) {
 				int x1_left = x1 + distance;
 				int x2_left = x2 + distance;
-				// left neighbor of first particle
+				// left neighbor of first particle exists
 				if (x1_left>=0) {
 					Basis p1(min(x1_left, x2), max(x1_left, x2));
 					neighbors.push_back(p1);
@@ -256,48 +255,81 @@ void generateNeighbors(Basis basis, int distance, LatticeShape& lattice,
 }
 
 
-// see the above documentation for VtoG, DimsOfV, and Index
+/**
+ * Generate the global variables: VtoG, DimsOfV, IndexMatrix
+ *
+ * This must be called before any calculation of the Green's function. When the
+ * lattice changes, this function should also be called.
+ */
 void generateIndexMatrix(LatticeShape& lattice) {
+	// reset those global variables
 	VtoG.clear();
 	DimsOfV.clear();
+	IndexMatrix.resize(0,0);
+
 	int dim = lattice.getDim();
 	switch (dim) {
 		// for the 1D case
 		case 1:{
 			int nth;
 			int xmax = lattice.getXmax();
-			int nsite = xmax + 1; //total number of sites
+			//total number of sites, note the index starts from 0
+			int nsite = xmax + 1;
 			IndexMatrix = IMatrix(nsite, nsite);
-			// allocate space for VtoG
-			VtoG.resize(xmax+xmax);
-			DimsOfV.resize(xmax+xmax); //K=xsum is from 1 to xmax+xmax-1
+
+			/**
+			 * allocate space for VtoG
+			 *
+			 * for each K in [Kmin, Kmax] where Kmin=0+1=1,
+			 * there should be a corresponding vector
+			 *
+			 * In order that VtoG[K] is for K, the size of VtoG
+			 * is made a little larger than necessary. That is,
+			 * we need to have VtoG[0], VtoG[Kmin=1], ..., VtoG[Kmax],
+			 * so the size of VtoG is set to be Kmax-0+1
+			 *
+			 */
+			int Kmin = 1;
+			int Kmax = xmax + xmax - 1; //the largest value for K
+			VtoG.resize(Kmax+1);
+			/**
+			 * similarly, we need to have DimsOfV[0], DimsOfV[Kmin=1],...,
+			 * ..., DimsOfV[Kmax], so the size of DimsOfV is also Kmax+1
+			 */
+			DimsOfV.resize(Kmax+1);
+
+
 			// set all dimension to be zero initially
 			for (int i=0; i<DimsOfV.size(); ++i) {
 				DimsOfV[i] = 0;
 			}
 
-			// find out the dimension of each V
-			for (int xsum = 1; xsum <= xmax + xmax-1; ++xsum) {
+			// find out the dimension of each V_K
+			for (int K = Kmin; K <= Kmax; ++K) {
 				nth = 0;
-				for (int i=0; i<= xsum/2; ++i) {
-					int j = xsum - i; // i+j = xsum
-					if (j>i && j<=xmax) {
-						IndexMatrix(i,j) = nth; // g(i,j) is the nth (zero-based) item in V_{i+j} = V_K
+				for (int site1=0; site1<= K/2; ++site1) {//assuming site1 < site2
+					int site2 = K - site1; // site1 + site2 = K
+					if (site2 > site1 && site2<=xmax) {
+						// g(site1, site2) is the nth (zero-based) item in V_{i+j} = V_K
+						IndexMatrix(site1,site2) = nth;
 						nth++;
 					}
 				}
-				DimsOfV[xsum] = nth;
-				VtoG[xsum].resize(nth+1);  //index from 0 to nth
+				DimsOfV[K] = nth;
+				//VtoG[K].resize(nth+1);  //index from 0 to nth
+
+				//reserve some memory for VtoG[K]
+				//to avoid reallocate and deallocate memory during inserting items
+				VtoG[K].reserve(nth+1);
 			}
 
-			// store each V as a row in VtoG
-			for (int xsum = 1; xsum <= xmax + xmax-1; ++xsum) {
-				nth = 0;
-				for (int i=0; i<= xsum/2; ++i) {
-					int j = xsum - i; // i+j = xsum
-					if (j>i && j<=xmax) {
-						VtoG[xsum][nth].reset(new Basis(i,j)); // mapping from (K, nth) to (i,j)
-						nth++;
+			// store each V_K as a row with index K in VtoG
+			for (int K = 1; K <= Kmax; ++K) {
+				for (int site1=0; site1<= K/2; ++site1) {
+					int site2 = K - site1;
+					if (site2 > site1 && site2<=xmax) {
+						// mapping from (K, nth) to (site1,site2)
+						VtoG[K].push_back(Basis(site1, site2));
 					}
 				}
 			}

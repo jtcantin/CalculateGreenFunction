@@ -6,8 +6,8 @@ CC = icc
 CFLAGS = -O3 -openmp -Wall -DNDEBUG
 
 
-#include eigen, mkl, boost
-CINCLUDE = -I/home/pxiang/eigen -I/home/pxiang/boost_1_55_0 -I/home/pxiang/gtest-1.7.0/include  -I$(MKLROOT)/include 
+#include eigen, mkl, boost: -I/home/pxiang/boost_1_55_0
+CINCLUDE = -I/home/pxiang/eigen  -I/home/pxiang/gtest-1.7.0/include  -I$(MKLROOT)/include 
 
 
 #link with mkl and google test (static library)

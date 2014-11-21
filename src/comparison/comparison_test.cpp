@@ -25,7 +25,7 @@ TEST(ComparisonTest, CheckDOS) {
 
 	for (int maxDistance=1; maxDistance<=10; ++maxDistance) {
 		/********** Set the stage for the calculations**********/
-		InteractionData interactionData = {0.0,5.0,15.0,false,
+		InteractionData interactionData = {1.0,1.0,1.0,false,
 				                           false,false,maxDistance,230,true, true};
 		setUpIndexInteractions(lattice1D, interactionData);
 
@@ -163,7 +163,7 @@ TEST(ComparisonTest, CheckOffDiagonalOrdered) {
  */
 TEST(ComparisonTest, CheckAllMatrixElements) {
 	LatticeShape lattice1D(1);
-	int xmax = 201;
+	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
 	int ni = xmax/2;
 	int mi = ni + 1;

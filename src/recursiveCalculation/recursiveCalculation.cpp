@@ -78,6 +78,12 @@ void setUpIndexInteractions(LatticeShape& lattice,
 	setInteractions(lattice, interactionData);
 }
 
+// only for testing purpose
+void setUpIndexInteractions_test(LatticeShape& lattice,
+		InteractionData& interactionData, int radius) {
+	generateIndexMatrix(lattice);
+	setInteractions_test(lattice, interactionData, radius);
+}
 
 
 /**

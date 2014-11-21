@@ -51,6 +51,9 @@ int getBasisIndexInVK(LatticeShape& lattice, int K, Basis& basis);
 void setUpIndexInteractions(LatticeShape& lattice,
 		InteractionData& interactionData);
 
+void setUpIndexInteractions_test(LatticeShape& lattice,
+		InteractionData& interactionData, int radius);
+
 void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		            Basis& initialSites, RecursionData& rd);
 

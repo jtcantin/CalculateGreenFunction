@@ -16,7 +16,7 @@
 #include "../Utility/types.h"
 #include "../Utility/misc.h"
 
-#include <boost/shared_ptr.hpp> //include boost library
+//#include <boost/shared_ptr.hpp> //include boost library
 
 /**
  * Basis is used to represent the two-particle basis
@@ -61,6 +61,9 @@ public:
 		dim = other.dim;
 		int num = 2*other.dim;
 		coordinates = new int[num];
+//		for (int i=0; i<num; i++) {
+//			coordinates[i] = other.coordinates[i];
+//		}
 	    memcpy(coordinates, other.coordinates, num*sizeof(int));
 	}
 
@@ -75,6 +78,9 @@ public:
 	    	dim = other.dim;
 	    	int num = 2*other.dim;
 	    	coordinates = new int[num];
+//			for (int i=0; i<num; i++) {
+//				coordinates[i] = other.coordinates[i];
+//			}
 	        memcpy(coordinates, other.coordinates, num*sizeof(int));
 	    }
 	    return *this;
@@ -143,17 +149,16 @@ private:
 	int dim;
 };
 
-typedef boost::shared_ptr<Basis> BasisPointer;
 
 typedef std::vector< Basis > Neighbors;
 
 /*************************** global variables ***********************/
-extern std::vector< std::vector<BasisPointer> > VtoG;
+extern std::vector< std::vector< Basis > > VtoG;
 
 extern std::vector<int> DimsOfV;
 
 extern IMatrix IndexMatrix;
-/*************************** global variables ***********************/
+/********************************************************************/
 
 double distance(Basis& b1, Basis& b2);
 

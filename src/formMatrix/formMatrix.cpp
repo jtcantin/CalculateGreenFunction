@@ -48,6 +48,20 @@ void setInteractions(LatticeShape& lattice, InteractionData& interactionData) {
 	pInteraction = new Interaction(lattice, interactionData);
 }
 
+// only for testing purpose
+void setInteractions_test(LatticeShape& lattice, InteractionData& interactionData,
+		                  int radius) {
+	pLattice = &lattice;
+
+	// destroy the Interaction object pointed by pInteraction
+	if (pInteraction!=NULL) {
+		//std::cout<<"Deallocate previously created Interaction objects"<<std::endl;
+		pInteraction->~Interaction();
+	}
+	pInteraction = new Interaction(lattice, interactionData);
+	pInteraction->setNoDisorderRange(radius);
+}
+
 
 /**
  * obtain the size of the Matrix M_{K, Kp}
@@ -82,15 +96,14 @@ void getZSize(int K, int& rows, int& cols) {
  * called such that VtoG, DimsOfV, and IndexMatrix have values
  */
 void formMatrixZ(int K, dcomplex Energy, CDMatrix& ZK) {
-	extern std::vector< std::vector<BasisPointer> > VtoG;
+	extern std::vector< std::vector< Basis > > VtoG;
 	int rows, cols;
 	getZSize(K, rows, cols);
 	ZK = CDMatrix::Zero(rows, cols);
 
 	// only diagonal elements are nonzero
 	for (int i=0; i<rows; ++i) {
-			BasisPointer p= VtoG[K][i];
-			Basis basis =  *p; // this is a pointer to a 1D or 2D basis
+			Basis basis =  VtoG[K][i]; // this is a pointer to a 1D or 2D basis
 			ZK(i,i) = Energy - pInteraction->onsiteE(basis)
 					   - pInteraction->dyn(basis);
 	}
@@ -100,7 +113,7 @@ void formMatrixZ(int K, dcomplex Energy, CDMatrix& ZK) {
  * calculate the matrix M_{K, Kp}
  */
 void formMatrixM(int K, int Kp, CDMatrix& MKKp) {
-	extern std::vector< std::vector<BasisPointer> > VtoG;
+	extern std::vector< std::vector< Basis > > VtoG;
 	extern IMatrix IndexMatrix;
 
 	int distance = Kp - K;
@@ -111,8 +124,7 @@ void formMatrixM(int K, int Kp, CDMatrix& MKKp) {
 
 	for (int i=0; i<rows; ++i) {
 		Neighbors neighbors;
-		BasisPointer p1 = VtoG[K][i];
-		Basis basis1 = *p1;
+		Basis basis1 = VtoG[K][i];
 		int site1, site2;
 		getLatticeIndex(*pLattice, basis1, site1, site2);
 //		std::cout << "LEFT site1: " << site1 <<"\t site2: "<< site2 <<std::endl;

@@ -55,6 +55,7 @@ public:
 		seed = interactionData.seed;
 		rng.SetSeed(seed);
 		if (dim==1) {
+			xmax = lattice.getXmax();
 			int xsite = lattice.getXmax() + 1;
 			maxDistance = interactionData.maxDistance;
 			// initialize the hopping matrix
@@ -99,6 +100,18 @@ public:
 				result = t(basis1[1], basis2[1]);
 			} else if (basis1[1]==basis2[1]) {
 				result = t(basis1[0], basis2[0]);
+			/**
+			 * what about the cases like this:
+			 *           basis1 = (-1, 0)
+			 *           basis2 = (0, 1)
+			 *
+			 * They are not considered by the above two clause,
+			 * so we have to add the corresponding clause
+			 */
+			} else if (basis1[0]==basis2[1]) {
+				result = t(basis1[1], basis2[0]);
+			} else if (basis1[1]==basis2[0]) {
+				result = t(basis1[0], basis2[1]);
 			} else {
 				result = 0.0;
 			}
@@ -168,6 +181,43 @@ public:
 		e.resize(0);
 	}
 
+	// for testing purpose: create a small range with no disorders
+	// only for the case of random onsite energy
+	void setNoDisorderRange(int radius) {
+		int center = xmax/2;
+		int start = center - radius;
+		int end = center + radius;
+		for (int i=start; i<=end; ++i) {
+			e[i] = 0.0;
+		}
+		// read an array of random numbers from text file
+		std::vector<double> random_array1;
+		std::vector<double> random_array2;
+		double number;
+
+		std::ifstream infile("random1.txt");
+		while (infile >> number) {
+		    random_array1.push_back(number);
+		}
+
+		std::ifstream infile2("random2.txt");
+		while (infile2 >> number) {
+		    random_array2.push_back(number);
+		}
+
+		int counter = 0;
+		for (int i=start-1; i>=0; i--) {
+			e[i] = random_array1[counter];
+			counter++;
+		}
+
+		counter = 0;
+		for (int i=end+1; i<=xmax; i++) {
+			e[i] = random_array1[counter];
+			counter++;
+		}
+	}
+
 private:
 	DMatrix t;
 	DMatrix d;
@@ -175,6 +225,7 @@ private:
 	int maxDistance;
 	int hop_maxDistance, dyn_maxDistance;
 	int dim;
+	int xmax;
 	unsigned seed;
 	RandomNumberGenerator rng;
 
@@ -232,6 +283,9 @@ void getMSize(int K, int Kp, int& rows, int& cols);
 void getZSize(int K, int& rows, int& cols);
 
 void setInteractions(LatticeShape& lattice, InteractionData& interactionData);
+
+void setInteractions_test(LatticeShape& lattice, InteractionData& interactionData,
+		                  int radius);
 
 void formMatrixZ(int K, dcomplex Energy, CDMatrix& ZK);
 

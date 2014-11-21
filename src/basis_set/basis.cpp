@@ -323,7 +323,7 @@ void generateIndexMatrix(LatticeShape& lattice) {
 				VtoG[K].reserve(nth+1);
 			}
 
-			// store each V_K as a row with index K in VtoG
+			// store each V_K as the Kth row of VtoG
 			for (int K = 1; K <= Kmax; ++K) {
 				for (int site1=0; site1<= K/2; ++site1) {
 					int site2 = K - site1;

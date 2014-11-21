@@ -30,26 +30,29 @@ double eVector(Interaction& interaction, int i) {
 Interaction *pInteraction;
 LatticeShape *pLattice;
 
+/**
+ * Set up the lattice and the interaction:
+ *      assign the values for pInteraction and pLattice
+ *
+ * you have to call this before forming the matrices
+ */
+void setLatticeAndInteractions(LatticeShape& lattice, InteractionData& interactionData) {
 
-// call this before forming the matrices
-void setInteractions(LatticeShape& lattice, InteractionData& interactionData) {
-	// destroy the Interaction object pointed by pInteraction
-//	if (pLattice!=NULL) {
-//		std::cout<<"Deallocate previously created LatticeShape objects"<<std::endl;
-//		pLattice->~LatticeShape();
-//	}
 	pLattice = &lattice;
 
 	// destroy the Interaction object pointed by pInteraction
 	if (pInteraction!=NULL) {
 		//std::cout<<"Deallocate previously created Interaction objects"<<std::endl;
 		pInteraction->~Interaction();
+		//you can probably use delete because it is (only) used for memory assigned by new
+//		delete pInteraction;
+//		pInteraction = NULL;
 	}
 	pInteraction = new Interaction(lattice, interactionData);
 }
 
 // only for testing purpose
-void setInteractions_test(LatticeShape& lattice, InteractionData& interactionData,
+void setLatticeAndInteractions_test(LatticeShape& lattice, InteractionData& interactionData,
 		                  int radius) {
 	pLattice = &lattice;
 

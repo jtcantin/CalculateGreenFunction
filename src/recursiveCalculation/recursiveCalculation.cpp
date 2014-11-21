@@ -75,14 +75,14 @@ int getBasisIndexInVK(LatticeShape& lattice, int K, Basis& basis) {
 void setUpIndexInteractions(LatticeShape& lattice,
 		InteractionData& interactionData) {
 	generateIndexMatrix(lattice);
-	setInteractions(lattice, interactionData);
+	setLatticeAndInteractions(lattice, interactionData);
 }
 
 // only for testing purpose
 void setUpIndexInteractions_test(LatticeShape& lattice,
 		InteractionData& interactionData, int radius) {
 	generateIndexMatrix(lattice);
-	setInteractions_test(lattice, interactionData, radius);
+	setLatticeAndInteractions_test(lattice, interactionData, radius);
 }
 
 

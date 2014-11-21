@@ -282,9 +282,9 @@ void getMSize(int K, int Kp, int& rows, int& cols);
 
 void getZSize(int K, int& rows, int& cols);
 
-void setInteractions(LatticeShape& lattice, InteractionData& interactionData);
+void setLatticeAndInteractions(LatticeShape& lattice, InteractionData& interactionData);
 
-void setInteractions_test(LatticeShape& lattice, InteractionData& interactionData,
+void setLatticeAndInteractions_test(LatticeShape& lattice, InteractionData& interactionData,
 		                  int radius);
 
 void formMatrixZ(int K, dcomplex Energy, CDMatrix& ZK);

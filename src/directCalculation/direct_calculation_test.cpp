@@ -16,7 +16,7 @@ TEST(DirectCalculationTest, CheckDOS) {
 	InteractionData interactionData = {0.0,5.0,15.0,false,false,false,2,230,true,true};
 	// calculate the indexMatrix and set up the interaction matrix
 	generateIndexMatrix(lattice1D);
-	setInteractions(lattice1D, interactionData);
+	setLatticeAndInteractions(lattice1D, interactionData);
 
 	Basis initialSites(xmax/2,xmax/2+1);
 
@@ -43,7 +43,7 @@ TEST(DirectCalculationTest, DISABLED_CheckOffDiagonal) {
 	InteractionData interactionData = {1.0,1.0,1.0,false,false,false,1,230,true,true};
 	// calculate the indexMatrix and set up the interaction matrix
 	generateIndexMatrix(lattice1D);
-	setInteractions(lattice1D, interactionData);
+	setLatticeAndInteractions(lattice1D, interactionData);
 
 	int n1i = lattice1D.getXmax()/2;
 	int n2i = n1i + 1;

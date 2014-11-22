@@ -67,7 +67,11 @@ void setLatticeAndInteractions_test(LatticeShape& lattice, InteractionData& inte
 
 
 /**
- * obtain the size of the Matrix M_{K, Kp}
+ * Obtain the size of the Matrix M_{K, Kp}
+ *
+ * Note the equation: Z_{K}*V_{K} = M_{K, Kp}*V_{Kp}
+ * ==> This means the shape of M is DimsOfV[K] X DimsOfV[Kp]
+ *     (since Z is a square matrix)
  */
 void getMSize(int K, int Kp, int& rows, int& cols) {
 	extern std::vector<int> DimsOfV;
@@ -129,8 +133,9 @@ void formMatrixM(int K, int Kp, CDMatrix& MKKp) {
 		Neighbors neighbors;
 		Basis basis1 = VtoG[K][i];
 		int site1, site2;
+		// obtain the site index corresponding to basis1
 		getLatticeIndex(*pLattice, basis1, site1, site2);
-//		std::cout << "LEFT site1: " << site1 <<"\t site2: "<< site2 <<std::endl;
+		// find out the index for the basis1 in the corresponding vector V_K
 		int row = IndexMatrix(site1, site2);
 
 		generateNeighbors( basis1, distance, *pLattice, neighbors);
@@ -138,22 +143,59 @@ void formMatrixM(int K, int Kp, CDMatrix& MKKp) {
 		for (int j=0; j<neighbors.size(); ++j) {
 			Basis basis2 = neighbors[j];
 			getLatticeIndex(*pLattice, basis2, site1, site2);
-//			std::cout << "OK before calling IndexMatrix" << std::endl;
+
 			int col = IndexMatrix(site1, site2);
-//			std::cout << "OK after calling IndexMatrix" << std::endl;
-//			std::cout << "RIGHT site1: " << site1 <<"\t site2: "<< site2 <<std::endl;
+
 			MKKp(row, col) = pInteraction->hop(basis1, basis2);
-//			std::cout << "OK" << std::endl;
+
 		}
 
-		//freeMemory(neighbors);
-		//neighbors.clear();
 	}
 }
 
 
 /**
- * form the WK matrix
+ * Form the WK matrix
+ *
+ *         /                                                   \
+ *         |  Z_{K}           -M_{K, K+1}   ...  -M_{K, K+p-1} |
+ *         |                                                   |
+ *         | -M_{K+1, K}        Z_{K+1}     ...       ...      |
+ *         |                                                   |
+ *         |  .                   .          .        ...      |
+ * W_{K} = |  .                   .          .        ...      |
+ *         |  .                   .          .        ...      |
+ *         |                                                   |
+ *         | -M_{K+p-1, K}        .          .      Z_{K+p-1}  |
+ *         \                                                   /
+ *
+ *         where p is the range of the interaction. W_{K} is always a square matrix
+ *         because its diagonal parts are Z matrices and Z matrices are all square
+ *         matrices
+ *
+ * Note the recursive equation is given by:
+ *           /           \             /            \            /            \
+ *           | V_{K}     |             | V_{K-p}    |            | V_{K+p}    |
+ *           | V_{K+1}   |             | V_{K-p+1}  |            | V_{K+p+1}  |
+ *           |   .       |             |   .        |            |   .        |
+ *     W_{K}*|   .       | = Alpha_{K}*|   .        | + Beta_{K}*|   .        |
+ *           |   .       |             |   .        |            |   .        |
+ *           | V_{K+p-1} |             | V_{K-p+p-1}|            | V_{K+p+p-1}|
+ *           \           /             \            /            \            /
+ *
+ * The above two equations are OK if you can have V_{K+p-1}. However when K is
+ * very small or very large such that it is close to the boundaries, you may not
+ * have V_{K+p-1} because K+p-1 is outside the range of K: [Kmin, Kmax].
+ * For example, we may have
+ *     /          \
+ *     | V_{K}    |
+ *     | V_{K+1}  |
+ *     |   .      |
+ *     |   .      |
+ *     |   .      |
+ *     | V_{Kmax} |
+ *     \          /
+ * In this case, K+p-1 = Kmax and p = Kmax-K + 1 (which is numBlock in the code)
  */
 void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
 	extern Interaction *pInteraction;
@@ -180,6 +222,7 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
 	int col_start = 0;
 	int row_size;
 	int col_size;
+	// fill up W_K block by block
 	for (int block_row=0; block_row<numBlock; ++block_row) {
 		col_start = 0; // rewind block col count
 		for (int block_col=0; block_col<numBlock; ++block_col) {
@@ -196,17 +239,83 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
 				col_size = M.cols();
 				WK.block(row_start, col_start, row_size, col_size) = -M;
 			}
-			//std::cout << "block row: " << block_row << " block col:" << block_col << std::endl;
+			/**
+			 * increment the column count by the col_size of the last block
+			 * that has just been filled (in the same row)
+			 */
 			col_start += col_size;
 		}
-
+        /**
+         * increment the row count by the row_size of the last block that has
+         * just been filled
+         */
 		row_start += row_size;
 	}
 }
 
 
 /**
- * form the Alpha matrix
+ * Form the Alpha matrix
+ *
+ *             /                                                       \
+ *             | M_{K, K-p}   M_{K, K-p+1}    ...   M_{K, K-p+p-1}     |
+ *             |                                                       |
+ *             |     0        M_{K+1, K-p+1}  ...   M_{K+1, K-p+p-1}   |
+ *             |                                                       |
+ * Alpha_{K} = |     .             .           .            .          |
+ *             |     .             .           .            .          |
+ *             |     .             .           .            .          |
+ *             |                                                       |
+ *             |     0            ...         ...   M_{K+p-1, K-p+p-1} |
+ *             \                                                       /
+ *             where p is the range of the interaction.
+ *
+ * Pay attention to the recursive equation:
+ *           /           \             /            \            /            \
+ *           | V_{K}     |             | V_{K-p}    |            | V_{K+p}    |
+ *           | V_{K+1}   |             | V_{K-p+1}  |            | V_{K+p+1}  |
+ *           |   .       |             |   .        |            |   .        |
+ *     W_{K}*|   .       | = Alpha_{K}*|   .        | + Beta_{K}*|   .        |
+ *           |   .       |             |   .        |            |   .        |
+ *           | V_{K+p-1} |             | V_{K-p+p-1}|            | V_{K+p+p-1}|
+ *           \           /             \            /            \            /
+ * you will see that the second index of every block in each row of Alpha_{K}
+ * matches with the row index of
+ *                        /            \
+ *                        | V_{K-p}    |
+ *                        | V_{K-p+1}  |
+ *                        |   .        |
+ *         VTilde_{K-p} = |   .        |
+ *                        |   .        |
+ *                        | V_{K-p+p-1}|
+ *                        \            /
+ * so the number of blocks in each row of Alpha_{K} = p (or numBlockRow = p).
+ * However,when K is very small such that K-p < Kmin so that V_{K-p} doesn't exist,
+ * we have
+ *                        /            \
+ *                        | V_{Kmin}   |
+ *                        | V_{Kmin+1} |
+ *                        |    .       |
+ *        VTilde_{Kmin} = |    .       |
+ *                        | V_{K-2}    |
+ *                        | V_{K-1}    |
+ *                        \            /
+ * In this case, numBlockRow = (K-1) -Kmin +1 = K - Kmin. Considering both cases,
+ * we use numBlockRow = min(K-Kmin, p) in the code.
+ *
+ * In the same way, the first index of every block in each column of Alpha_{K} matches
+ *                        /           \
+ *                        | V_{K}     |
+ *                        | V_{K+1}   |
+ *                        |   .       |
+ *         VTilde_{K} =   |   .       |
+ *                        |   .       |
+ *                        | V_{K+p-1} |
+ *                        \           /
+ *
+ * Therefore numBlockCol = p in the code. Or in the extreme case, K+p-1 > Kmax,
+ * then numBlockCol = Kmax - K + 1. (This rarely happens, so we just ignore it).
+ *
  */
 void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 	extern Interaction *pInteraction;
@@ -218,14 +327,13 @@ void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 	// it may happen that the number of blocks is < maxDistance
 	extern std::vector<int> DimsOfV;
 	int Kmax = DimsOfV.size()-1;
-//	std::cout<<"Insider formMatrixAlpha, Kmax = " << Kmax << " K=" <<K << std::endl;
 	int numBlockRow = min(Kmax-K+1, maxDistance);
+	//int numBlockRow = min(Kmax-K, maxDistance);
 	int numBlockCol = maxDistance;
 
 	// go through the last column block by block
 	for (int i=0; i<numBlockRow; ++i) {
 		int rows, cols;
-//		std::cout << "Insider formMatrixAlpha" << std::endl;
 		getMSize(K+i, K-1, rows, cols);
 		total_rows += rows;
 	}

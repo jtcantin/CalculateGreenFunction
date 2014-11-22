@@ -270,6 +270,44 @@ TEST(FormMatrixAlpha, RunningOK) {
 	EXPECT_EQ(rows, rows_expected);
 	EXPECT_EQ(cols, cols_expected);
 
+	/**
+	 * test the case for
+	 *      /     \
+	 *W_2 * | V_2 |  = Alpha_2 * V_1 + ...
+	 *      | V_3 |
+	 *      \     /
+	 */
+	K = 2;
+	interactionData.maxDistance = 2;
+	setLatticeAndInteractions(lattice1D, interactionData);
+	formMatrixAlpha(K, Alpha);
+	rows = Alpha.rows();
+	cols = Alpha.cols();
+	rows_expected = DimsOfV[K] + DimsOfV[K+1];
+	cols_expected = DimsOfV[K-1];
+	EXPECT_EQ(rows, rows_expected);
+	EXPECT_EQ(cols, cols_expected);
+
+	/**
+	 * test the case for
+	 *      /     \
+	 *      | V_3 |             /     \
+	 *  W_3*| V_4 | = Alpha_3 * | V_1 | + ...
+	 *      | V_5 |             | V_2 |
+	 *      | V_6 |             \     /
+	 *      \     /
+	 */
+	K = 3;
+	interactionData.maxDistance = 4;
+	setLatticeAndInteractions(lattice1D, interactionData);
+	formMatrixAlpha(K, Alpha);
+	rows = Alpha.rows();
+	cols = Alpha.cols();
+	rows_expected = DimsOfV[K] + DimsOfV[K+1] + DimsOfV[K+2] + DimsOfV[K+3];
+	cols_expected = DimsOfV[K-1] + DimsOfV[K-2];
+	EXPECT_EQ(rows, rows_expected);
+	EXPECT_EQ(cols, cols_expected);
+
 }
 
 

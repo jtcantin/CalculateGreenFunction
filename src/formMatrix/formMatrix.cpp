@@ -289,7 +289,7 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
  *                        |   .        |
  *                        | V_{K-p+p-1}|
  *                        \            /
- * so the number of blocks in each row of Alpha_{K} = p (or numBlockRow = p).
+ * so the number of blocks in each row of Alpha_{K} = p (or numBlockInRow = p).
  * However,when K is very small such that K-p < Kmin so that V_{K-p} doesn't exist,
  * we have
  *                        /            \
@@ -300,8 +300,8 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
  *                        | V_{K-2}    |
  *                        | V_{K-1}    |
  *                        \            /
- * In this case, numBlockRow = (K-1) -Kmin +1 = K - Kmin. Considering both cases,
- * we use numBlockRow = min(K-Kmin, p) in the code.
+ * In this case, numBlockInRow = (K-1) -Kmin +1 = K - Kmin. Considering both cases,
+ * we use numBlockInRow = min(K-Kmin, p) in the code.
  *
  * In the same way, the first index of every block in each column of Alpha_{K} matches
  *                        /           \
@@ -313,8 +313,8 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
  *                        | V_{K+p-1} |
  *                        \           /
  *
- * Therefore numBlockCol = p in the code. Or in the extreme case, K+p-1 > Kmax,
- * then numBlockCol = Kmax - K + 1. (This rarely happens, so we just ignore it).
+ * Therefore numBlockInCol = p in the code. Or in the extreme case, K+p-1 > Kmax,
+ * then numBlockInCol = Kmax - K + 1. So numBlockInCol = min(Kmax - K + 1, p).
  *
  */
 void formMatrixAlpha(int K, CDMatrix& AlphaK) {
@@ -326,55 +326,50 @@ void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 
 	// it may happen that the number of blocks is < maxDistance
 	extern std::vector<int> DimsOfV;
+	int Kmin = 1;
 	int Kmax = DimsOfV.size()-1;
-	int numBlockRow = min(Kmax-K+1, maxDistance);
+	int numBlockInCol = min(Kmax-K+1, maxDistance);
 	//int numBlockRow = min(Kmax-K, maxDistance);
-	int numBlockCol = maxDistance;
+	int numBlockInRow = min(K-Kmin, maxDistance); //maxDistance;
 
 	// go through the last column block by block
-	for (int i=0; i<numBlockRow; ++i) {
+	for (int i=0; i<numBlockInCol; ++i) {
 		int rows, cols;
 		getMSize(K+i, K-1, rows, cols);
 		total_rows += rows;
 	}
 
+	// find out the starting V_{Kstart} in VTilde_{K-p} or VTilde_{Kmin}
+	int Kstart = max(Kmin, K-maxDistance);
 	// go through the first row block by block
-	for (int i=0; i<numBlockCol; ++i) {
+	for (int i=0; i<numBlockInRow; ++i) {
 		int rows, cols;
-//		std::cout << "Insider formMatrixAlpha" << std::endl;
-		getMSize(K, K-maxDistance+i, rows, cols);
+		getMSize(K, Kstart+i, rows, cols);
 		total_cols += cols;
 	}
-//	std::cout<<"Size of AlphaK: " << total_rows << "  " << total_cols << std::endl;
-//	std::cout << "before initialize AlphaK" << std::endl;
 
 	//assign memory for AlphaK
 	AlphaK = CDMatrix::Zero(total_rows, total_cols);
-//	std::cout << "after initialize AlphaK\n" << std::endl;
 
 	int row_start = 0;
 	int col_start = 0;
 	int row_size;
 	int col_size;
 
-	for (int block_row=0; block_row<numBlockRow; ++block_row) {
+	for (int block_row=0; block_row<numBlockInCol; ++block_row) {
 		// rewind block col count
 		col_start = 0;
-		// find out the starting column index
+		// go through the diagonal part and find out the starting column index
 		for (int i=0; i<block_row; ++i) {
 			int rows, cols;
-			getMSize(K+i, K+i-maxDistance, rows, cols);
+			getMSize(K+i, Kstart+i, rows, cols);
 			col_start += cols;
 		}
 
-		for (int block_col=block_row; block_col<numBlockCol; ++block_col) {
-			// calculate only the upper triangle part is nonzero
-//			std::cout << "block row: " << block_row << " block col: "
-//					<< block_col << std::endl;
+		// fill up a row, only the upper triangle part is nonzero
+		for (int block_col=block_row; block_col<numBlockInRow; ++block_col) {
 			CDMatrix M;
-//			std::cout << "before calling formMatrixM" << std::endl;
-			formMatrixM(K+block_row, K+block_col-maxDistance, M);
-//			std::cout << "after calling formMatrixM" << std::endl;
+			formMatrixM(K+block_row, Kstart+block_col, M);
 			row_size = M.rows();
 			col_size = M.cols();
 			AlphaK.block(row_start, col_start, row_size, col_size) = M;

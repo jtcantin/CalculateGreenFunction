@@ -218,7 +218,8 @@ void fromRightToCenter( RecursionData& recursionData,
 	CDMatrix WKPlus; //initially equal to W_{KRightStart}
 	formMatrixW(KRightStart,  z, WKPlus);
 
-	CDMatrix AKPlus; //initially equal to A_{KRightStart}
+	//initially points to A_{KRightStart} and finally points to A_{KRightStop}
+	CDMatrix AKPlus;
 	solveDenseLinearEqs(WKPlus, alphaStart, AKPlus);
 
 	// release memory
@@ -257,30 +258,30 @@ void fromRightToCenter( RecursionData& recursionData,
 	for (int K=KRightStart-maxDistance; K>=KRightStop; K-=maxDistance) {
 		CDMatrix BetaK;
 		formMatrixBeta(K,  BetaK);
-//		std::cout<< "K=" << K <<"\tBetaK: " << BetaK.rows() << " " << BetaK.cols()<<std::endl;
+
 		CDMatrix WK;
 		formMatrixW(K, z, WK);
-//		std::cout<< "K=" << K <<"\tWK: " << WK.rows() << " " << WK.cols()<<std::endl;
-		//CDMatrix LeftSide = WK - BetaK*AKPlus;
-		/*
-		 * an optimized way to obtain LeftSide without evaluating temporary matrices
-		 */
-		CDMatrix LeftSide = WK;
-//		std::cout<< "K=" << K <<"\tAKPlus: " << AKPlus.rows() << " " << AKPlus.cols()<<std::endl;
-		LeftSide.noalias() -= BetaK*AKPlus;
 
-		//release the memory of WK and Beta
+		/*
+		 * pLeftSide ===> WK - BetaK*AKPlus;
+		 * using .noalias() as an optimized way to obtain the result without
+		 * evaluating temporary matrices
+		 */
+		CDMatrix * pLeftSide = &WK;
+		(*pLeftSide).noalias() -= BetaK*AKPlus;
+
+		//now Beta is not needed, release its memory
 		BetaK.resize(0,0);
-		WK.resize(0,0);
 
 		CDMatrix AlphaK;
 		formMatrixAlpha(K,  AlphaK);
 
 		// solve for AK and assign the value to AKPlus for next iteration
-		solveDenseLinearEqs(LeftSide, AlphaK, AKPlus);
+		solveDenseLinearEqs(*pLeftSide, AlphaK, AKPlus);
 
-		//release the memory of LeftSide and AlphaK
-		LeftSide.resize(0,0);
+		//pLeftSide, WK and AlphaK are not needed, release their memory
+		WK.resize(0,0);
+		pLeftSide = NULL;
 		AlphaK.resize(0,0);
 
 		// save the AK matrix into a binary file
@@ -391,21 +392,21 @@ void fromLeftToCenter( RecursionData& recursionData,
 		/*
 		 * an optimized way to obtain LeftSide without evaluating temporary matrices
 		 */
-		CDMatrix LeftSide = WK;
-		LeftSide.noalias() -= AlphaK*ATildeKMinus;
+		CDMatrix * pLeftSide = &WK;
+		(*pLeftSide).noalias() -= AlphaK*ATildeKMinus;
 
-		//release the memory of WK and AlphaK
+		//AlphaK is not needed, release its memory
 		AlphaK.resize(0,0);
-		WK.resize(0,0);
 
 		CDMatrix BetaK;
 		formMatrixBeta(K,  BetaK);
 
 		// solve for ATildeK and assign the value to ATildeKMinus for next iteration
-		solveDenseLinearEqs(LeftSide, BetaK, ATildeKMinus);
+		solveDenseLinearEqs(*pLeftSide, BetaK, ATildeKMinus);
 
-		//release the memory of LeftSide and BetaK
-		LeftSide.resize(0,0);
+		//pLeftSide, WK and BetaK are not needed, release their memory
+		WK.resize(0,0);
+		pLeftSide = NULL;
 		BetaK.resize(0,0);
 
 		// save the AK matrix into a binary file

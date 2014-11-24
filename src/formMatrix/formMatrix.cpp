@@ -175,27 +175,28 @@ void formMatrixM(int K, int Kp, CDMatrix& MKKp) {
  *
  * Note the recursive equation is given by:
  *           /           \             /            \            /            \
- *           | V_{K}     |             | V_{K-p}    |            | V_{K+p}    |
- *           | V_{K+1}   |             | V_{K-p+1}  |            | V_{K+p+1}  |
+ *           | v_{K}     |             | v_{K-p}    |            | v_{K+p}    |
+ *           | v_{K+1}   |             | v_{K-p+1}  |            | v_{K+p+1}  |
  *           |   .       |             |   .        |            |   .        |
  *     W_{K}*|   .       | = Alpha_{K}*|   .        | + Beta_{K}*|   .        |
  *           |   .       |             |   .        |            |   .        |
- *           | V_{K+p-1} |             | V_{K-p+p-1}|            | V_{K+p+p-1}|
+ *           | v_{K+p-1} |             | v_{K-p+p-1}|            | v_{K+p+p-1}|
  *           \           /             \            /            \            /
  *
- * The above two equations are OK if you can have V_{K+p-1}. However when K is
+ * The above two equations are OK if you can have v_{K+p-1}. However when K is
  * very small or very large such that it is close to the boundaries, you may not
- * have V_{K+p-1} because K+p-1 is outside the range of K: [Kmin, Kmax].
+ * have v_{K+p-1} because K+p-1 is outside the range of K: [Kmin, Kmax].
  * For example, we may have
  *     /          \
- *     | V_{K}    |
- *     | V_{K+1}  |
+ *     | v_{K}    |
+ *     | v_{K+1}  |
  *     |   .      |
  *     |   .      |
  *     |   .      |
- *     | V_{Kmax} |
+ *     | v_{Kmax} |
  *     \          /
- * In this case, K+p-1 = Kmax and p = Kmax-K + 1 (which is numBlock in the code)
+ * In this case, K+p-1 = Kmax and p = Kmax-K + 1 (which is numBlock in each row
+ * or column)
  */
 void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
 	extern Interaction *pInteraction;
@@ -272,45 +273,45 @@ void formMatrixW(int K, dcomplex energy, CDMatrix& WK) {
  *
  * Pay attention to the recursive equation:
  *           /           \             /            \            /            \
- *           | V_{K}     |             | V_{K-p}    |            | V_{K+p}    |
- *           | V_{K+1}   |             | V_{K-p+1}  |            | V_{K+p+1}  |
+ *           | v_{K}     |             | v_{K-p}    |            | v_{K+p}    |
+ *           | v_{K+1}   |             | v_{K-p+1}  |            | v_{K+p+1}  |
  *           |   .       |             |   .        |            |   .        |
  *     W_{K}*|   .       | = Alpha_{K}*|   .        | + Beta_{K}*|   .        |
  *           |   .       |             |   .        |            |   .        |
- *           | V_{K+p-1} |             | V_{K-p+p-1}|            | V_{K+p+p-1}|
+ *           | v_{K+p-1} |             | v_{K-p+p-1}|            | v_{K+p+p-1}|
  *           \           /             \            /            \            /
  * you will see that the second index of every block in each row of Alpha_{K}
  * matches with the row index of
  *                        /            \
- *                        | V_{K-p}    |
- *                        | V_{K-p+1}  |
+ *                        | v_{K-p}    |
+ *                        | v_{K-p+1}  |
  *                        |   .        |
- *         VTilde_{K-p} = |   .        |
+ *  (large V) V_{K-p}  =  |   .        |    (small v)
  *                        |   .        |
- *                        | V_{K-p+p-1}|
+ *                        | v_{K-p+p-1}|
  *                        \            /
  * so the number of blocks in each row of Alpha_{K} = p (or numBlockInRow = p).
- * However,when K is very small such that K-p < Kmin so that V_{K-p} doesn't exist,
+ * However,when K is very small such that K-p < Kmin so that v_{K-p} doesn't exist,
  * we have
  *                        /            \
- *                        | V_{Kmin}   |
- *                        | V_{Kmin+1} |
+ *                        | v_{Kmin}   |
+ *                        | v_{Kmin+1} |
  *                        |    .       |
- *        VTilde_{Kmin} = |    .       |
- *                        | V_{K-2}    |
- *                        | V_{K-1}    |
+ *             V_{Kmin} = |    .       |
+ *                        | v_{K-2}    |
+ *                        | v_{K-1}    |
  *                        \            /
  * In this case, numBlockInRow = (K-1) -Kmin +1 = K - Kmin. Considering both cases,
  * we use numBlockInRow = min(K-Kmin, p) in the code.
  *
  * In the same way, the first index of every block in each column of Alpha_{K} matches
  *                        /           \
- *                        | V_{K}     |
- *                        | V_{K+1}   |
+ *                        | v_{K}     |
+ *                        | v_{K+1}   |
  *                        |   .       |
- *         VTilde_{K} =   |   .       |
+ *              V_{K} =   |   .       |
  *                        |   .       |
- *                        | V_{K+p-1} |
+ *                        | v_{K+p-1} |
  *                        \           /
  *
  * Therefore numBlockInCol = p in the code. Or in the extreme case, K+p-1 > Kmax,
@@ -383,7 +384,66 @@ void formMatrixAlpha(int K, CDMatrix& AlphaK) {
 
 
 /**
- * form the Beta matrix
+ * Form the Beta matrix
+ *
+ *             /                                                             \
+ *             | M_{K, K+p}           0             ...           0          |
+ *             |                                                             |
+ *             | M_{K+1, K+p}     M_{K+1, K+p+1}    ...           0          |
+ *             |                                                             |
+ * Alpha_{K} = |     .                .              .            .          |
+ *             |     .                .              .            .          |
+ *             |     .                .              .            .          |
+ *             |                                                             |
+ *             | M_{K+p-1, K+p}   M_{K+p-1, K+p+1}  ...   M_{K+p-1, K+p+p-1} |
+ *             \                                                             /
+ *             where p is the range of the interaction.
+ *
+ * Pay attention to the recursive equation:
+ *           /           \             /            \            /            \
+ *           | v_{K}     |             | v_{K-p}    |            | v_{K+p}    |
+ *           | v_{K+1}   |             | v_{K-p+1}  |            | v_{K+p+1}  |
+ *           |   .       |             |   .        |            |   .        |
+ *     W_{K}*|   .       | = Alpha_{K}*|   .        | + Beta_{K}*|   .        |
+ *           |   .       |             |   .        |            |   .        |
+ *           | v_{K+p-1} |             | v_{K-p+p-1}|            | v_{K+p+p-1}|
+ *           \           /             \            /            \            /
+ * you will see that the second index of every block in each row of Beta_{K}
+ * matches with the row index of
+ *                        /            \
+ *                        | v_{K+p}    |
+ *                        | v_{K+p+1}  |
+ *                        |   .        |
+ *              V_{K+p} = |   .        |
+ *                        |   .        |
+ *                        | v_{K+p+p-1}|
+ *                        \            /
+ * so the number of blocks in each row of Beta_{K} = p (or numBlockInRow = p).
+ * However,when K is very large such that K+p < Kmax and K+p+p-1 > Kmax, then not
+ * every elements in the above V_{K+p} exists. So we have the new V_{K+p} as
+ *                        /            \
+ *                        | v_{K+p}    |
+ *                        | v_{K+p+1}  |
+ *                        |    .       |
+ *              V_{K+p} = |    .       |
+ *                        | v_{Kmax-1} |
+ *                        | v_{Kmax}   |
+ *                        \            /
+ * In this case, numBlockInRow = Kmax - (K+p) +1 = Kmax-K-p+1. Considering both cases,
+ * we use numBlockInRow = min(Kmax-K-p+1, p) in the code.
+ *
+ * In the same way, the first index of every block in each column of Alpha_{K} matches
+ *                        /           \
+ *                        | v_{K}     |
+ *                        | v_{K+1}   |
+ *                        |   .       |
+ *              V_{K} =   |   .       |
+ *                        |   .       |
+ *                        | v_{K+p-1} |
+ *                        \           /
+ *
+ * Therefore numBlockInCol = p in the code.
+ *
  */
 void formMatrixBeta(int K, CDMatrix& BetaK) {
 	extern Interaction *pInteraction;
@@ -392,28 +452,26 @@ void formMatrixBeta(int K, CDMatrix& BetaK) {
 	int total_rows=0;
 	int total_cols=0;
 
-	// go through the blocks that on the diagonal
-	// it may happen that the number of blocks is < maxDistance
 	extern std::vector<int> DimsOfV;
 	int Kmax = DimsOfV.size()-1;
-//	std::cout << "Kmax = " << Kmax << std::endl;
-	int numBlockRow = min(Kmax-K+1, maxDistance);
-//	std::cout << "numBlockRow = " << numBlockRow << std::endl;
-	int numBlockCol = min(Kmax-(K+maxDistance)+1, maxDistance); //the number of blocks
+
+	//the number of blocks in each column
+	int numBlockInCol = maxDistance; //min(Kmax-K+1, maxDistance);
+
+	//the number of blocks in each row
+	int numBlockInRow = min(Kmax-(K+maxDistance)+1, maxDistance);
 
 
-	// go through the first column of blocks row by row
-	for (int i=0; i<numBlockRow; ++i) {
+	// go through the first column of the matrix and count the rows
+	for (int i=0; i<numBlockInCol; ++i) {
 		int rows, cols;
-//		std::cout << "Insider formMatrixBeta" << std::endl;
 		getMSize(K+i, K+maxDistance, rows, cols);
 		total_rows += rows;
 	}
 
-	// go through the column of blocks
-	for (int i=0; i<numBlockCol; ++i) {
+	// go through the last row of the matrix and count the columns
+	for (int i=0; i<numBlockInRow; ++i) {
 		int rows, cols;
-//		std::cout << "Insider formMatrixBeta" << std::endl;
 		getMSize(K+maxDistance-1, K+maxDistance+i, rows, cols);
 		total_cols += cols;
 	}
@@ -427,18 +485,14 @@ void formMatrixBeta(int K, CDMatrix& BetaK) {
 	int row_size;
 	int col_size;
 
-	for (int block_row=0; block_row<numBlockRow; ++block_row) {
+	for (int block_row=0; block_row<numBlockInCol; ++block_row) {
 		// rewind block col count
 		col_start = 0;
 
-		for (int block_col=0; block_col<=min(block_row,numBlockCol-1); ++block_col) {
-			// calculate only the upper triangle part is nonzero
-//			std::cout << "block row: " << block_row << " block col: "
-//					<< block_col << std::endl;
+		// only the lower triangle part is nonzero
+		for (int block_col=0; block_col<=min(block_row,numBlockInRow-1); ++block_col) {
 			CDMatrix M;
-//			std::cout << "before calling formMatrixM" << std::endl;
 			formMatrixM(K+block_row, K+block_col+maxDistance, M);
-//			std::cout << "after calling formMatrixM" << std::endl;
 			row_size = M.rows();
 			col_size = M.cols();
 			BetaK.block(row_start, col_start, row_size, col_size) = M;

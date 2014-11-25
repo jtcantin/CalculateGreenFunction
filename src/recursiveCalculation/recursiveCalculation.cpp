@@ -20,7 +20,9 @@ void deleteMatrixFiles(std::string filename_may_contain_wildcard) {
 
 
 /**
- * solve the linear equation A*X = B
+ * Solve the linear equation A*X = B
+ *
+ * The solution will be saved in the X matrix
  */
 void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X) {
 	X = A.colPivHouseholderQr().solve(B);
@@ -31,15 +33,26 @@ void solveDenseLinearEqs(CDMatrix& A, CDMatrix& B, CDMatrix& X) {
 
 
 /**
- * find out which V_{K} the basis belongs to
+ * Find out which V_{K} the basis belongs to
+ *
+ * If it doesn't belongs to any V_{K}, return -1;
  */
 int findCorrespondingVK(LatticeShape& lattice, int maxDistance, Basis& basis) {
-	int result;
+	int result = -1;
 	int Kc=basis.getSum();
+	int Kmin = 1;
 	int Kmax = DimsOfV.size()-1;
-	for (int K=1; K<=Kmax; K+=maxDistance) {
+
+	if (Kc<Kmin || Kc>Kmax) {
+		std::cout<< "The basis (" << basis[0] <<", "<< basis[1]
+		                        <<") doesn't belong to any V_{K}" << std::endl;
+		std::exit(-1);
+	}
+
+	for (int K=Kmin; K<=Kmax; K+=maxDistance) {
 		if (Kc>=K && Kc<=K+maxDistance-1) {
 			result = K;
+			return result;
 		}
 	}
 	return result;
@@ -101,17 +114,34 @@ void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 	case 1: {
 		int Kmin = 1;
 		int Kmax = 2*lattice.getXmax() - 1;
+		/**
+		 * Kc ==> K for the critical case when the following equation
+		 *           Z_{K} * v_{K} = m_{K, K-1}*v_{K-1} + m_{K, K-2}*v_{K-2}
+		 *                           + ... + m_{K, K-maxDistance}*v_{K-maxDistance}
+		 *
+		 *                           +m_{K, K+1}*v_{K+1} + m_{K, K+2}*v_{K+2}
+		 *                           +... + m_{K, K+maxDistance}*v_{K+maxDistance}
+		 *
+		 *                           + c
+		 *          contains a constant vector c
+		 */
 		int Kc = initialSites.getSum(); //initialSites[0] + initialSites[1];
 
 		recursionData.KLeftStart = 1; // always start from V_1 from the left
+
 		// find out the position where the left and right recursions must stop
-		for (int K=1; K<=Kmax; K+=maxDistance) {
-			if (Kc>=K && Kc<=K+maxDistance-1) {
-				recursionData.KCenter = K;
-				recursionData.KLeftStop = recursionData.KCenter-maxDistance;
-				recursionData.KRightStop = recursionData.KCenter+maxDistance;
-			}
-		}
+		recursionData.KCenter = findCorrespondingVK(lattice, maxDistance,
+				                                    initialSites);
+		recursionData.KLeftStop = recursionData.KCenter-maxDistance;
+		recursionData.KRightStop = recursionData.KCenter+maxDistance;
+
+//		for (int K=1; K<=Kmax; K+=maxDistance) {
+//			if (Kc>=K && Kc<=K+maxDistance-1) {
+//				recursionData.KCenter = K;
+//				recursionData.KLeftStop = recursionData.KCenter-maxDistance;
+//				recursionData.KRightStop = recursionData.KCenter+maxDistance;
+//			}
+//		}
 
 		/**
 		 * To find out KRightStart, we start from
@@ -119,7 +149,7 @@ void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		 *                  ..., v_{KRightStop+maxDistance-1} ].
 		 * We can let K = KRightStop+maxDistance-1 and increase K by maxDistance
 		 * each time until K > Kmax, then the value of KRightStart is given by
-		 * current_value_of_K - maxDistance - (maxDistance-1)
+		 * current_value_of_K - (maxDistance-1)
 		 *
 		 */
 
@@ -129,7 +159,32 @@ void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		} while (K<Kmax);
 		recursionData.KRightStart = K - (maxDistance-1);
 
-		// find out the size of the constant C
+		/**
+		 * find out the size of the constant C in:
+		 *
+		 * W_{KCenter}*V_{KCenter} = Alpha_{KLeftStop}*V_{KLeftStop}
+		 *
+		 *                           + Beta_{KRightStop}*V_{KRightStop}
+		 *
+		 *                           + C
+		 *
+		 * Note C can be divided into different blocks associated with different K
+		 *
+		 *                   /                  \
+		 *                   | c_{KCenter}      |
+		 *                   | c_{KCenter + 1}  |
+		 *                   |        .         |
+		 *                   |        .         |
+		 *                   |        .         |
+		 *                   |      c_{Kc}      |
+		 *                   |        .         |
+		 *                   |        .         |
+		 *                   |        .         |
+		 *                   | c_{KRightStop-1} |
+		 *                   \                  /
+		 * where only the block c_{Kc} is a nonzero block, which contains only
+		 * one nonzero element (that element = 1.0)
+		 */
 		extern std::vector<int> DimsOfV;
 		int totalRows = 0;
 		for(int i=0; i<maxDistance; ++i) {
@@ -137,16 +192,23 @@ void setUpRecursion(LatticeShape& lattice, InteractionData& interactionData,
 		}
 		recursionData.Csize=totalRows;
 
-		// find out the index for the nonzero element in vector C
+		/**
+		 * find out the starting index for the nonzero block c_{Kc} in vector C
+		 * start from KCenter and increase until K = Kc
+		 */
 		int rowIndex = 0;
 		for(int K=recursionData.KCenter; K!=Kc; ++K) {
 			rowIndex += DimsOfV[K];
 		}
-		// when K = Kc, the above loop is over
+
+
 		int index1, index2;
 		getLatticeIndex(lattice, initialSites, index1, index2);
 		extern IMatrix IndexMatrix;
-		// find out G(index1, index2) is the nth elements of v_{Kc} (nth starts from 0)
+		/**
+		 * find out G(index1, index2) is the nth elements of v_{Kc} (nth starts from 0)
+		 * then we know the nth element of the block c_{Kc} is the nonzero element
+		 */
 		int nth = IndexMatrix(index1, index2);
 		rowIndex += nth;
 		recursionData.indexForNonzero = rowIndex;

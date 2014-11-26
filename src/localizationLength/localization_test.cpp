@@ -92,10 +92,8 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 	std::string output = "a_" + itos(initialSeperation)+".txt";
 
 	myFile.open(output.c_str());
-	int m = n;
-	int mPlusa = m + initialSeperation;
-	for ( ; mPlusa<=xmax; ++m, mPlusa=m+initialSeperation ) {
-		dcomplex element = gf(m, mPlusa);
+	for (int m=n; m<=xmax-initialSeperation; ++m ) {
+		dcomplex element = gf(m, m+initialSeperation);
 		double G_n_m = std::log( std::abs( element ) );
 		myFile << (m-n) << "\t"<< G_n_m << std::endl;
 	}
@@ -170,19 +168,17 @@ TEST(LocalizationTest, RandomOnSiteEnergyWithNoDisorderRange) {
 	loadMatrix(fileList[0], gf);
 
 	std::ofstream myFile;
-	std::string output = "size_" + itos(xmax+1)
-			              +"_a_" + itos(initialSeperation)+".txt";
+	std::string output = "n_vs_G_" + itos(xmax+1)+".txt";
 
 	myFile.open(output.c_str());
 	int center = xmax/2;
 	int start = center - radius;
 	int end = center + radius-initialSeperation;
 
-	for ( int i=start; i<=end; ++i ) {
+	for ( int i=center; i<=xmax-initialSeperation; ++i ) {
 		dcomplex element = gf(i, i+initialSeperation);
-		//double G_n_m = std::log( std::abs( element ) );
-		myFile << (i-center) << "\t" << (i+initialSeperation-center)
-				<<"\t"<< element.real() <<"\t" << element.imag() << std::endl;
+		double G_n_m = std::log( std::abs( element ) );
+		myFile << (i-center) << "\t" << G_n_m << std::endl;
 	}
 	myFile.close();
 

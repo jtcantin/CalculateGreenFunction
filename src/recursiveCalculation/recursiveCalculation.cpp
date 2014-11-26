@@ -244,27 +244,39 @@ void fromRightToCenter( RecursionData& recursionData,
 	 *
 	 * At the right-most end, the index K = KRightStart. But KRightStart is not
 	 * necessarily equal to Kmax (the largest value that K can take).
-	 * What we can say is that Kmax is one of {KRightStop, KRightStop+1, ...,
-	 * KRightStop+maxDistance-1}. Similarly, KRightStop-1 is not necessarily
+	 * What we can say is that v_{Kmax} is contained in the rightmost Vector
+	 *                     /                   \
+	 *                     | v_{KRightStart}   |
+	 *                     | v_{KRightStart+1} |
+	 *  V_{KRightStart} =  |         .         |
+	 *                     |         .         |
+	 *                     |         .         |
+	 *                     \                   /
+	 *
+	 * Similarly, KRightStop-maxDistance is not necessarily
 	 * equal to the summation of initial indexes. For example, in 1D, we
 	 * want to calculate G(n, m, n', m'), Kc = n' + m', but KRightStop may be
-	 * != Kc + 1. We can only say that V_{KRightStop-1} contains v_{Kc} (that
-	 * is why the recursive calculation from right must stop at KRightStop)
+	 * != Kc + maxDistance. We can only say that V_{KRightStop-maxDistance}
+	 *                                /                                \
+	 *                                | v_{KRightStop-maxDistance}     |
+	 *                                | v_{KRightStop-maxDistance + 1} |
+	 *  V_{KRightStop-maxDistance} =  |                .               |
+	 *                                |                .               |
+	 *                                |                .               |
+	 *                                \                                /
 	 *
-	 * For the convenience of calculation, we may let the Kmax to be
-	 * (N*maxDistance) so that all v_{K} from v_1 to v_Kmax can be divided into
-	 * V_{1} = [v_1, v_2, ..., v_{maxDistance}],
-	 * V_{maxDistance+1} = [v_{maxDistance+1}, v_{maxDistance+2}, ..., v_{2*maxDistance}],
-	 * V_{2*maxDistance+1} = [..., V_{3*maxDistance}]
-	 *  .
-	 *  .
-	 *  .
-	 * V_{(N-1)*maxDistance+1} = [..., V_{N*maxDistance}]
+	 *  contains v_{Kc}
+	 *  (that is why the recursive calculation from right must stop at KRightStop)
+	 *
 	 *
 	 *
 	 * Assuming V_{K+maxDistance} = 0 in the recursive relation for
-	 *  K=KRightStart, we obtain:
+	 *  K=KRightStart, we have:
 	 *  W_{KRightStart}*V_{KRightStart} = alpha_{KRightStart}*V_{KRightStart-maxDistance}
+	 *                               + beta_{KRightStart}*V_{KRightStart+maxDistance}
+	 *
+	 *                              = alpha_{KRightStart}*V_{KRightStart-maxDistance}
+	 *
 	 * Based on the definition: V_{K} = A_{K} * V_{K-maxDistance}, we obtain:
 	 * W_{KRightStart} * A_{KRightStart} = alpha_{KRightStart}
 	 *
@@ -273,14 +285,19 @@ void fromRightToCenter( RecursionData& recursionData,
 	CDMatrix alphaStart;
 	formMatrixAlpha(KRightStart, alphaStart);
 	/**
-	 * W_{K}*V_{K} = alpha_{K}*V_{K-maxDistance} + beta_{K}*V_{K+maxDistance}
-	 * let's simplify the notation:
-	 * W_{K}*V_{K} = alpha_{K}*V_{K-} + beta_{K}*V_{K+}
+	 *   W_{K}*V_{K} = alpha_{K}*V_{K-maxDistance} + beta_{K}*V_{K+maxDistance}
+	 * let's simplify the notation by defining
+	 *     V_{K-} = V_{K-maxDistance}
+	 *     V_{K+} = V_{K+maxDistance}
+	 * then the equation becomes:
+	 *     W_{K}*V_{K} = alpha_{K}*V_{K-} + beta_{K}*V_{K+}
+	 *
+	 * For the case when K = KRightStart, we have
+	 *     W_{K}*V_{K} = alpha_{K}*V_{K-}
 	 */
-	CDMatrix WKPlus; //initially equal to W_{KRightStart}
+	CDMatrix WKPlus; //initially set to W_{KRightStart}
 	formMatrixW(KRightStart,  z, WKPlus);
 
-	//initially points to A_{KRightStart} and finally points to A_{KRightStop}
 	CDMatrix AKPlus;
 	solveDenseLinearEqs(WKPlus, alphaStart, AKPlus);
 

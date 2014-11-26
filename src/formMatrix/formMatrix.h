@@ -188,7 +188,8 @@ public:
 		int start = center - radius;
 		int end = center + radius;
 		for (int i=start; i<=end; ++i) {
-			e[i] = 0.0;
+			// do nothing
+			//e[i] = 0.0;
 		}
 		// read an array of random numbers from text file
 		std::vector<double> random_array1;
@@ -206,13 +207,13 @@ public:
 		}
 
 		int counter = 0;
-		for (int i=start-1; i>=0; i--) {
+		for (int i=center; i>=0; i--) {
 			e[i] = random_array1[counter];
 			counter++;
 		}
 
 		counter = 0;
-		for (int i=end+1; i<=xmax; i++) {
+		for (int i=center+1; i<=xmax; i++) {
 			e[i] = random_array1[counter];
 			counter++;
 		}

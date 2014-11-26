@@ -114,3 +114,21 @@ TEST(BinaryIO, ThousandByThousandMatirx) {
 		}
 	}
 }
+
+
+TEST(TestIOSpeed, Normal) {
+	CDMatrix cm = CDMatrix::Random(10000,10000);
+	saveMatrixBin("cm.bin",cm);
+	CDMatrix cm2;
+	loadMatrixBin("cm.bin",cm2);
+	EXPECT_TRUE(true);
+}
+
+
+TEST(TestIOSpeed, Tmpfs) {
+	CDMatrix cm = CDMatrix::Random(10000,10000);
+	saveMatrixBin("/dev/shm/cm.bin",cm);
+	CDMatrix cm2;
+	loadMatrixBin("/dev/shm/cm.bin",cm2);
+	EXPECT_TRUE(true);
+}

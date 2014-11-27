@@ -26,7 +26,6 @@ TEST(SetUpInteraction, CheckMagnitude) {
 	InteractionData interactionData = {onSiteE,hop,dyn,randomOnsite,
 			                           randomHop,randomDyn,maxDistance,seed,
 			                           longRangeHop,longRangeDyn};
-//	generateIndexMatrix(lattice1D);
 
 	setLatticeAndInteractions(lattice1D, interactionData);
 
@@ -94,6 +93,16 @@ TEST(SetUpInteraction, CheckMagnitude) {
 		}
 	}
 
+	// check whether different seeds will gives different random on site energies
+	pInteraction->recordOnsiteE("onsite_energy_seed_" + itos((int) seed) + ".txt");
+	// using a different seed
+	seed = 1275;
+	interactionData.seed = seed;
+	setLatticeAndInteractions(lattice1D, interactionData);
+	pInteraction->recordOnsiteE("onsite_energy_seed_" + itos((int) seed) + ".txt");
+	// then you have to examine the two files manually to see how different they are
+
+	EXPECT_TRUE(true);
 }
 
 

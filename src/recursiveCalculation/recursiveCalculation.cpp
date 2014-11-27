@@ -286,7 +286,8 @@ void fromRightToCenter( RecursionData& recursionData,
 	formMatrixAlpha(KRightStart, alphaStart);
 	/**
 	 *   W_{K}*V_{K} = alpha_{K}*V_{K-maxDistance} + beta_{K}*V_{K+maxDistance}
-	 * let's simplify the notation by defining
+	 *
+	 * Let's simplify the notation by defining
 	 *     V_{K-} = V_{K-maxDistance}
 	 *     V_{K+} = V_{K+maxDistance}
 	 * then the equation becomes:
@@ -325,7 +326,7 @@ void fromRightToCenter( RecursionData& recursionData,
 	 *  W_{K}*V_{K} = alpha_{K}*V_{K-} + beta_{K}*A_{K+}*V_{K}.
 	 *
 	 * Because of V_{K} = A_{K} V_{K-}, the above equation can be rewritten as
-	 *  W_{K}*A_{K}*V_{K-} = alpha_{K}*V_{K-} + beta_{K}*A_{K+}*A_{K}*V_{K} .
+	 *  W_{K}*A_{K}*V_{K-} = alpha_{K}*V_{K-} + beta_{K}*A_{K+}*A_{K}*V_{K-} .
 	 * Therefore,
 	 * 	W_{K}*A_{K} = alpha_{K} + beta_{K}*A_{K+}*A_{K}
 	 *
@@ -399,12 +400,12 @@ void fromLeftToCenter( RecursionData& recursionData,
 	 *
 	 *
 	 * V_{1} = [v_1, v_2, ..., v_{maxDistance}],
-	 * V_{maxDistance+1} = [v_{maxDistance+1}, v_{maxDistance+2}, ..., v_{2*maxDistance}],
-	 * V_{2*maxDistance+1} = [..., V_{3*maxDistance}]
+	 * V_{maxDistance+1} = [v_{maxDistance+1}, ..., v_{2*maxDistance}],
+	 * V_{2*maxDistance+1} = [v_{2*maxDistance+1}, ..., v_{3*maxDistance}]
 	 *  .
 	 *  .
 	 *  .
-	 * V_{(N-1)*maxDistance+1} = [..., V_{N*maxDistance}]
+	 * V_{(N-1)*maxDistance+1} = [v_{(N-1)*maxDistance+1}, ..., v_{N*maxDistance}]
 	 *
 	 *
 	 * Assuming V_{K-maxDistance} = 0 in the recursive relation for
@@ -419,8 +420,23 @@ void fromLeftToCenter( RecursionData& recursionData,
 	formMatrixBeta(KLeftStart, betaStart);
 	/**
 	 * W_{K}*V_{K} = alpha_{K}*V_{K-maxDistance} + beta_{K}*V_{K+maxDistance}
-	 * let's simplify the notation:
+	 *
+	 * Let's simplify the notation:
 	 * W_{K}*V_{K} = alpha_{K}*V_{K-} + beta_{K}*V_{K+}
+	 *
+	 * When K = KLeftStart, we have:
+	 *      W_{K}*V_{K} = beta_{K}*V_{K+}
+	 *  ==> W_{K}*ATilde_{K}*V_{K+} = beta_{K}*V_{K+}
+	 *
+	 *  ==> W_{K}*ATilde_{K} = beta_{K}
+	 *
+	 *  In the eyes of the next recursion relation, K is K+, so we change
+	 *  the notation to:
+	 *
+	 *  	W_{K-}*ATilde_{K-} = beta
+	 *
+	 *  Then ATilde_{K-} can be used directly in the next recusion as
+	 *  "ATilde_{K-}" without changing the notation
 	 */
 	CDMatrix WKMinus; //initially equal to W_{KLeftStart}
 	formMatrixW(KLeftStart,  z, WKMinus);
@@ -440,8 +456,8 @@ void fromLeftToCenter( RecursionData& recursionData,
 	}
 
 	/**
-	 * Now knowing the A_{KLeftStart} or ATildeKMinus, we can recursively calculate
-	 * ATilde, ... until ATildeKLeftStop
+	 * Now knowing the A_{KLeftStart} or ATilde_{K-}, we can recursively
+	 * calculate ATilde_{K}, ATilde_{K+}, ... until ATildeKLeftStop
 	 *
 	 * Start with the recursion relation
 	 * W_{K}*V_{K} = alpha_{K}*V_{K-} + beta_{K}*V_{K+}
@@ -453,13 +469,14 @@ void fromLeftToCenter( RecursionData& recursionData,
 	 *
 	 * Because of V_{K} = ATilde_{K} V_{K+}, the above equation can be rewritten as
 	 *  W_{K}*ATilde_{K} V_{K+} = alpha_{K}*ATilde_{K-}*ATilde_{K} V_{K+}
-	 *                            + beta_{K}*A_{K+} .
+	 *                            + beta_{K}*V_{K+} .
 	 * Therefore,
 	 * 	W_{K}*ATilde_{K} = alpha_{K}*ATilde_{K-}*ATilde_{K} + beta_{K}
 	 *
 	 * 	==> ( W_{K} - alpha_{K}*ATilde_{K-} ) * ATilde_{K} = beta_{K}
 	 *
 	 * 	Then ATilde_{K} can be obtained by solving the above linear equations
+	 * 	once ATilde_{K-} is known
 	 */
 
 	for (int K=KLeftStart+maxDistance; K<=KLeftStop; K += maxDistance) {
@@ -467,8 +484,8 @@ void fromLeftToCenter( RecursionData& recursionData,
 		formMatrixAlpha(K,  AlphaK);
 		CDMatrix WK;
 		formMatrixW(K, z, WK);
-		//CDMatrix LeftSide = WK - AlphaK*ATildeKMinus;
 		/*
+		 * CDMatrix LeftSide = WK - AlphaK*ATildeKMinus;
 		 * an optimized way to obtain LeftSide without evaluating temporary matrices
 		 */
 		CDMatrix * pLeftSide = &WK;
@@ -506,14 +523,16 @@ void fromLeftToCenter( RecursionData& recursionData,
  *
  * W_{KCenter}*V_{KCenter} = alpha_{KCenter}*V_{KCenter-maxDistance}
  *                           + beta_{KCenter}*V_{KCenter+maxDistance} + C
- * Knowing A_{KRightStop} = A_{KCenter+maxDistance}, we can obtain V_{KCenter+maxDistance} by
- * V_{KCenter+maxDistance} =  A_{KRightStop}*V_{KCenter}
+ *
+ * Knowing A_{KRightStop} = A_{KCenter+maxDistance}, we can obtain
+ * 	V_{KCenter+maxDistance} =  A_{KRightStop}*V_{KCenter}
  *
  * Knowing ATilde_{KLeftStop} = ATilde_{KCenter-maxDistance}, we have
- * V_{KCenter-maxDistance} =  ATilde_{KLeftStop}*V_{KCenter}
+ * 	V_{KCenter-maxDistance} =  ATilde_{KLeftStop}*V_{KCenter}
  *
  * Substituting the above two equations into the first equation, we obtain
- * [ W_{KCenter} - alpha_{KCenter}*ATilde_{KLeftStop} - beta_{KCenter}*A_{KRightStop}]*V_{KCenter}
+ * [ W_{KCenter} - alpha_{KCenter}*ATilde_{KLeftStop}
+ *   - beta_{KCenter}*A_{KRightStop}] * V_{KCenter}
  * = C
  *
  * Then V_{KCenter} can be obtained by solving the above linear equation
@@ -525,17 +544,17 @@ void solveVKCenter(RecursionData& recursionData, dcomplex z,
 	// obtain the lefthand side of the linear equation
 	CDMatrix WKCenter;
 	formMatrixW(KCenter,z,WKCenter);
-	CDMatrix LeftSide = WKCenter;
-	WKCenter.resize(0,0);
+	CDMatrix * pLeftSide = &WKCenter;
+	//WKCenter.resize(0,0);
 
 	CDMatrix AlphaKCenter;
 	formMatrixAlpha(KCenter, AlphaKCenter);
-	LeftSide -= AlphaKCenter*ATildeKLeftStop;
+	(*pLeftSide).noalias() -= AlphaKCenter*ATildeKLeftStop;
 	AlphaKCenter.resize(0,0);
 
 	CDMatrix BetaKCenter;
 	formMatrixBeta(KCenter, BetaKCenter);
-	LeftSide -= BetaKCenter*AKRightStop;
+	(* pLeftSide).noalias() -= BetaKCenter*AKRightStop;
 	BetaKCenter.resize(0,0);
 
 
@@ -543,20 +562,15 @@ void solveVKCenter(RecursionData& recursionData, dcomplex z,
 	CDMatrix RightSide = CDMatrix::Zero(recursionData.Csize, 1);
 	RightSide(recursionData.indexForNonzero, 0)=dcomplex(1.0, 0.0);
 
-//	std::cout << "OK before solving the linear equation" << std::endl;
-//	std::cout << "LeftSide: " << LeftSide.rows() <<"X" << LeftSide.cols() << std::endl;
-//	std::cout << "RightSide: " << RightSide.rows() <<"X" << RightSide.cols() << std::endl;
-//	std::cout << "KCenter: " << recursionData.KCenter << std::endl;
-//	std::cout << "DimsOfV[KCenter]: " << DimsOfV[recursionData.KCenter]<< std::endl;
-//	std::cout << "CSize: " << recursionData.Csize << std::endl;
 	//solve the linear equation
-	solveDenseLinearEqs(LeftSide,RightSide,VKCenter);
+	solveDenseLinearEqs(*pLeftSide, RightSide, VKCenter);
 }
 
 
 
 /**
- * calculate density of state at the initial sites
+ * Calculate density of state at the initial sites for an array of z values (zList)
+ * and save the result to the rhoList array
  *
  * IMPORTANT: before calling calculateDensityOfState, you have to call
  *            setUpIndexInteractions(lattice, interactionData) to set
@@ -566,7 +580,7 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 		                      InteractionData& interactionData,
 		                      const std::vector<dcomplex>& zList,
 		                      std::vector<double>& rhoList) {
-
+	rhoList.clear();
 	RecursionData recursionData;
 	setUpRecursion(lattice,  interactionData, initialSites, recursionData);
 
@@ -606,7 +620,8 @@ void calculateDensityOfState(LatticeShape& lattice, Basis& initialSites,
 
 
 /**
- * calculate density of state at all sites
+ * Calculate density of state at all sites for a given array of z energy (zList)
+ * and save the result into an array of files (fileList)
  *
  * IMPORTANT: before calling calculateDensityOfStateAll, you have to call
  *            setUpIndexInteractions(lattice, interactionData) first to

@@ -43,7 +43,7 @@ class RandomNumberGenerator {
 		return rc;
 	}
 
-	// produce a complex random number in [0, 1) + [0, 1)*I given the seed
+	// produce a real random number in [0, 1) given the seed
 	double randomReal() {
 		double random = (double)rand()/(double)RAND_MAX;
 		return random;

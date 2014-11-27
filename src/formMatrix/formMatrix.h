@@ -152,6 +152,15 @@ public:
 		return result;
 	}
 
+	// for testing purposes
+	void recordOnsiteE(std::string filename) {
+		std::ofstream out(filename.c_str());
+		for (int i=0; i< e.size(); ++i) {
+			out << i <<"  " << e(i) << "\n";
+		}
+		out.close();
+	}
+
 	// if the seed is not set, use the default one
 	void setRandomSeed(unsigned inputSeed) {
 		seed = inputSeed;

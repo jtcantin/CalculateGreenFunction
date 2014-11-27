@@ -93,6 +93,9 @@ void calculateGreenFunc(LatticeShape& lattice, Basis& finalSites, Basis& initial
                         const std::vector<dcomplex>& zList,
                         std::vector<dcomplex>& gfList);
 
+void assignValuesToG(LatticeShape& lattice, int K, int maxDistance, CDMatrix& VK, CDMatrix& gf);
+
+
 /**
  * calculate all the matrix elements of the Green function and save them into a text file
  *

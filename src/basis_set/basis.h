@@ -271,6 +271,4 @@ void generateIndexMatrix(LatticeShape& lattice);
 
 
 
-
-
 #endif /* BASIS_H_ */

@@ -787,13 +787,55 @@ void calculateGreenFunc(LatticeShape& lattice, Basis& finalSites,
 
 }
 
+/**
+ * Extract the Green's function from VK
+ *           /                     \
+ *           | v_{K}               |
+ *           | v_{K+1}             |
+ *           |    .                |
+ *  V_{K} =  |    .                |
+ *           |    .                |
+ *           | v_{K+maxDistance-1} |
+ *           \                     /
+ * or at boundary when K + maxDistance-1 > Kmax, we have
+ *
+  *          /          \
+ *           | v_{K}    |
+ *           | v_{K+1}  |
+ *           |    .     |
+ *  V_{K} =  |    .     |
+ *           |    .     |
+ *           | v_{Kmax} |
+ *           \          /
+ *
+ * ( It should work for both 1D and 2D cases. )
+ */
+void assignValuesToG(LatticeShape& lattice, int K, int maxDistance,
+		             CDMatrix& VK, CDMatrix& gf) {
+	extern std::vector< std::vector< Basis > > VtoG;
+	int Kmax = 2*lattice.getXmax() - 1;
+	// number of small v in V_{K}
+	int numOfv = min(maxDistance, Kmax-K+1);
+	int indexInLargeV = 0;
+	for (int i=0; i<numOfv; ++i) {
+		for (int indexInSmallV=0; indexInSmallV<VtoG[K+i].size(); indexInSmallV++) {
+			Basis * pBasis = &( VtoG[K+i][indexInSmallV] );
+			int site1, site2;
+			getLatticeIndex(lattice, *pBasis, site1, site2);
+			gf(site1, site2) = VK(indexInLargeV, 0);
+			gf(site2, site1) = VK(indexInLargeV, 0);
+			indexInLargeV++;
+		}
+	}
 
+
+}
 
 
 
 
 /**
- * calculate all the matrix elements of the Green function and
+ * Calculate all the matrix elements of the Green function and
  * save them into a text file
  *
  * IMPORTANT: before calling calculateAllGreenFunc, you have to call
@@ -808,6 +850,27 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 		                InteractionData& interactionData,
 		                std::vector<dcomplex> zList,
                         std::vector< std::string > fileList) {
+
+	/**
+	 * figure out the dimensions of the matrix of the Green's functions
+	 *   G(lattice_index_for_site1, lattice_index_for_site2)
+	 */
+	CDMatrix gf;
+	switch ( lattice.getDim() )  {
+	case 1:
+	{
+		// for the 1D case, the index for a site = the label of the site
+		int nsite = lattice.getXmax()+1;
+		gf= CDMatrix::Zero(nsite, nsite);
+		break;
+	}
+	case 2:
+		break;
+	case 3:
+		break;
+	}
+
+
 	int maxDistance = interactionData.maxDistance;
 	RecursionData recursionData;
 	setUpRecursion(lattice,  interactionData, initialSites, recursionData);
@@ -834,8 +897,9 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 
 		// save VKCenter into a file
 		int KCenter = recursionData.KCenter;
-		std::string fileV = "V"+itos(KCenter)+".bin";
-		saveMatrixBin(fileV, VKCenter);
+		assignValuesToG(lattice, KCenter, maxDistance, VKCenter, gf);
+		//std::string fileV = "V"+itos(KCenter)+".bin";
+		//saveMatrixBin(fileV, VKCenter);
 
 		/*
 		 * go from the center to the right and calculate all VK with K>KCenter
@@ -853,8 +917,9 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 			deleteMatrixFiles(filename);
 
 			VK = A*VK;
-			std::string fileV = "V"+itos(K)+".bin";
-			saveMatrixBin(fileV, VK);
+			assignValuesToG(lattice, K, maxDistance, VK, gf);
+			//std::string fileV = "V"+itos(K)+".bin";
+			//saveMatrixBin(fileV, VK);
 		}
 
 		/*
@@ -873,60 +938,19 @@ void calculateAllGreenFunc(LatticeShape& lattice,  Basis& initialSites,
 			deleteMatrixFiles(filename);
 
 			VK = ATilde*VK;
-			std::string fileV = "V"+itos(K)+".bin";
-			saveMatrixBin(fileV, VK);
+			assignValuesToG(lattice, K, maxDistance, VK, gf);
+			// we don't want to save V into disk because it seems useless
+			//std::string fileV = "V"+itos(K)+".bin";
+			//saveMatrixBin(fileV, VK);
+
 		}
 
 		// release memory because they are no longer needed
 		VK.resize(0, 0);
 		VKCenter.resize(0, 0);
 
-		/*
-		 * form all basis sets and calculate the Green's function sandwiched
-		 * between any basis set and the basis set for the initial sites,
-		 * then save the results into a text file in the following format:
-		 *
-		 * index_for_site1 index_for_site2 <basis|G(z)|initial_sites>.real <>.imag
-		 *
-		 * ( where <basis| = <index_for_site1, index_for_site2| )
-		 */
-		switch ( lattice.getDim() )  {
-		case 1:
-		{
-			// for the 1D case, the index for a site = the label of the site
-			int xmax = lattice.getXmax();
-			CDMatrix gf(xmax+1, xmax+1);
-			for (int n1=0; n1<=xmax-1; ++n1) {
-				for (int n2=n1+1; n2<=xmax; ++n2) {
-					Basis finalSites(n1, n2);
-					/*
-					 *find out what V_K the Green's function G(n1, n2, ...)
-					 *belongs to
-					 */
-					int Kfinal = findCorrespondingVK(lattice, maxDistance,
-							                          finalSites);
-					// find out the row index for G(n1, n2, ...) within V_K
-					int rowIndex = getBasisIndexInVK(lattice, Kfinal, finalSites);
-					CDMatrix VKfinal;
-					std::string fileV = "V"+itos(Kfinal)+".bin";
-					loadMatrixBin(fileV, VKfinal);
-					gf(n1, n2) = VKfinal(rowIndex, 0);
-					gf(n2, n1) = gf(n1, n2);
-				}
-			}
-			// make the diagonal terms zero
-			for (int i=0; i<gf.rows(); ++i) {
-				gf(i, i) = dcomplex(0,0);
-			}
-
-			saveMatrix(filename, gf);
-			break;
-		}
-		case 2:
-			break;
-		case 3:
-			break;
-		}
+		// save the matrix of the Green's functions
+		saveMatrix(filename, gf);
 
 	}
 }

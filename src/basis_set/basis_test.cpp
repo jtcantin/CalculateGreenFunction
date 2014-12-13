@@ -114,6 +114,30 @@ TEST(GenerateNeighborsTest, OneDistance1D) {
 	EXPECT_EQ(neighbors[0][1], 2);
 	neighbors.clear();
 
+	// only right neighbor of the second particle
+	distance = 1;
+	basis[0] = 1;
+	basis[1] = 2;
+	lattice1D.setXmax(4);
+	generateNeighbors( basis, distance, lattice1D, neighbors);
+	EXPECT_EQ(neighbors.size(), 1);
+	EXPECT_EQ(neighbors[0][0], 1);
+	EXPECT_EQ(neighbors[0][1], 3);
+	neighbors.clear();
+
+	//left neighbors of the first and second particles
+	distance = -1;
+	basis[0] = 1;
+	basis[1] = 3;
+	lattice1D.setXmax(4);
+	generateNeighbors( basis, distance, lattice1D, neighbors);
+	EXPECT_EQ(neighbors.size(), 2);
+	EXPECT_EQ(neighbors[0][0], 0);
+	EXPECT_EQ(neighbors[0][1], 3);
+	EXPECT_EQ(neighbors[1][0], 1);
+	EXPECT_EQ(neighbors[1][1], 2);
+	neighbors.clear();
+
 /********** when the |distance| is 2 ****************/
 	distance = 2;
 	basis[0] = 5;

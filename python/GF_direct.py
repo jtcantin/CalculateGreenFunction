@@ -18,27 +18,27 @@ from matplotlib import cm
 np.set_printoptions(threshold=10000,linewidth=2000,precision=4,suppress=False)
 
 
-E = 4.0 #NOTE: This is the on-site energy of a SINGLE particle
+E = 1.0 #NOTE: This is the on-site energy of a SINGLE particle
 t = 1.0
-d = 0.0
+d = 2.0
 
-N = 30
+N = 55
 
-E_random = True
+E_random = False
 T_random = False
 D_random = False
 rand_seed = 52
 
 T_range = N #NOTE: the form is t / dist^3
-D_range = 0 #NOTE: the form is d / dist^3
+D_range = N #NOTE: the form is d / dist^3
 
-#These are for the Green's function G(z), z = omega + i*eta
+#These are for the Green's functions G(z), z = omega + i*eta
 omega_start = 0.1
 omega_stop = 5.5
 omega_step = 0.025
 eta = 0.001
 
-zeroErrorTolerance = 1E-11
+zeroErrorTolerance = 1E-7
 
 ti = time.time()
 print "--------------------------------------------------------------"

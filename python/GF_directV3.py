@@ -9,6 +9,8 @@
 
 #First date of completion: 12 Feb 2015 - JTC
 #13 Feb 2015 - JTC - Switched GF calculation from S*I*S^t to only using the specific rows/columns necessary
+#19to20 Feb 2015 - JTC - Placed key components into functions and set up the average over disorder
+#20 Feb 2015 - JTC - Set up ability to output data to disk, using the numpy routines
 
 from __future__ import division
 import numpy as np
@@ -47,13 +49,68 @@ eta = 0.001
 
 zeroErrorTolerance = 1E-7 #Means results are single precision or better
 
-numDisorders = 2 #Number of disorders to average over
+numDisorders = 10 #Number of disorders to average over
+
+#Parameters for xi_2 calculation
+#ie., for: |<m,m+a|G(z)|n,n+a>| ~ exp(-|n-m|/xi_2) as |m-n| -> inf
+a_locCalc = 1
+n_locCalc = int(np.round(N/2)) #Approximate centre of lattice
+m_start_locCalc = 0
+m_stop_locCalc = N-1
+
+#Parameters for data storage to disk
+datafile = "./data/arrays"
+saveData = True
 
 ####################################################################
 ####################################################################
 # Functions
 ####################################################################
 ####################################################################
+
+####################################################################
+# Set up the basis/index conversion arrays
+####################################################################
+def basis_setup(N):
+    if N < 2:
+        sys.exit("Error: Can't have fewer lattice sites than hard core bosons.")
+    #This converts the tuple list to a numpy array
+    #n_to_basis_tmp = []
+    #
+    #for i in range(0,N):
+    #    for j in range(i+1,N):
+    #        n_to_basis_tmp.append((i,j))
+    #
+    #n_to_basis = np.array(n_to_basis_tmp)
+    #
+    #print n_to_basis_tmp
+    #print n_to_basis
+
+    #This uses the tuple list directly
+    n_to_basis = []
+
+    for i in range(0,N):
+        for j in range(i+1,N):
+            n_to_basis.append((i,j))
+
+    basis_size = len(n_to_basis)
+    #print basis_size
+
+    #print n_to_basis
+
+    #Set up a dictionary for the reverse look up (could this be too slow?)
+    basis_to_n = {}
+
+    i = 0
+    for ket in n_to_basis:
+        basis_to_n[ket] = i
+        i += 1
+
+    #print basis_to_n
+    #print basis_to_n[(1,2)]
+    #print basis_to_n[(1,4)] #This line will error out with a key error (if N =< 4), which is the desired behaviour
+
+    return basis_size, basis_to_n, n_to_basis
 
 
 # Set up the On Site Energy array (diagonal in Hamiltonian)
@@ -374,43 +431,7 @@ print "-----------------------"
 # Set up the basis/index conversion arrays
 ####################################################################
 
-if N < 2:
-    sys.exit("Error: Can't have fewer lattice sites than hard core bosons.")
-#This converts the tuple list to a numpy array
-#n_to_basis_tmp = []
-#
-#for i in range(0,N):
-#    for j in range(i+1,N):
-#        n_to_basis_tmp.append((i,j))
-#
-#n_to_basis = np.array(n_to_basis_tmp)
-#
-#print n_to_basis_tmp
-#print n_to_basis
-
-#This uses the tuple list directly
-n_to_basis = []
-
-for i in range(0,N):
-    for j in range(i+1,N):
-        n_to_basis.append((i,j))
-
-basis_size = len(n_to_basis)
-#print basis_size
-
-#print n_to_basis
-
-#Set up a dictionary for the reverse look up (could this be too slow?)
-basis_to_n = {}
-
-i = 0
-for ket in n_to_basis:
-    basis_to_n[ket] = i
-    i += 1
-
-#print basis_to_n
-#print basis_to_n[(1,2)]
-#print basis_to_n[(1,4)] #This line will error out with a key error (if N =< 4), which is the desired behaviour
+basis_size, basis_to_n, n_to_basis = basis_setup(N)
 
 print "Basis built, time: %G s" % (time.time() - ti)
 t2 = time.time()
@@ -493,13 +514,19 @@ plt.title("Green's Function", fontsize=18)
 #Calculate the localization length
 ####################################################################
 #Calculate |<m,m+a|G(z)|n,n+a>| ~ exp(-|n-m|/xi_2) as |m-n| -> inf for various values of z
-a = 1
+#a = 1
+#
+#n = int(np.round(N/2))
+#m_start = 0
+#m_stop = N-1
 
-n = int(np.round(N/2))
-m_start = 0
-m_stop = N-1
+GF_2DArray, GF_logMangitude_2DArray, m_Array, z_Array = CM_Motion_GF(a_locCalc,n_locCalc,m_start_locCalc,m_stop_locCalc,omega_start,omega_stop,omega_step,eta,eval_Array_srtd,evec_2DArray_srtd)
 
-GF_2DArray, GF_logMangitude_2DArray, m_Array, z_Array = CM_Motion_GF(a,n,m_start,m_stop,omega_start,omega_stop,omega_step,eta,eval_Array_srtd,evec_2DArray_srtd)
+if saveData:
+    GF_2DArraySave = GF_2DArray.copy()
+    GF_logMangitude_2DArraySave = GF_logMangitude_2DArray.copy()
+    m_ArraySave = m_Array.copy()
+    z_ArraySave = z_Array.copy()
 
 print "Relevant Green's Functions built, time: %G s" % (time.time() - t2)
 t2 = time.time()
@@ -516,7 +543,7 @@ X,Y = np.meshgrid(X,Y)
 
 surf = ax.plot_surface(X, Y, GF_logMangitude_2DArray, rstride=100, cstride=1, cmap=cm.hsv, linewidth=0, antialiased=False)
 
-custom_zLabel = r'$ln|<m,m+{0}|G(z)|{1},{1}+{0}>|$'.format(a,n+1)
+custom_zLabel = r'$ln|<m,m+{0}|G(z)|{1},{1}+{0}>|$'.format(a_locCalc,n_locCalc+1)
 
 #plt.ylim(0,50)
 ax.set_ylabel(r'$m$', fontsize=16)
@@ -543,48 +570,113 @@ fig.colorbar(surf, shrink=0.5, aspect=5)
 
 #print "Green's Function built, time: %G s" % (time.time() - t2)
 #t2 = time.time()
+print "First disorder completed, time: %G s" % (time.time() - ti)
+t2 = time.time()
 
+
+
+#plt.show()
+
+
+####################################################################
+# Average over multiple disorders
+####################################################################
+print "                   --------------------                       "
+print "Now for additional disorders."
+
+GF_logMangitude_2DArray_Array = np.zeros((GF_logMangitude_2DArray.shape[0], GF_logMangitude_2DArray.shape[1],numDisorders))
+
+GF_logMangitude_2DArray_Array[:,:,0] = GF_logMangitude_2DArray
+
+#loop over disorders, gathering relevant GF data
+for i in range(1,numDisorders):
+    print "Disorder number: %d" % (i+1)
+
+    # Set up the On Site Energy array (diagonal in Hamiltonian)
+    ####################################################################
+    E_onSite_Array = E_onSite_Array_setup(basis_size,E_random,rand_seed,E,N)
+
+    # Set up the Hamiltonian Matrix
+    ####################################################################
+    H_2DArray = H_2DArray_setup(E_onSite_Array,D_interaction_Array,T_tunnelling_2DArray)
+
+    print "Hamiltonian built, time: %G s" % (time.time() - t2)
+    t2 = time.time()
+
+    # Diagonalize the Hamiltonian
+    ####################################################################
+    eval_Array_srtd, evec_2DArray_srtd = diagAndSort(H_2DArray,zeroErrorTolerance)
+
+    #Calculate |<m,m+a|G(z)|n,n+a>| ~ exp(-|n-m|/xi_2) as |m-n| -> inf for various values of z
+    ####################################################################
+    GF_2DArray, GF_logMangitude_2DArray, m_Array, z_Array = CM_Motion_GF(a_locCalc,n_locCalc,m_start_locCalc,m_stop_locCalc,omega_start,omega_stop,omega_step,eta,eval_Array_srtd,evec_2DArray_srtd)
+
+    GF_logMangitude_2DArray_Array[:,:,i] = GF_logMangitude_2DArray
+
+    print "Relevant Green's Functions built, time: %G s" % (time.time() - t2)
+    t2 = time.time()
+
+    print "----------"
+
+GF_logMangitude_2DArray_Avg = np.average(GF_logMangitude_2DArray_Array, axis=2)
+
+####################################################################
+# Plot the Average over multiple disorders
+####################################################################
+
+figNum += 1
+fig = plt.figure(figNum)
+ax = fig.gca(projection='3d')
+Y = m_Array.copy()
+X = (z_Array.real).copy()
+
+#print Y
+
+X,Y = np.meshgrid(X,Y)
+
+surf = ax.plot_surface(X, Y, GF_logMangitude_2DArray_Avg, rstride=100, cstride=1, cmap=cm.hsv, linewidth=0, antialiased=False)
+
+custom_zLabel = r'$<<ln|<m,m+{0}|G(z)|{1},{1}+{0}>|>>$'.format(a_locCalc,n_locCalc+1)
+
+#plt.ylim(0,50)
+ax.set_ylabel(r'$m$', fontsize=16)
+ax.set_xlabel(r'$\omega + {0}i$'.format(eta), fontsize=16)
+#ax.set_zlabel(custom_zLabel, fontsize=16)
+ax.set_title(custom_zLabel, fontsize=18)
+
+skip = 10
+skip_Array = [i for i in range(0,m_Array.size,skip)]
+#print skip_Array
+ax.set_yticks(m_Array[skip_Array])
+ax.set_yticklabels(m_Array[skip_Array])
+
+#ax.set_zlim(0, 25)
+
+
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+if saveData:
+    t2 = time.time()
+    print "Saving data to %s." % (datafile)
+
+    np.savez(datafile, E_onSite_Array, D_interaction_Array, T_tunnelling_2DArray, H_2DArray, \
+             eval_Array_srtd, evec_2DArray_srtd,GF_2DArraySave,GF_logMangitude_2DArraySave, \
+             m_ArraySave, z_ArraySave, GF_logMangitude_2DArray_Array, GF_logMangitude_2DArray_Avg)
+
+    print "Data saved, time: %G s" % (time.time() - t2)
+    t2 = time.time()
 
 print "Program completed, time: %G s" % (time.time() - ti)
+print "Crude average per disorder = %G s" % ((time.time() - ti)/numDisorders)
 print "All times are the Wall Time."
 print "--------------------------------------------------------------"
 
 
 print "Now for plots."
 
+
+
 plt.show()
-
-
-
-
-## Set up the On Site Energy array (diagonal in Hamiltonian)
-#####################################################################
-#E_onSite_Array = E_onSite_Array_setup(basis_size,E_random,rand_seed,E,N)
-#
-## Set up the Hamiltonian Matrix
-#####################################################################
-#H_2DArray = H_2DArray_setup(E_onSite_Array,D_interaction_Array,T_tunnelling_2DArray)
-#
-#print "Hamiltonian built, time: %G s" % (time.time() - t2)
-#t2 = time.time()
-#
-#####################################################################
-## Diagonalize the Hamiltonian
-#####################################################################
-#eval_Array_srtd, evec_2DArray_srtd = diagAndSort(H_2DArray,zeroErrorTolerance)
-#
-##Calculate |<m,m+a|G(z)|n,n+a>| ~ exp(-|n-m|/xi_2) as |m-n| -> inf for various values of z
-#a = 1
-#
-#n = int(np.round(N/2))
-#m_start = 0
-#m_stop = N-1
-#
-#GF_2DArray, GF_logMangitude_2DArray, m_Array, z_Array = CM_Motion_GF(a,n,m_start,m_stop,omega_start,omega_stop,omega_step,eta,eval_Array_srtd,evec_2DArray_srtd)
-
-
-
-
 
 
 

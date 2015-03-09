@@ -49,7 +49,7 @@ eta = 0.001
 
 zeroErrorTolerance = 1E-7 #Means results are single precision or better
 
-numDisorders = 10 #Number of disorders to average over
+numDisorders = 3 #Number of disorders to average over
 
 #Parameters for xi_2 calculation
 #ie., for: |<m,m+a|G(z)|n,n+a>| ~ exp(-|n-m|/xi_2) as |m-n| -> inf
@@ -659,9 +659,7 @@ if saveData:
     t2 = time.time()
     print "Saving data to %s." % (datafile)
 
-    np.savez(datafile, E_onSite_Array, D_interaction_Array, T_tunnelling_2DArray, H_2DArray, \
-             eval_Array_srtd, evec_2DArray_srtd,GF_2DArraySave,GF_logMangitude_2DArraySave, \
-             m_ArraySave, z_ArraySave, GF_logMangitude_2DArray_Array, GF_logMangitude_2DArray_Avg)
+    np.savez(datafile, E_onSite_Array=E_onSite_Array, D_interaction_Array=D_interaction_Array, T_tunnelling_2DArray=T_tunnelling_2DArray, H_2DArray=H_2DArray, eval_Array_srtd=eval_Array_srtd, evec_2DArray_srtd=evec_2DArray_srtd, GF_2DArraySave=GF_2DArraySave, GF_logMangitude_2DArraySave=GF_logMangitude_2DArraySave, m_ArraySave=m_ArraySave, z_ArraySave=z_ArraySave, GF_logMangitude_2DArray_Array=GF_logMangitude_2DArray_Array, GF_logMangitude_2DArray_Avg=GF_logMangitude_2DArray_Avg)
 
     print "Data saved, time: %G s" % (time.time() - t2)
     t2 = time.time()

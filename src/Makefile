@@ -7,11 +7,11 @@ CFLAGS = -O3 -openmp -Wall -DNDEBUG
 
 
 #include eigen, mkl, boost
-CINCLUDE = -I/home/pxiang/eigen -I/home/pxiang/boost_1_55_0 -I/home/pxiang/gtest-1.7.0/include  -I$(MKLROOT)/include 
+CINCLUDE = -I/home/jtcantin/eigen -I/home/jtcantin/boost_1_55_0 -I/home/jtcantin/gtest-1.7.0/include  -I$(MKLROOT)/include 
 
 
 #link with mkl and google test (static library)
-FLAGSLIB = /home/pxiang/gtest-1.7.0/libgtest.a -L$(MKLROOT)/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm
+FLAGSLIB = /home/jtcantin/gtest-1.7.0/libgtest.a -L$(MKLROOT)/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm
 
 
 

@@ -1,0 +1,30 @@
+
+double onsiteE 2.5
+
+double hop 1.0
+
+double dyn 1.0
+
+bool randomOnsite true
+
+bool randomHop false
+
+bool randomDyn false
+
+unsigned seed 100
+
+bool longRangeHop true
+
+bool longRangeDyn true
+
+
+int maxDistance 4
+
+int xmax 101
+
+double E 0.0
+
+double eta 0.01
+
+int initialSeperation 1
+

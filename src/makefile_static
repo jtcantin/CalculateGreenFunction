@@ -6,13 +6,13 @@ CC = icc
 CFLAGS = -O3 -openmp -Wall -DNDEBUG
 
 
-#include eigen, mkl, boost: -I/home/pxiang/boost_1_55_0
-CINCLUDE = -I/home/pxiang/eigen  -I/home/pxiang/gtest-1.7.0/include  -I$(MKLROOT)/include 
+#include eigen, mkl, boost: -I/home/jtcantin/boost_1_55_0
+CINCLUDE = -I/home/jtcantin/eigen  -I/home/jtcantin/gtest-1.7.0/include  -I$(MKLROOT)/include 
 
 
 #link with mkl and google test (static library)
-#FLAGSLIB = /home/pxiang/gtest-1.7.0/libgtest.a -L$(MKLROOT)/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm
-FLAGSLIB = /home/pxiang/gtest-1.7.0/libgtest.a -Wl,--start-group $(MKLROOT)/lib/intel64/libmkl_intel_lp64.a $(MKLROOT)/lib/intel64/libmkl_core.a $(MKLROOT)/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -lpthread -lm
+#FLAGSLIB = /home/jtcantin/gtest-1.7.0/libgtest.a -L$(MKLROOT)/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm
+FLAGSLIB = /home/jtcantin/gtest-1.7.0/libgtest.a -Wl,--start-group $(MKLROOT)/lib/intel64/libmkl_intel_lp64.a $(MKLROOT)/lib/intel64/libmkl_core.a $(MKLROOT)/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -lpthread -lm
 
 
 SOURCES = $(wildcard *.cpp) $(wildcard */*.cpp) 

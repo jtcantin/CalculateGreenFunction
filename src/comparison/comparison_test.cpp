@@ -14,7 +14,7 @@
  * from recursive and direct calculations
  */
 
-TEST(ComparisonTest, CheckDOS) {
+TEST(ComparisonTest, DISABLED_CheckDOS) {
 	LatticeShape lattice1D(1);
 	int xmax = 51;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -68,7 +68,7 @@ TEST(ComparisonTest, CheckDOS) {
 /**
  * check the off-diagonal elements of the Green's operator
  */
-TEST(ComparisonTest, CheckOffDiagonalOrdered) {
+TEST(ComparisonTest, DISABLED_CheckOffDiagonalOrdered) {
 	LatticeShape lattice1D(1);
 	int xmax = 51;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -161,7 +161,7 @@ TEST(ComparisonTest, CheckOffDiagonalOrdered) {
 /**
  * check all matrix elements of the Green's operator
  */
-TEST(ComparisonTest, CheckAllMatrixElements) {
+TEST(ComparisonTest, DISABLED_CheckAllMatrixElements) {
 	LatticeShape lattice1D(1);
 	int xmax = 101;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1

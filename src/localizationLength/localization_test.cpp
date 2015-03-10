@@ -27,7 +27,7 @@
  * In the current case, we let a = 1 and
  * we want z.real to be at the center of the band
  */
-TEST(LocalizationTest, RandomOnSiteEnergy) {
+TEST(LocalizationTest, DISABLED_RandomOnSiteEnergy) {
 	LatticeShape lattice1D(1);
 	int xmax;
 	READ_INPUT("input.txt", "int", xmax);
@@ -105,7 +105,7 @@ TEST(LocalizationTest, RandomOnSiteEnergy) {
 
 
 
-TEST(LocalizationTest, RandomOnSiteEnergyWithNoDisorderRange) {
+TEST(LocalizationTest, DISABLED_RandomOnSiteEnergyWithNoDisorderRange) {
 	LatticeShape lattice1D(1);
 	int xmax;
 	READ_INPUT("input.txt", "int", xmax);

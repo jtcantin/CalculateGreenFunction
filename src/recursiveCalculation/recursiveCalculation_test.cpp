@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 #include "recursiveCalculation.h"
 
-TEST(SetUpRecursion, RunningOK) {
+TEST(SetUpRecursion, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -31,7 +31,7 @@ TEST(SetUpRecursion, RunningOK) {
 }
 
 
-TEST(FromRightToCenter, RunningOK) {
+TEST(FromRightToCenter, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -52,7 +52,7 @@ TEST(FromRightToCenter, RunningOK) {
 }
 
 
-TEST(FromLeftToCenter, RunningOK) {
+TEST(FromLeftToCenter, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 120;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -74,7 +74,7 @@ TEST(FromLeftToCenter, RunningOK) {
 }
 
 
-TEST(SolveVKCenter, RunningOK) {
+TEST(SolveVKCenter, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 121;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -108,7 +108,7 @@ TEST(SolveVKCenter, RunningOK) {
 }
 
 
-TEST(GeneratingDensityOfStates, RunningOK) {
+TEST(GeneratingDensityOfStates, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 100;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1

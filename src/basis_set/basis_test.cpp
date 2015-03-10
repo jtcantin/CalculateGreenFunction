@@ -8,7 +8,7 @@
 #include "basis.h"
 
 
-TEST(BasisTest, AllBasisTypes) {
+TEST(BasisTest, DISABLED_AllBasisTypes) {
 	Basis b1(1,2);
 	EXPECT_EQ( b1[0], 1);
 	EXPECT_EQ( b1[1], 2);
@@ -31,7 +31,7 @@ TEST(BasisTest, AllBasisTypes) {
 }
 
 
-TEST(NeighborsTest, AssignmentAndFree) {
+TEST(NeighborsTest, DISABLED_AssignmentAndFree) {
 	Neighbors neighbors;
 	Basis p(0,1);
 	neighbors.push_back(p);
@@ -55,7 +55,7 @@ TEST(NeighborsTest, AssignmentAndFree) {
 
 
 // test the Boundary class
-TEST(BoundaryTest, RightSize) {
+TEST(BoundaryTest, DISABLED_RightSize) {
 	std::vector<int> maxXYZ;
 	int xmax = 100;
 	int ymax = 101;
@@ -86,7 +86,7 @@ TEST(BoundaryTest, RightSize) {
 
 
 
-TEST(GenerateNeighborsTest, OneDistance1D) {
+TEST(GenerateNeighborsTest, DISABLED_OneDistance1D) {
 	int dim = 1;
 	LatticeShape lattice1D(dim);
 	lattice1D.setXmax(1);
@@ -170,7 +170,7 @@ TEST(GenerateNeighborsTest, OneDistance1D) {
 
 
 
-TEST(GenerateIndexMatrixTest, FourSites) {
+TEST(GenerateIndexMatrixTest, DISABLED_FourSites) {
 	int xmax = 3;
 	LatticeShape lattice1D(1);
 	lattice1D.setXmax(xmax);
@@ -227,7 +227,7 @@ TEST(GenerateIndexMatrixTest, FourSites) {
 	EXPECT_EQ(basis[1],3);
 }
 
-TEST(GenerateIndexMatrixTest, Sites121) {
+TEST(GenerateIndexMatrixTest, DISABLED_Sites121) {
 	int xmax = 121;
 	LatticeShape lattice1D(1);
 	lattice1D.setXmax(xmax);
@@ -240,7 +240,7 @@ TEST(GenerateIndexMatrixTest, Sites121) {
 	EXPECT_EQ(i,61);
 }
 
-TEST(GetLatticeIndex, TestPointerArgument) {
+TEST(GetLatticeIndex, DISABLED_TestPointerArgument) {
 	int xmax = 99;
 	LatticeShape lattice1D(1);
 	lattice1D.setXmax(xmax);

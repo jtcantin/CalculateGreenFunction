@@ -1,0 +1,75 @@
+[jtcantin@fano runDir]$ ./green --gtest_list_tests
+SetUpRecursion.
+  RunningOK
+FromRightToCenter.
+  RunningOK
+FromLeftToCenter.
+  RunningOK
+SolveVKCenter.
+  RunningOK
+GeneratingDensityOfStates.
+  RunningOK
+LocalizationTest.
+  RandomOnSiteEnergy
+  RandomOnSiteEnergyWithNoDisorderRange
+TextIO.
+  TwoByTwoMatirx
+  TwoByOneMatirx
+  OneByTwoMatirx
+  OneByOneMatirx
+  ThousandByThousandMatirx
+StringificationTest.
+  IntDouble
+  Struct
+InputVariable.
+  Unsigned
+ReadInputTest.
+  AllParameters
+BinaryIO.
+  TwoByTwoMatirx
+  TwoByOneMatirx
+  OneByTwoMatirx
+  OneByOneMatirx
+  ThousandByThousandMatirx
+TestIOSpeed.
+  Normal
+  Tmpfs
+SetUpInteraction.
+  CheckMagnitude
+SetUpLongRange.
+  Hop
+FormMatrixZ.
+  RunningOK
+FormMatrixM.
+  RunningOK
+FormMatrixW.
+  RunningOK
+FormMatrixAlpha.
+  RunningOK
+FormMatrixBeta.
+  RunningOK
+DirectCalculationTest.
+  CheckDOS
+  DISABLED_CheckOffDiagonal
+ComparisonTest.
+  CheckDOS
+  CheckOffDiagonalOrdered
+  CheckAllMatrixElements
+  DISABLED_RandomOnSiteEnergy
+  DISABLED_RandomHopping
+  DISABLED_NoDisorderNoDyn
+  DISABLED_RandomHoppingLargeDyn
+  DISABLED_NoDisorderLargeDyn
+BasisTest.
+  AllBasisTypes
+NeighborsTest.
+  AssignmentAndFree
+BoundaryTest.
+  RightSize
+GenerateNeighborsTest.
+  OneDistance1D
+GenerateIndexMatrixTest.
+  FourSites
+  Sites121
+GetLatticeIndex.
+  TestPointerArgument

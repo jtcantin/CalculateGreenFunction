@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 #include "../Utility/misc.h"
 
-TEST(DirectCalculationTest, CheckDOS) {
+TEST(DirectCalculationTest, DISABLED_CheckDOS) {
 	LatticeShape lattice1D(1);
 	int xmax = 100;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1

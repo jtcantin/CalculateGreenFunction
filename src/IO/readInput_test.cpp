@@ -9,7 +9,7 @@
 #include "readInput.h"
 #include "../recursiveCalculation/recursiveCalculation.h"
 
-TEST(StringificationTest, IntDouble) {
+TEST(StringificationTest, DISABLED_IntDouble) {
 	int var1;
 	double var2;
 	std::string var1string = xstr(var1);
@@ -19,7 +19,7 @@ TEST(StringificationTest, IntDouble) {
 }
 
 
-TEST(StringificationTest, Struct) {
+TEST(StringificationTest, DISABLED_Struct) {
 	struct {
 		int var1;
 		double var2;
@@ -32,7 +32,7 @@ TEST(StringificationTest, Struct) {
 }
 
 
-TEST(InputVariable, Unsigned) {
+TEST(InputVariable, DISABLED_Unsigned) {
 	InteractionData interactionData = {1.0,1.0,1.0,true,
 			false,false,10,88,true,true};
 	InputVariable inputVar("unsigned", xstr(interactionData.seed),
@@ -49,7 +49,7 @@ TEST(InputVariable, Unsigned) {
 }
 
 
-TEST(ReadInputTest, AllParameters) {
+TEST(ReadInputTest, DISABLED_AllParameters) {
 	std::string inputFile = "tmp.txt";
 	// create the input file
 	std::ofstream myfile;

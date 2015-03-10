@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 #include "formMatrix.h"
 
-TEST(SetUpInteraction, CheckMagnitude) {
+TEST(SetUpInteraction, DISABLED_CheckMagnitude) {
 	extern Interaction *pInteraction;
 	LatticeShape lattice1D(1);
 	int xmax = 200;
@@ -106,7 +106,7 @@ TEST(SetUpInteraction, CheckMagnitude) {
 }
 
 
-TEST(SetUpLongRange, Hop) {
+TEST(SetUpLongRange, DISABLED_Hop) {
 	extern Interaction *pInteraction;
 	LatticeShape lattice1D(1);
 	int xmax = 200;
@@ -138,7 +138,7 @@ TEST(SetUpLongRange, Hop) {
 }
 
 
-TEST(FormMatrixZ, RunningOK) {
+TEST(FormMatrixZ, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -153,7 +153,7 @@ TEST(FormMatrixZ, RunningOK) {
 }
 
 
-TEST(FormMatrixM, RunningOK) {
+TEST(FormMatrixM, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -172,7 +172,7 @@ TEST(FormMatrixM, RunningOK) {
 }
 
 
-TEST(FormMatrixW, RunningOK) {
+TEST(FormMatrixW, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -196,7 +196,7 @@ TEST(FormMatrixW, RunningOK) {
 }
 
 
-TEST(FormMatrixAlpha, RunningOK) {
+TEST(FormMatrixAlpha, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1
@@ -321,7 +321,7 @@ TEST(FormMatrixAlpha, RunningOK) {
 
 
 
-TEST(FormMatrixBeta, RunningOK) {
+TEST(FormMatrixBeta, DISABLED_RunningOK) {
 	LatticeShape lattice1D(1);
 	int xmax = 200;
 	lattice1D.setXmax(xmax); //xsite = xmax + 1

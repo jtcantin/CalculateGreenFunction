@@ -8,7 +8,7 @@
 #include "gtest/gtest.h"
 #include "textIO.h"
 
-TEST(TextIO, TwoByTwoMatirx) {
+TEST(TextIO, DISABLED_TwoByTwoMatirx) {
 	CDMatrix cm(2,2);
 	cm(0,0) = dcomplex(1.0, 0.5);
 
@@ -34,7 +34,7 @@ TEST(TextIO, TwoByTwoMatirx) {
 }
 
 
-TEST(TextIO, TwoByOneMatirx) {
+TEST(TextIO, DISABLED_TwoByOneMatirx) {
 	CDMatrix cm(2,1);
 	cm(0,0) = dcomplex(1.0, 0.5);
 	cm(1,0) = dcomplex(1.89, 0.35);
@@ -54,7 +54,7 @@ TEST(TextIO, TwoByOneMatirx) {
 }
 
 
-TEST(TextIO, OneByTwoMatirx) {
+TEST(TextIO, DISABLED_OneByTwoMatirx) {
 	CDMatrix cm(1,2);
 	cm(0,0) = dcomplex(1.0, 0.5);
 	cm(0,1) = dcomplex(1.3, 0.3);
@@ -74,7 +74,7 @@ TEST(TextIO, OneByTwoMatirx) {
 }
 
 
-TEST(TextIO, OneByOneMatirx) {
+TEST(TextIO, DISABLED_OneByOneMatirx) {
 	CDMatrix cm(1,1);
 	cm(0,0) = dcomplex(1.0, 0.5);
 	saveMatrixText("cm.txt",cm, true);
@@ -93,7 +93,7 @@ TEST(TextIO, OneByOneMatirx) {
 }
 
 
-TEST(TextIO, ThousandByThousandMatirx) {
+TEST(TextIO, DISABLED_ThousandByThousandMatirx) {
 	CDMatrix cm(1000,1000);
 	RandomNumberGenerator random;
 	for (int i=0; i<cm.rows(); ++i) {

@@ -17,6 +17,7 @@ FLAGSLIB = /home/jtcantin/gtest-1.7.0/libgtest.a -Wl,--start-group $(MKLROOT)/li
 
 SOURCES = $(wildcard *.cpp) $(wildcard */*.cpp) 
 OBJECTS= $(SOURCES:.cpp=.o)
+EXECUTABLE=green
 
 all: $(SOURCES) $(EXECUTABLE)
 

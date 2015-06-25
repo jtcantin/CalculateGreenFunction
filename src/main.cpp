@@ -10,6 +10,7 @@
 #include "Utility/random_generator.h"
 #include "Utility/types.h"
 #include "gtest/gtest.h"
+#include "testing/testing.h"
 
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);

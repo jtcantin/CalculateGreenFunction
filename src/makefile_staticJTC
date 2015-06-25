@@ -16,12 +16,24 @@ FLAGSLIB = /home/jtcantin/gtest-1.7.0/libgtest.a -Wl,--start-group $(MKLROOT)/li
 
 
 SOURCES = $(wildcard *.cpp) $(wildcard */*.cpp) 
+OBJECTS= $(SOURCES:.cpp=.o)
 
+all: $(SOURCES) $(EXECUTABLE)
 
-green: $(SOURCES) makefile_static
-	$(CC) $(CFLAGS) $(CINCLUDE)   $(SOURCES)  $(FLAGSLIB) -o $@
-# Tab before $(CC)
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(FLAGSLIB) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $(CINCLUDE) $< -o $@
 
 clean:
-	rm -f green
+	rm -f $(OBJECTS) $(EXECUTABLE)
+
+
+#green: $(SOURCES) makefile_static
+#	$(CC) $(CFLAGS) $(CINCLUDE)   $(SOURCES)  $(FLAGSLIB) -o $@
+# Tab before $(CC)
+#
+#clean:
+#	rm -f green
 # Tab before "rm"

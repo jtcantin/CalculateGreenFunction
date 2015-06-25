@@ -5,3 +5,6 @@ src/green
 src/inputBackup/green
 src/runDir
 python/data
+*/.DS_Store
+.DS_Store
+python/data

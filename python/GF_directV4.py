@@ -11,11 +11,14 @@
 #13 Feb 2015 - JTC - Switched GF calculation from S*I*S^t to only using the specific rows/columns necessary
 #19to20 Feb 2015 - JTC - Placed key components into functions and set up the average over disorder
 #20 Feb 2015 - JTC - Set up ability to output data to disk, using the numpy routines
+#21 June 2015 - JTC - Fixed problem with saving
 
 from __future__ import division
 import numpy as np
 import sys
 import time
+import os
+import datetime
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -59,8 +62,11 @@ m_start_locCalc = 0
 m_stop_locCalc = N-1
 
 #Parameters for data storage to disk
-datafile = "./data/arrays"
-saveData = False
+datafolder = "data"
+if not(os.path.isdir(datafolder)):
+    os.system('mkdir -p '+datafolder)
+datafile = datafolder + "/arrays_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".npz"
+saveData = True
 
 ####################################################################
 ####################################################################
